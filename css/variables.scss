@@ -1,0 +1,44 @@
+@import "~bulma/sass/utilities/_all";
+
+// General
+$primary: #FDABCD;
+
+$body-background-color: $white;
+
+$border: $black-ter;
+$border-hover: $grey;
+
+$control-radius: 0;
+$input-border-color: $black-ter;
+$input-hover-border-color: $grey;
+
+$button-border-color: $black-ter;
+$button-hover-border-color: $grey;
+
+$text: $black-ter;
+
+$weight-medium : 400;
+$weight-semibold : 400;
+$weight-bold : 700;
+
+$radius-small: 0;
+$radius: 0;
+$radius-large: 0;
+
+// Partial
+
+$menu-list-border-left: 2px solid $border;
+
+$pre: $black-ter;
+$pre-background: $white;
+
+$code: $red;
+$code-background: $white-ter;
+
+$hr-height: 2px;
+
+$family-sans-serif: Ubuntu, 'Helvetica Neue', "Hiragino Kaku Gothic ProN", Meiryo, Arial, sans-serif;
+$family-monospace: 'Ubuntu Mono', consolas, 'Courier New', Courier, monospace;
+$family-primary: $family-sans-serif;
+$family-code: $family-monospace;
+$body-primary: $family-sans-serif;
