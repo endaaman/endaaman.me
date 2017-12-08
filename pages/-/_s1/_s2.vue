@@ -1,5 +1,5 @@
 <style scope lang="scss">
-@import "../../css/variables";
+@import "../../../css/variables";
 
 .article-content {
   h2 {
@@ -57,9 +57,17 @@ export default {
   async fetch ({ store, params }) {
     await store.dispatch('fetchArticles')
   },
+  validate ({ store, params }) {
+    return true
+    const { s1, s2 } = params
+    const slug = s2 ? s1 + '/' + s2 : s1
+    return store.getters.findArticle(slug)
+  },
   computed: {
     article() {
-      return this.$store.getters.findArticle(this.$route.params.slug)
+      const { s1, s2 } = this.$route.params
+      const slug = s2 ? s1 + '/' + s2 : s1
+      return this.$store.getters.findArticle(slug)
     },
   },
 }

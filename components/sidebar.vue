@@ -50,7 +50,9 @@ aside.sidebar
   h2 Links
   ul
     li
-      nuxt-link(to="/-/about") About me
+      nuxt-link(to="/archive") Archive
+    li(v-for="article in getSpecialArticles()")
+      nuxt-link(:to="'/-/' + article.slug") {{article.title}}
     li(v-if="!authorized")
       nuxt-link(to="/login") Login
     li(v-if="authorized")
@@ -67,12 +69,20 @@ aside.sidebar
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   data: () => ({
     hoge: 'hidwa',
   }),
-  computed: mapState(['articles', 'authorized']),
+  computed: {
+    ...mapState([
+      'articles',
+      'authorized'
+    ]),
+    ...mapGetters([
+      'getSpecialArticles',
+    ])
+  },
 }
 </script>
