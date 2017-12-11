@@ -25,8 +25,8 @@ export default {
   }),
   computed: mapState(['token']),
   methods: {
-    performLogout() {
-      this.$store.dispatch('logout')
+    async performLogout() {
+      await this.$store.dispatch('logout')
       this.$router.push('/')
       this.$toast.open({
         message: 'Logged out',

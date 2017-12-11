@@ -6,26 +6,13 @@ function isClient() {
   return typeof window !== 'undefined'
 }
 
-async function sleep(ms = 3000) {
-  return new Promise((r) => {
-    setTimeout(r, ms)
-  })
-}
-
 export const state = () => ({
   authorized: false,
-  articles: [],
   token: null,
   isClient: true,
 })
 
 export const mutations = {
-  setArticles(state, items) {
-    state.articles = items
-  },
-  clearArticles(state, items) {
-    state.articles = []
-  },
   setToken(state, token) {
     state.token = token
     if (isClient()) {
@@ -56,25 +43,13 @@ export const actions = {
     }
   },
 
-  async fetchArticles({ commit, getters }) {
-    const { data } = await getters.api.get('/articles')
-    data.reverse()
-    commit('setArticles', data)
-  },
-  async getArticles({ commit, getters, dispatch }) {
-    // if (getters.hasArticles) {
-    //   return
-    // }
-    await dispatch('fetchArticles')
-  },
-
   async login({ getters, commit, dispatch }, { password }) {
     let error = null
     try {
       const { data: { token } } = await getters.api.post('/sessions', { password })
       commit('setToken', token)
       commit('setAuthorized', true)
-      dispatch('fetchArticles')
+      await dispatch('article/fetchArticles')
     } catch (e) {
       error = e
     }
@@ -89,12 +64,11 @@ export const actions = {
       commit('clearToken')
     }
     commit('setAuthorized', !error)
-    dispatch('fetchArticles')
   },
   async logout({ getters, commit, dispatch }) {
     commit('clearToken')
     commit('setAuthorized', false)
-    dispatch('fetchArticles')
+    await dispatch('article/fetchArticles')
   }
 }
 
@@ -109,17 +83,4 @@ export const getters = {
       headers,
     })
   },
-  hasArticles(state) {
-    return state.articles.length > 0
-  },
-  findArticle(state) {
-    return (slug) => {
-      return state.articles.find(article => article.slug === slug)
-    }
-  },
-  getSpecialArticles(state) {
-    return (slug) => {
-      return state.articles.filter(article => article.visiblity === 'special')
-    }
-  }
 }

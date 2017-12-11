@@ -18,7 +18,7 @@
       p.control
         input.input(type="password" placeholder="Password" ref="password")
     .field
-      button.button(:class="{ 'is-loading': loading }") Login
+      button.button(:class="{ 'is-loading': isLoading }") Login
 </template>
 
 <script>
@@ -27,17 +27,17 @@ import { mapState } from 'vuex'
 export default {
   layout: 'simple',
   data: () => ({
-    loading: false,
+    isLoading: false,
     errorMessage: '',
   }),
   methods: {
     async performLogin() {
-      this.loading = true
+      this.isLoading = true
       this.errorMessage = ''
       const { error } = await this.$store.dispatch('login', {
         password: this.$refs.password.value
       })
-      this.loading = false
+      this.isLoading = false
       if (error) {
         this.errorMessage = error.message
       } else {

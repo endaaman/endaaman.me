@@ -49,7 +49,7 @@ div
     .article-subtitle {{article.digest}}
     .article-sub
       .article-date
-        | {{formatDate(article.updated_at)}}
+        | {{formatDate(article.date)}}
       .article-tags
         .tags
           .tag.is-white(v-for="tag in article.tags", v-bind:key="tag", @click.prevent="navigate" :data-href="'/archive?tag=' + tag")
@@ -63,9 +63,9 @@ import { mapState } from 'vuex'
 
 export default {
   async fetch({ store, params, route }) {
-    await store.dispatch('getArticles')
+    await store.dispatch('article/getArticles')
   },
-  computed: mapState(['articles']),
+  computed: mapState('article', ['articles']),
   methods: {
     formatDate(date) {
       return fecha.format(new Date(date), 'YYYY年MM月DD日')

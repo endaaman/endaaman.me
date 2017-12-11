@@ -47,6 +47,13 @@ aside.sidebar
     li
       a(href="#") Java(10)
 
+  h2 Accounts
+  ul
+    li
+      a(href="http://twitter.com/endaaman") Twitter
+    li
+      a(href="http://github.com/endaaman") GitHub
+
   h2 Links
   ul
     li
@@ -60,29 +67,20 @@ aside.sidebar
     li(v-if="authorized")
       nuxt-link(to="/logout") Logout
 
-  h2 Accounts
-  ul
-    li
-      a(href="http://twitter.com/endaaman") Twitter
-    li
-      a(href="http://github.com/endaaman") GitHub
-    li
-      span {{hoge}}
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
 
 export default {
-  data: () => ({
-    hoge: 'hidwa',
-  }),
   computed: {
     ...mapState([
-      'articles',
       'authorized'
     ]),
-    ...mapGetters([
+    ...mapState('article', [
+      'articles',
+    ]),
+    ...mapGetters('article', [
       'getSpecialArticles',
     ])
   },

@@ -52,19 +52,19 @@ import { mapState } from 'vuex'
 
 export default {
   async fetch ({ store, params }) {
-    await store.dispatch('fetchArticles')
+    await store.dispatch('article/getArticles')
   },
   validate ({ store, params }) {
     return true
     const { s1, s2 } = params
     const slug = s2 ? s1 + '/' + s2 : s1
-    return store.getters.findArticle(slug)
+    return store.getters['article/findArticle'](slug)
   },
   computed: {
     article() {
       const { s1, s2 } = this.$route.params
       const slug = s2 ? s1 + '/' + s2 : s1
-      return this.$store.getters.findArticle(slug)
+      return this.$store.getters['article/findArticle'](slug)
     },
   },
 }

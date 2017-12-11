@@ -30,28 +30,30 @@
 
   ul.file-controls
     li
-      button.button.is-small(v-if="isRoot" disabled) Parent dir
-      nuxt-link.button.is-small(v-else :to="parentLink") Parent dir
+      nuxt-link.button.is-small(:to="parentLink" :disabled="isRoot") Parent dir
     li
-      button.button.is-small.is-info(@click="reload") Reload
+      button.button.is-small.is-info(
+        @click="reload",
+        :class="{ 'is-loading': isReloading }",
+      ) Reload
     li
-      button.button.is-small.is-success(@click="upload") Upload..
+      button.button.is-small.is-success(@click="uploadFiles") Upload..
+    li
+      button.button.is-small.is-primary(@click="moveFile" :disabled="selectedFiles.length !== 1") Move
+    li
+      button.button.is-small.is-danger(@click="deleteFiles" :disabled="selectedFiles.length === 0") Delete
 
   table.table.is-fullwidth
     thead
       tr
+        th(width="40px")
         th(width="200px") name
         th(width="120px") size
         th mtime
     tbody
-      tr(v-if="!isRoot")
-        td.file-filename
-          nuxt-link(:to="parentLink") ..
-          span /
-        td -
-        td -
-
       tr(v-for="file in files")
+        td
+          b-checkbox(v-model="selectedFiles", :native-value="file.name")
         td.file-filename
           span(v-if="file.is_dir")
             nuxt-link(:to="buildSubLink(file.name)") {{ file.name }}
@@ -72,6 +74,10 @@ export default {
     const slug = route.query.q || ''
     await store.dispatch('file/getFiles', { slug })
   },
+  data: () => ({
+    isReloading: false,
+    selectedFiles: [],
+  }),
   computed: {
     ...mapState('file', ['tree']),
     parentLink() {
@@ -111,11 +117,17 @@ export default {
     }
   },
   methods: {
-    upload() {
-    },
     async reload() {
+      this.isReloading = true
       const slug = this.$route.query.q || ''
       await this.$store.dispatch('file/fetchFiles', { slug })
+      this.isReloading = false
+    },
+    uploadFiles() {
+    },
+    moveFile() {
+    },
+    deleteFiles() {
     },
     buildSubLink(dirName) {
       const slug = this.$route.query.q

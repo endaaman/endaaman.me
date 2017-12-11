@@ -17,8 +17,8 @@ $breakpoint: 720px;
 
   .col-sidebar {
     flex: 1;
-    position: sticky;
     align-self: flex-start;
+    position: sticky;
     top: 0;
     min-width: 240px;
     max-width: 480px;
