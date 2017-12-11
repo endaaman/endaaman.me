@@ -2,6 +2,9 @@
 @import "../css/variables";
 
 .article-item {
+  display: block;
+  color: inherit;
+
   padding: 8px 16px;
   margin: 36px 0;
   border-left: 2px solid $black-ter;
@@ -40,41 +43,35 @@
 
 <template lang="pug">
 div
-  .article-item(v-for="article in articles", :key="article.slug")
-    nuxt-link.nodeco-block(:to="{path: '/-/' + article.slug}")
-      div.article-title {{article.title}}
-      div.article-subtitle {{article.digest}}
+  // pre {{ JSON.stringify(articles, null, 2) }}
+  nuxt-link.article-item(v-for="article in articles", :key="article.slug", :to="'/-/' + article.slug")
+    .article-title {{article.title}}
+    .article-subtitle {{article.digest}}
     .article-sub
       .article-date
         | {{formatDate(article.updated_at)}}
       .article-tags
         .tags
-          a.tag.is-white Vim
-          a.tag.is-white Java
-          a.tag.is-white C言語
+          .tag.is-white(v-for="tag in article.tags", v-bind:key="tag", @click.prevent="navigate" :data-href="'/archive?tag=' + tag")
+            | {{ tag }}
 </template>
 
 <script>
-import axios from 'axios'
 import fecha from 'fecha'
 import { mapState } from 'vuex'
 
 
 export default {
-  async fetch ({ store, params }) {
-    await Promise.all([
-      store.dispatch('getArticles'),
-      // store.dispatch('checkAuth'),
-    ])
+  async fetch({ store, params, route }) {
+    await store.dispatch('getArticles')
   },
-  computed: {
-    articles() {
-      return this.$store.state.articles
-    },
-  },
+  computed: mapState(['articles']),
   methods: {
     formatDate(date) {
       return fecha.format(new Date(date), 'YYYY年MM月DD日')
+    },
+    navigate(e) {
+      this.$router.push(e.target.dataset['href'])
     }
   }
 }

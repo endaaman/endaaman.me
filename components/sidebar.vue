@@ -53,6 +53,8 @@ aside.sidebar
       nuxt-link(to="/archive") Archive
     li(v-for="article in getSpecialArticles()")
       nuxt-link(:to="'/-/' + article.slug") {{article.title}}
+    li(v-if="authorized")
+      nuxt-link(to="/file") File Management
     li(v-if="!authorized")
       nuxt-link(to="/login") Login
     li(v-if="authorized")

@@ -37,13 +37,10 @@
         nuxt-link(to="/") Home
       li
         nuxt-link(:to="'/-/' + article.slug") {{article.title}}
-
   h1.title {{article.title}}
   h2.subtitle(v-if="article.digest") {{article.digest}}
-  .tags
-    a.tag.is-white Vim
-    a.tag.is-white Java
-    a.tag.is-white C言語
+  .tags(v-if="article.tags.length > 0")
+    a.tag.is-white(v-for="tag in article.tags") {{tag}}
   hr
   .article-content.content
     VueMarkdown {{ article.content }}

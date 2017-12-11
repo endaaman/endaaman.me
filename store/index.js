@@ -24,7 +24,7 @@ export const mutations = {
     state.articles = items
   },
   clearArticles(state, items) {
-    state.articles = null
+    state.articles = []
   },
   setToken(state, token) {
     state.token = token
@@ -62,9 +62,9 @@ export const actions = {
     commit('setArticles', data)
   },
   async getArticles({ commit, getters, dispatch }) {
-    if (getters.hasArticles) {
-      return
-    }
+    // if (getters.hasArticles) {
+    //   return
+    // }
     await dispatch('fetchArticles')
   },
 
