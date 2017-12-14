@@ -39,8 +39,10 @@
         :class="{ 'is-loading': isReloading }",
       ) Reload
     li
-      input(type="file" ref="fileInput" @change.prevent="onSelectUploadingFiles" multiple style="display: none")
-      button.button.is-small.is-success(@click="selectUploadingFiles") Upload..
+      input(type="file" ref="fileInput" @change.prevent="onSelectUploadings" multiple style="display: none")
+      button.button.is-small.is-success(v-if="uploadings.length === 0" @click="selectUploadings") Select files
+      button.button.is-small.is-success(v-else  @click="uploadFiles") Upload!
+
     li
       button.button.is-small.is-primary(@click="moveFile" :disabled="selectedFiles.length !== 1") Move
     li
@@ -50,8 +52,10 @@
         :disabled="selectedFiles.length === 0",
       ) Delete
 
-  .tags(v-if="uploadingFiles.length > 0")
-    .tag(v-for="f in uploadingFiles", :key="f.name") {{ f.name }}
+  .tags(v-if="uploadings.length > 0")
+    .tag(v-for="u in uploadings", :key="u.name")
+      | {{ u.name }}&nbsp;&nbsp;
+      button.delete.is-small(@click="unselectUploading(u)")
 
   table.table.is-fullwidth
     thead
@@ -88,8 +92,9 @@ export default {
     errorMessage: '',
     isReloading: false,
     isDeleting: false,
+    isUploading: false,
     selectedFiles: [],
-    uploadingFiles: [],
+    uploadings: [],
   }),
   computed: {
     parentLink() {
@@ -137,19 +142,37 @@ export default {
     },
     moveFile() {
     },
-    selectUploadingFiles() {
+    selectUploadings() {
       this.$refs.fileInput.click()
     },
-    onSelectUploadingFiles(e) {
+    onSelectUploadings(e) {
       const files = [ ...e.target.files ]
-      console.log(files)
-      this.uploadingFiles = [].concat(files)
+      this.uploadings = this.uploadings.concat(files)
+    },
+    unselectUploading(u) {
+      this.uploadings = this.uploadings.filter(uu => uu !== u)
+    },
+    async uploadFiles() {
+      const dir = this.$route.query.q || ''
+      this.isUploading = true
+      const { error } = await this.$store.dispatch('file/uploadFiles', { dir, files: this.uploadings })
+      this.isUploading = false
+      this.uploadings = []
+      if (error) {
+        this.errorMessage = error
+      } else {
+        this.$toast.open({
+          message: 'Uploaded files',
+          position: 'is-bottom',
+        })
+      }
     },
     async deleteFiles() {
       const dir = this.$route.query.q || ''
       this.isDeleting = true
-      // await new Promise(r => setTimeout(r, 4000))
-      const wg = this.selectedFiles.map(async name => await this.$store.dispatch('file/deleteFile', { dir, name }))
+      const wg = this.selectedFiles.map(async name => {
+        return await this.$store.dispatch('file/deleteFile', { dir, name })
+      })
       const errors = await Promise.all(wg)
       this.selectedFiles = []
       this.isDeleting = false

@@ -44,20 +44,22 @@ export const actions = {
     }
     return { error }
   },
-  async uploadFiles({ commit, getters, dispatch }, { files }) {
-    const data = new FormData()
+  async uploadFiles({ commit, dispatch, rootGetters }, { dir, files }) {
+    const fd = new FormData()
+    let error = null
     for (const file of files) {
       // NOTE: force lower case
-      data.append(file.name.toLowerCase(), file)
+      fd.append(file.name.toLowerCase(), file)
     }
-    let error = null
     try {
-      await rootGetters.api.post('files', data,{
-        timeout: 10 * 60 * 1000  // 10min
+      const { data } = await rootGetters.api.post('files' + (dir || `/${dir}`), fd, {
+        timeout: 10 * 60 * 1000,  // 10min
       })
     } catch (e) {
       error = e.message
+      return { error }
     }
+    await dispatch('fetchFiles', { dir })
     return { error }
   },
 }
