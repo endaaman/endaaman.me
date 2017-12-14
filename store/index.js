@@ -41,6 +41,7 @@ export const actions = {
       commit('setToken', token)
       await dispatch('checkAuth')
     }
+    await dispatch('article/fetchArticles')
   },
 
   async login({ getters, commit, dispatch }, { password }) {

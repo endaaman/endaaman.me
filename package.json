@@ -13,8 +13,10 @@
     "buefy": "^0.6.2",
     "bulma": "^0.6.1",
     "cookie": "^0.3.1",
+    "debounce": "^1.1.0",
     "fecha": "^2.3.2",
     "highlight.js": "^9.12.0",
+    "markdown-it-attrs": "^1.2.0",
     "nuxt": "^1.0.0-rc11",
     "vue-markdown": "git+https://git@github.com/endaaman/vue-markdown.git"
   },

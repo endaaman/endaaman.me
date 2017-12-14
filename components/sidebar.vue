@@ -67,6 +67,33 @@ aside.sidebar
     li(v-if="authorized")
       nuxt-link(to="/logout") Logout
 
+  ul
+    li
+      a(href="#") プログラミング(10)
+    li
+      a(href="#") ポエム(6)
+    li
+      a(href="#") 医学(9)
+    li
+      a(href="#") 未分類(10)
+  ul
+    li
+      a(href="#") プログラミング(10)
+    li
+      a(href="#") ポエム(6)
+    li
+      a(href="#") 医学(9)
+    li
+      a(href="#") 未分類(10)
+  ul
+    li
+      a(href="#") プログラミング(10)
+    li
+      a(href="#") ポエム(6)
+    li
+      a(href="#") 医学(9)
+    li
+      a(href="#") 未分類(10)
 </template>
 
 <script>

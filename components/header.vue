@@ -7,15 +7,14 @@ header {
 }
 
 h1 {
-  margin: 24px;
   font-family: 'Ubuntu Condensed', cursive;
   font-weight: bold;
   text-align: center;
   height: 100%;
 
   font-size: 24px;
-  line-height: 24px;
-  height: 24px;
+  height: $my-header-hight;
+  line-height: $my-header-hight;
 }
 
 .accent {

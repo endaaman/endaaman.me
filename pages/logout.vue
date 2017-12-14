@@ -1,14 +1,14 @@
-<style scope lang="scss">
+<style scoped lang="scss">
 @import "../css/variables";
 
-.container-logout {
-  width: 480px;
-  margin: 0 auto;
+.container-login {
+  max-width: 480px;
 }
 </style>
 
 <template lang="pug">
 .container-logout
+  p さようなら、俺
   form(v-on:submit.prevent="performLogout")
     .field
       button.button Logout

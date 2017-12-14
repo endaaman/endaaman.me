@@ -5,20 +5,27 @@ footer {
 
   height: 24px;
   line-height: 24px;
-  text-align: right;
-
-  font-style: italic;
   font-size: 14px;
 
   background-color: $black-ter;
   color: $white-ter;
+}
+
+.footer-content {
+  padding: 0 24px;
+}
+
+.footer-right-text {
+  float: right;
+  font-style: italic;
 }
 </style>
 
 <template lang="pug">
 footer
   .container
-    span Built at {{ builtAt }}
+    .footer-content
+      span.footer-right-text Built at {{ builtAt }}
 </template>
 
 

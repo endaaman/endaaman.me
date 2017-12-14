@@ -1,4 +1,4 @@
-<style scope lang="scss">
+<style scoped lang="scss">
 @import "../css/variables";
 
 .article-item {
@@ -6,7 +6,7 @@
   color: inherit;
 
   padding: 8px 16px;
-  margin: 36px 0;
+  margin-top: 36px;
   border-left: 2px solid $black-ter;
   /* background-color: $white-ter; */
   &:first-child {

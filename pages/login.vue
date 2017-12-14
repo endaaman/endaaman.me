@@ -1,9 +1,8 @@
-<style scope lang="scss">
+<style scoped lang="scss">
 @import "../css/variables";
 
 .container-login {
-  width: 480px;
-  margin: 0 auto;
+  max-width: 480px;
 }
 </style>
 
