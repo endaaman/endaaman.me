@@ -58,14 +58,16 @@ div
 
 <script>
 import fecha from 'fecha'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 
 export default {
   async fetch({ store, params, route }) {
     await store.dispatch('article/getArticles')
   },
-  computed: mapState('article', ['articles']),
+  computed: mapGetters({
+    articles: 'article/getHomeArticles'
+  }),
   methods: {
     formatDate(date) {
       return fecha.format(new Date(date), 'YYYY年MM月DD日')

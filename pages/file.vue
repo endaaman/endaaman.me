@@ -5,16 +5,14 @@
   font-family: $family-monospace;
 }
 
-.file-controls {
+.file-control {
   @include clearfix
+  margin: 8px 0;
   li {
     float: left;
     margin-right: 8px;
   }
-
-  margin: 8px 0;
 }
-
 </style>
 
 <template lang="pug">
@@ -26,9 +24,13 @@
       li
         nuxt-link(to="/file") File Management
       li(v-for="c in crumbs")
-        nuxt-link(:to="'/file?q=' + c.slug") {{ c.name }}
+        nuxt-link(:to="'/file?q=' + c.dir") {{ c.name }}
 
-  ul.file-controls
+  .notification.is-danger(v-if="errorMessage")
+    button.delete(@click="errorMessage = ''")
+    div(v-html="errorMessage")
+
+  ul.file-control
     li
       nuxt-link.button.is-small(:to="parentLink" :disabled="isRoot") Parent dir
     li
@@ -37,11 +39,19 @@
         :class="{ 'is-loading': isReloading }",
       ) Reload
     li
-      button.button.is-small.is-success(@click="uploadFiles") Upload..
+      input(type="file" ref="fileInput" @change.prevent="onSelectUploadingFiles" multiple style="display: none")
+      button.button.is-small.is-success(@click="selectUploadingFiles") Upload..
     li
       button.button.is-small.is-primary(@click="moveFile" :disabled="selectedFiles.length !== 1") Move
     li
-      button.button.is-small.is-danger(@click="deleteFiles" :disabled="selectedFiles.length === 0") Delete
+      button.button.is-small.is-danger(
+        @click="deleteFiles",
+        :class="{ 'is-loading': isDeleting }",
+        :disabled="selectedFiles.length === 0",
+      ) Delete
+
+  .tags(v-if="uploadingFiles.length > 0")
+    .tag(v-for="f in uploadingFiles", :key="f.name") {{ f.name }}
 
   table.table.is-fullwidth
     thead
@@ -49,7 +59,7 @@
         th(width="40px")
         th(width="200px") name
         th(width="120px") size
-        th mtime
+        th.is-hidden-touch mtime
     tbody
       tr(v-for="file in files")
         td
@@ -60,7 +70,7 @@
             span /
           span(v-else) {{ file.name }}
         td {{ formatByteSize(file.size) }}
-        td {{ formatTime(file.mtime) }}
+        td.is-hidden-touch {{ formatTime(file.mtime) }}
 
 </template>
 
@@ -71,21 +81,23 @@ import { mapState } from 'vuex'
 export default {
   layout: 'simple',
   async fetch ({ store, route }) {
-    const slug = route.query.q || ''
-    await store.dispatch('file/getFiles', { slug })
+    const dir = route.query.q || ''
+    await store.dispatch('file/getFiles', { dir })
   },
   data: () => ({
+    errorMessage: '',
     isReloading: false,
+    isDeleting: false,
     selectedFiles: [],
+    uploadingFiles: [],
   }),
   computed: {
-    ...mapState('file', ['tree']),
     parentLink() {
-      const slug = this.$route.query.q
-      if (!slug) {
+      const dir = this.$route.query.q
+      if (!dir) {
         return '/file'
       }
-      const splitted = slug.split('/')
+      const splitted = dir.split('/')
       splitted.pop()
       if (splitted.length === 0) {
         return '/file'
@@ -99,17 +111,17 @@ export default {
       return this.$store.getters['file/findFiles'](this.$route.query.q || '')
     },
     crumbs() {
-      const slug = this.$route.query.q
-      if (!slug) {
+      const dir = this.$route.query.q
+      if (!dir) {
         return []
       }
       let prev = ''
       const items = []
-      for (const path of slug.split('/')) {
+      for (const path of dir.split('/')) {
         const cur = prev + path
         items.push({
           name: path,
-          slug: cur,
+          dir: cur,
         })
         prev = cur + '/'
       }
@@ -119,23 +131,44 @@ export default {
   methods: {
     async reload() {
       this.isReloading = true
-      const slug = this.$route.query.q || ''
-      await this.$store.dispatch('file/fetchFiles', { slug })
+      const dir = this.$route.query.q || ''
+      await this.$store.dispatch('file/fetchFiles', { dir })
       this.isReloading = false
-    },
-    uploadFiles() {
     },
     moveFile() {
     },
-    deleteFiles() {
+    selectUploadingFiles() {
+      this.$refs.fileInput.click()
+    },
+    onSelectUploadingFiles(e) {
+      const files = [ ...e.target.files ]
+      console.log(files)
+      this.uploadingFiles = [].concat(files)
+    },
+    async deleteFiles() {
+      const dir = this.$route.query.q || ''
+      this.isDeleting = true
+      // await new Promise(r => setTimeout(r, 4000))
+      const wg = this.selectedFiles.map(async name => await this.$store.dispatch('file/deleteFile', { dir, name }))
+      const errors = await Promise.all(wg)
+      this.selectedFiles = []
+      this.isDeleting = false
+      if (errors.some(e => e.error)) {
+        this.errorMessage = errors.filter(e => e.error).map(e => `<li>${e.error}<li>`).join('')
+      } else {
+        this.$toast.open({
+          message: 'Deleted file(s)',
+          position: 'is-bottom',
+        })
+      }
     },
     buildSubLink(dirName) {
-      const slug = this.$route.query.q
+      const dir = this.$route.query.q
       let suffix
-      if (!slug) {
+      if (!dir) {
         suffix = dirName
       } else {
-        suffix = slug + '/' + dirName
+        suffix = dir + '/' + dirName
       }
       return '/file?q=' + suffix
     },

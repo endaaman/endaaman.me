@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Buefy, { Toast } from 'buefy'
 
-const components = ['Checkbox']
+const components = ['Checkbox', 'Tag']
 
 for (const c of components) {
   Vue.component(Buefy[c].name, Buefy[c])

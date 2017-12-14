@@ -10,11 +10,12 @@
 <template lang="pug">
 .container-login
   .notification.is-danger(v-if="errorMessage")
-    button.delete
+    button.delete(@click="errorMessage = ''")
     | {{ errorMessage }}
+  p 俺用
   form(v-on:submit.prevent="performLogin")
     .field
-      label.lavel Password(俺用)
+      label.lavel Password
       p.control
         input.input(type="password" placeholder="Password" ref="password")
     .field

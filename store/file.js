@@ -7,32 +7,66 @@ export const state = () => ({
 })
 
 export const mutations = {
-  setFiles(state, [ slug, files ]) {
-    state.tree[slug] = files
-  }
+  SET_FILES(state, [ dir, files ]) {
+    state.tree = {
+      ...state.tree,
+      [dir]: files,
+    }
+  },
+  DELETE_FILE(state, [ dir, name ]) {
+    state.tree = {
+      ...state.tree,
+      [dir]: state.tree[dir].filter(file => file.name !== name),
+    }
+  },
 }
 
 export const actions = {
-  async fetchFiles({ commit, getters, rootGetters }, { slug }) {
-    slug = slug || ''
-    const { data } = await rootGetters.api.get('files/' + slug)
-    commit('setFiles', [ slug, data ])
+  async fetchFiles({ commit, getters, rootGetters }, { dir }) {
+    dir = dir || ''
+    const { data } = await rootGetters.api.get('files/' + dir)
+    commit('SET_FILES', [ dir, data ])
   },
-
-  async getFiles({ commit, getters, dispatch }, { slug }) {
-    slug = slug || ''
-    if (getters.hasFiles(slug)) {
+  async getFiles({ commit, getters, dispatch }, { dir }) {
+    dir = dir || ''
+    if (getters.hasFiles(dir)) {
       return
     }
-    await dispatch('fetchFiles', { slug })
-  }
+    await dispatch('fetchFiles', { dir })
+  },
+  async deleteFile({ commit, dispatch, rootGetters }, { dir, name }) {
+    let error = null
+    try {
+      await rootGetters.api.delete('files/' + (dir ? `${dir}/${name}` : name))
+      commit('DELETE_FILE', [ dir, name ])
+    } catch (e) {
+      error = e.message
+    }
+    return { error }
+  },
+  async uploadFiles({ commit, getters, dispatch }, { files }) {
+    const data = new FormData()
+    for (const file of files) {
+      // NOTE: force lower case
+      data.append(file.name.toLowerCase(), file)
+    }
+    let error = null
+    try {
+      await rootGetters.api.post('files', data,{
+        timeout: 10 * 60 * 1000  // 10min
+      })
+    } catch (e) {
+      error = e.message
+    }
+    return { error }
+  },
 }
 
 export const getters = {
   hasFiles(state) {
-    return slug => slug in state.tree
+    return dir => dir in state.tree
   },
   findFiles(state) {
-    return slug => state.tree[slug]
+    return dir => state.tree[dir]
   },
 }

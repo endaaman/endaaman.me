@@ -27,6 +27,39 @@
   margin-top: 16px;
 }
 
+.article-heading {
+  margin: 0 0 36px;
+
+  .article-title {
+    font-size: 36px;
+    line-height: 64px;
+    text-align: center;
+  }
+
+  .article-digest {
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+  }
+
+  .article-tags {
+    margin: 16px auto;
+    text-align: center;
+    .tag {
+      display: inline-block;
+      margin: 0 4px;
+      line-height: 22px;
+    }
+  }
+}
+
+.article-delimiter {
+  margin: 16px auto;
+  width: 128px;
+  height: 2px;
+  background-color: $black-ter;
+}
+
 </style>
 
 <template lang="pug">
@@ -37,23 +70,31 @@
         nuxt-link(to="/") Home
       li
         nuxt-link(:to="'/-/' + article.slug") {{article.title}}
-  h1.title {{article.title}}
-  h2.subtitle(v-if="article.digest") {{article.digest}}
-  .tags(v-if="article.tags.length > 0")
-    a.tag.is-white(v-for="tag in article.tags") {{tag}}
-  hr
+  .article-heading
+    h1.article-title {{article.title}}
+    h2.article-digest(v-if="article.digest") {{article.digest}}
+    .article-tags(v-if="article.tags.length > 0")
+      a.tag.is-white(v-for="tag in article.tags") {{tag}}
+    .article-delimiter
   .article-content.content
-    VueMarkdown {{ article.content }}
+    VueMarkdown(v-bind="mdProps") {{ article.content }}
 </template>
 
 <script>
-import axios from 'axios'
 import { mapState } from 'vuex'
 
 export default {
   async fetch ({ store, params }) {
     await store.dispatch('article/getArticles')
   },
+  data: () => ({
+    mdProps: {
+      breaks: false,
+      plugins: [],
+      override(md) {
+      },
+    }
+  }),
   validate ({ store, params }) {
     return true
     const { s1, s2 } = params

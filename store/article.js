@@ -43,12 +43,15 @@ export const getters = {
   },
   findArticle(state) {
     return (slug) => {
-      return state.articles.find(article => article.slug === slug)
+      return state.articles.find(a => a.slug === slug)
     }
   },
   getSpecialArticles(state) {
     return (slug) => {
-      return state.articles.filter(article => article.visiblity === 'special')
+      return state.articles.filter(a => a.visiblity === 'special')
     }
+  },
+  getHomeArticles(state) {
+    return state.articles.filter(a => a.visiblity === 'public')
   }
 }

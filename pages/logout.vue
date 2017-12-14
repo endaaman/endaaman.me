@@ -15,15 +15,12 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
-
 export default {
   layout: 'simple',
   data: () => ({
     loading: false,
     errorMessage: '',
   }),
-  computed: mapState(['token']),
   methods: {
     async performLogout() {
       await this.$store.dispatch('logout')

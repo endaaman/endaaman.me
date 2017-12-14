@@ -19,7 +19,7 @@ h1 {
 }
 
 .accent {
-  color: $primary;
+  color: #FDABCD;
 }
 </style>
 
