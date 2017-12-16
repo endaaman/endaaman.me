@@ -1,11 +1,50 @@
+<style lang="scss">
+@import "../css/variables";
+
+.md-content {
+  h2 {
+    margin: 48px 0;
+    line-height: 48px;
+    font-size: $size-4;
+    border-bottom: solid 2px $border;
+  }
+
+  h3 {
+    margin: 24px 0;
+    padding: 12px;
+    font-size: $size-5;
+    border-left: solid 2px $border;
+  }
+  & > p {
+    line-height: 24px;
+    margin: 24px 0;
+  }
+  .fl {
+    float: left;
+  }
+  .fr {
+    float: right;
+  }
+  .cl {
+    overflow: hidden;
+    clear: both;
+  }
+  .center {
+    text-align: center;
+  }
+}
+</style>
+
 <template lang="pug">
-VueMarkdown(v-bind="mdProps")
-  slot
+.md-content.content
+  vue-markdown(v-bind="mdProps")
+    slot
 </template>
 
 <script>
 import hljs from 'highlight.js'
-import markdownItAttrs from 'markdown-it-attrs'
+import mdItAttrs from 'markdown-it-attrs'
+import mdItContainer from 'markdown-it-container'
 
 export default {
   data: () => ({
@@ -14,9 +53,25 @@ export default {
       bre: false,
       breaks: false,
       plugins: [
-        markdownItAttrs,
+        mdItAttrs,
       ],
-      override(md) { }
+      override(md) {
+        console.log('ov')
+        md.use(mdItContainer, 'spoiler', {
+          validate(params) {
+            return params.trim().match(/^spoiler\s+(.*)$/)
+          },
+          render(tokens, idx) {
+            const m = tokens[idx].info.trim().match(/^spoiler\s+(.*)$/)
+            if (tokens[idx].nesting === 1) {
+              // opening tag
+              return '<details><summary>' + md.utils.escapeHtml(m[1]) + '</summary>\n'
+            } else {
+              return '</details>\n'
+            }
+          }
+        })
+      }
     }
   }),
   mounted () {

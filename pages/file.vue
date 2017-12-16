@@ -17,7 +17,7 @@
 
 <template lang="pug">
 .container-file
-  nav.breadcrumb.is-small(aria-label="breadcrumbs")
+  nav.breadcrumb(aria-label="breadcrumbs")
     ul
       li
         nuxt-link(to="/") Home

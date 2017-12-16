@@ -30,20 +30,20 @@ aside.sidebar
   h2 Category
   ul
     li
-      a(href="#") プログラミング(10)
+      a(href="#") Lorem(10)
     li
-      a(href="#") ポエム(6)
+      a(href="#") Ipsum(6)
     li
-      a(href="#") 医学(9)
+      a(href="#") Dolor(9)
     li
-      a(href="#") 未分類(10)
+      a(href="#") 雑記(10)
 
   h2 Tags
   ul
     li
       a(href="#") Vim(1)
     li
-      a(href="#") C言語(4)
+      a(href="#") C(4)
     li
       a(href="#") Java(10)
 
@@ -58,7 +58,7 @@ aside.sidebar
   ul
     li
       nuxt-link(to="/archive") Archive
-    li(v-for="article in getSpecialArticles()")
+    li(v-for="article in specialArticles")
       nuxt-link(:to="'/-/' + article.slug") {{article.title}}
     li(v-if="authorized")
       nuxt-link(to="/file") File Management
@@ -67,33 +67,27 @@ aside.sidebar
     li(v-if="authorized")
       nuxt-link(to="/logout") Logout
 
+  h2 Category
   ul
     li
-      a(href="#") プログラミング(10)
+      a(href="#") Lorem(10)
     li
-      a(href="#") ポエム(6)
+      a(href="#") Ipsum(6)
     li
-      a(href="#") 医学(9)
+      a(href="#") Dolor(9)
     li
-      a(href="#") 未分類(10)
+      a(href="#") 雑記(10)
+
+  h2 Category
   ul
     li
-      a(href="#") プログラミング(10)
+      a(href="#") Lorem(10)
     li
-      a(href="#") ポエム(6)
+      a(href="#") Ipsum(6)
     li
-      a(href="#") 医学(9)
+      a(href="#") Dolor(9)
     li
-      a(href="#") 未分類(10)
-  ul
-    li
-      a(href="#") プログラミング(10)
-    li
-      a(href="#") ポエム(6)
-    li
-      a(href="#") 医学(9)
-    li
-      a(href="#") 未分類(10)
+      a(href="#") 雑記(10)
 </template>
 
 <script>
@@ -107,9 +101,9 @@ export default {
     ...mapState('article', [
       'articles',
     ]),
-    ...mapGetters('article', [
-      'getSpecialArticles',
-    ])
+    ...mapGetters('article', {
+      specialArticles: 'getSpecialArticles',
+    })
   },
 }
 </script>

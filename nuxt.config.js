@@ -36,8 +36,7 @@ module.exports = {
     }
   },
   plugins: [
-    '~plugins/markdown',
-    '~plugins/global',
-    '~plugins/buefy',
+    '~plugins/components',
+    '~plugins/my-components',
   ]
 }
