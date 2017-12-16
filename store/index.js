@@ -2,26 +2,21 @@ import axios from 'axios'
 import cookieParser from 'cookie'
 import browserCookie from 'browser-cookies'
 
-function isClient() {
-  return typeof window !== 'undefined'
-}
-
 export const state = () => ({
   authorized: false,
   token: null,
-  isClient: true,
 })
 
 export const mutations = {
   setToken(state, token) {
     state.token = token
-    if (isClient()) {
+    if (!process.server) {
       browserCookie.set('token', token, { expires: 365 })
     }
   },
   clearToken(state) {
     state.token = null
-    if (isClient()) {
+    if (!process.server) {
       browserCookie.erase('token')
     }
   },

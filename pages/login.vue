@@ -2,6 +2,7 @@
 @import "../css/variables";
 
 .container-login {
+  margin: 0 auto;
   max-width: 480px;
 }
 </style>

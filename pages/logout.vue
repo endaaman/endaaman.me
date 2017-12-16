@@ -1,7 +1,8 @@
 <style scoped lang="scss">
 @import "../css/variables";
 
-.container-login {
+.container-logout {
+  margin: 0 auto;
   max-width: 480px;
 }
 </style>

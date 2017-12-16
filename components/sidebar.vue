@@ -66,28 +66,6 @@ aside.sidebar
       nuxt-link(to="/login") Login
     li(v-if="authorized")
       nuxt-link(to="/logout") Logout
-
-  h2 Category
-  ul
-    li
-      a(href="#") Lorem(10)
-    li
-      a(href="#") Ipsum(6)
-    li
-      a(href="#") Dolor(9)
-    li
-      a(href="#") 雑記(10)
-
-  h2 Category
-  ul
-    li
-      a(href="#") Lorem(10)
-    li
-      a(href="#") Ipsum(6)
-    li
-      a(href="#") Dolor(9)
-    li
-      a(href="#") 雑記(10)
 </template>
 
 <script>

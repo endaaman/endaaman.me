@@ -56,21 +56,12 @@ export default {
         mdItAttrs,
       ],
       override(md) {
-        console.log('ov')
-        md.use(mdItContainer, 'spoiler', {
-          validate(params) {
-            return params.trim().match(/^spoiler\s+(.*)$/)
-          },
-          render(tokens, idx) {
-            const m = tokens[idx].info.trim().match(/^spoiler\s+(.*)$/)
-            if (tokens[idx].nesting === 1) {
-              // opening tag
-              return '<details><summary>' + md.utils.escapeHtml(m[1]) + '</summary>\n'
-            } else {
-              return '</details>\n'
-            }
-          }
-        })
+        // md.use(mdItContainer, 'spoiler', {
+        //   validate(params) {
+        //   },
+        //   render(tokens, idx) {
+        //   }
+        // })
       }
     }
   }),
