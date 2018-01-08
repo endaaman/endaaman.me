@@ -10,16 +10,16 @@
   "dependencies": {
     "@endaaman/vue-markdown": "^2.2.4",
     "axios": "^0.17.1",
-    "browser-cookies": "^1.1.0",
+    "browser-cookies": "^1.2.0",
     "buefy": "^0.6.2",
     "bulma": "^0.6.1",
     "cookie": "^0.3.1",
     "debounce": "^1.1.0",
     "fecha": "^2.3.2",
     "highlight.js": "^9.12.0",
-    "markdown-it-attrs": "^1.2.0",
+    "markdown-it-attrs": "^1.2.1",
     "markdown-it-container": "^2.0.0",
-    "nuxt": "^1.0.0-rc11",
+    "nuxt": "^1.0.0",
     "vue2-ace-editor": "0.0.3"
   },
   "devDependencies": {
