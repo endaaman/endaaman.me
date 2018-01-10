@@ -43,7 +43,7 @@
 
 <template lang="pug">
 .container-archive
-  nuxt-link.article-item(v-for="article in articles", :key="article.slug", :to="'/-/' + article.slug")
+  nuxt-link.article-item(v-for="article in articles", :key="article.slug", :to="getHref(article)")
     .article-title {{article.title}}
     .article-subtitle {{article.digest}}
     .article-sub
@@ -63,11 +63,16 @@ export default {
     await store.dispatch('article/getArticles')
   },
   computed: mapGetters({
-    articles: 'article/getHomeArticles'
+    articles: 'article/getDefaultArticles'
   }),
   methods: {
     navigate(e) {
       this.$router.push(e.target.dataset['href'])
+    },
+    getHref(article) {
+      const splitted = article.slug.split('/')
+      const l = splitted.length
+      return l == 2 ? article.slug : '/-/' + splitted[l - 1]
     }
   }
 }

@@ -29,23 +29,13 @@
 aside.sidebar
   h2 Category
   ul
-    li
-      a(href="#") Lorem(10)
-    li
-      a(href="#") Ipsum(6)
-    li
-      a(href="#") Dolor(9)
-    li
-      a(href="#") 雑記(10)
+    li(v-for="category in categories")
+      nuxt-link(:to="'/archive?category=' + category.slug") {{ category.name }}
 
   h2 Tags
   ul
-    li
-      a(href="#") Vim(1)
-    li
-      a(href="#") C(4)
-    li
-      a(href="#") Java(10)
+    li(v-for="tag in tags")
+      nuxt-link(:to="'/archive?tag=' + tag.name") {{ tag.name }} ({{tag.count}})
 
   h2 Accounts
   ul
@@ -76,11 +66,12 @@ export default {
     ...mapState([
       'authorized'
     ]),
-    ...mapState('article', [
-      'articles',
+    ...mapState('category', [
+      'categories',
     ]),
     ...mapGetters('article', {
       specialArticles: 'getSpecialArticles',
+      tags: 'getTags',
     })
   },
 }

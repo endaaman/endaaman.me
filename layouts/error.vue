@@ -1,5 +1,5 @@
 <style scoped lang="scss">
-@import "../css/layout.scss";
+@import "../css/variables";
 .container-error {
   text-align: center;
   h1 {
@@ -9,15 +9,10 @@
 </style>
 
 <template lang="pug">
-.root
-  my-header
-  .container
-    .section
-      .container-error
-        h1 {{error.statusCode}}
-        p {{error.message}}
-        nuxt-link(to="/") Home
-  my-footer
+.container-error
+  h1 {{error.statusCode}}
+  p {{error.message}}
+  nuxt-link(to="/") Home
 </template>
 
 <script>

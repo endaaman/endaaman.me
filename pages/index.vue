@@ -16,7 +16,7 @@ export default {
     await store.dispatch('article/getArticles')
   },
   computed: mapGetters({
-    articles: 'article/getHomeArticles'
+    articles: 'article/getDefaultArticles'
   }),
   methods: {
     navigate(e) {

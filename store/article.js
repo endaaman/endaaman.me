@@ -35,7 +35,31 @@ export const getters = {
   getSpecialArticles(state) {
     return state.articles.filter(a => a.visiblity === 'special')
   },
-  getHomeArticles(state) {
-    return state.articles.filter(a => a.visiblity === 'public')
+  getDefaultArticles(state) {
+    return state.articles.filter(a => a.visiblity === 'default')
+  },
+  getTags() {
+    const counts = {}
+    // for (const article of state.articles) {
+    //   const { tags } = article
+    //   for (const tag of tags) {
+    //     if (tag in counts) {
+    //       counts[tag] = counts[tag] + 1
+    //     } else {
+    //       counts[tag] = 1
+    //     }
+    //   }
+    // }
+
+    counts['hoge'] = 2
+
+    const tags = []
+    for (const key of Object.keys(counts)) {
+      tags.push({
+        name: key,
+        count: counts[key],
+      })
+    }
+    return tags
   }
 }
