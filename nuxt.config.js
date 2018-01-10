@@ -1,6 +1,6 @@
 module.exports = {
   env: {
-    apiRoot: 'http://localhost:3001',
+    apiRoot: 'http://localhost:3001/',
     builtAt: new Date(),
   },
   dev: process.env.NODE_ENV !== 'production',
@@ -38,5 +38,8 @@ module.exports = {
   plugins: [
     '~plugins/components',
     '~plugins/my-components',
-  ]
+  ],
+  modules: [
+    'nuxt-material-design-icons',
+  ],
 }

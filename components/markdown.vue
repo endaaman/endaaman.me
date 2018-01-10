@@ -1,23 +1,31 @@
 <style lang="scss">
 @import "../css/variables";
 
-.md-content {
+.content.md-content {
+  // h2 {
+  //   margin: 48px 0;
+  //   line-height: 48px;
+  //   font-size: $size-4;
+  //   border-bottom: solid 2px $border;
+  // }
+
   h2 {
-    margin: 48px 0;
-    line-height: 48px;
+    margin: 32px 0 16px;
+    padding: 16px;
     font-size: $size-4;
-    border-bottom: solid 2px $border;
+    border-left: solid 2px $border;
+    color: $black-ter;
   }
 
   h3 {
-    margin: 24px 0;
-    padding: 12px;
+    margin: 32px 0 16px;
     font-size: $size-5;
-    border-left: solid 2px $border;
+    color: #FDABCD;
   }
-  & > p {
-    line-height: 24px;
-    margin: 24px 0;
+
+  p {
+    line-height: 1.5rem;
+    margin: 1.5rem 0;
   }
   .fl {
     float: left;

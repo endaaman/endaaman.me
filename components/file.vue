@@ -41,17 +41,15 @@
     li
       input(type="file" ref="fileInput" @change.prevent="onSelectUploadings" multiple style="display: none")
       button.button.is-small.is-success(v-if="uploadings.length === 0" @click="selectUploadings") Select files
-      button.button.is-small.is-success(v-else @click="uploadFiles") Upload!
+      button.button.is-small.is-success(v-else  @click="uploadFiles") Upload!
 
-    li(v-if="selectedFiles.length > 0") ・
-
-    li(v-if="selectedFiles.length === 1")
-      button.button.is-small.is-primary(@click="moveFile") Move
-
-    li(v-if="selectedFiles.length > 0")
+    li
+      button.button.is-small.is-primary(@click="moveFile" :disabled="selectedFiles.length !== 1") Move
+    li
       button.button.is-small.is-danger(
         @click="deleteFiles",
         :class="{ 'is-loading': isDeleting }",
+        :disabled="selectedFiles.length === 0",
       ) Delete
 
   .tags(v-if="uploadings.length > 0")
@@ -84,18 +82,12 @@
 import fecha from 'fecha'
 import { mapState } from 'vuex'
 
-async function fetch(store, route) {
-  const dir = route.query.q || ''
-  await store.dispatch('file/getFiles', { dir })
-}
-
 export default {
   layout: 'simple',
   async fetch ({ store, route }) {
-    await fetch(store, route)
-  },
-  updated() {
-    fetch(this.$store, this.$route)
+    const dir = route.query.q || ''
+    console.log(route)
+    await store.dispatch('file/getFiles', { dir })
   },
   data: () => ({
     errorMessage: '',

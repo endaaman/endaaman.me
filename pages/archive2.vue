@@ -43,6 +43,21 @@
 
 <template lang="pug">
 .container-archive
+  nav.breadcrumb(aria-label="breadcrumbs")
+    ul
+      li
+        nuxt-link(to="/") Home
+
+      li
+        nuxt-link(to="/archive") Archive
+
+      li(v-if="qCategory")
+        nuxt-link(:to="'/archive?category=' + qCategory") 
+          | {{ qCategory === '-' ? '雑記' : qCategory }}
+
+      li(v-if="qTag")
+        nuxt-link(:to="'/archive?tag=' + qTag") タグ: {{ qTag }}
+
   nuxt-link.article-item(v-for="article in articles", :key="article.slug", :to="getHref(article)")
     .article-title {{article.title}}
     .article-subtitle {{article.digest}}
@@ -59,12 +74,6 @@
 import { mapState, mapGetters } from 'vuex'
 
 export default {
-  async fetch({ store, params, route }) {
-    await store.dispatch('article/getArticles')
-  },
-  computed: mapGetters({
-    articles: 'article/getDefaultArticles'
-  }),
   methods: {
     navigate(e) {
       this.$router.push(e.target.dataset['href'])
@@ -73,6 +82,38 @@ export default {
       const splitted = article.slug.split('/')
       const l = splitted.length
       return l == 2 ? article.slug : '/-/' + splitted[l - 1]
+    }
+  },
+  computed: {
+    ...mapGetters('article', {
+      allArticles: 'getNormalArticles',
+    }),
+    ...{
+      qCategory() {
+        return this.$route.query.category
+      },
+      qTag() {
+        return this.$route.query.tag
+      },
+      articles() {
+        let articles = this.allArticles
+        const { tag, category } = this.$route.query
+        if (tag) {
+          articles = articles.filter((a) => a.tags.includes(tag))
+        }
+        if (category === '-') {
+          articles = articles.filter((a) => a.slug.split('/').length === 1 )
+        } else if (category) {
+          articles = articles.filter((a) => {
+            const splitted = a.slug.split('/')
+            if (splitted.length !== 2) {
+              return false
+            }
+            return splitted[0] === category
+          })
+        }
+        return articles
+      }
     }
   }
 }

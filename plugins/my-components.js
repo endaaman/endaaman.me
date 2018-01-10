@@ -1,14 +1,16 @@
 import Vue from 'vue'
-import header from '../components/header.vue'
-import footer from '../components/footer.vue'
-import sidebar from '../components/sidebar.vue'
-import markdown from '../components/markdown.vue'
+import Header from '../components/header.vue'
+import Footer from '../components/footer.vue'
+import Sidebar from '../components/sidebar.vue'
+import Markdown from '../components/markdown.vue'
+import ArticleDetail from '../components/article-detail.vue'
 import date from '../filters/date'
 
 
-Vue.component('my-header', header)
-Vue.component('my-footer', footer)
-Vue.component('my-sidebar', sidebar)
-Vue.component('my-markdown', markdown)
+Vue.component('my-header', Header)
+Vue.component('my-footer', Footer)
+Vue.component('my-sidebar', Sidebar)
+Vue.component('my-markdown', Markdown)
+Vue.component('article-detail', ArticleDetail)
 
 Vue.filter('date', date)

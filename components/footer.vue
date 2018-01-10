@@ -18,6 +18,12 @@ footer {
 .footer-right-text {
   float: right;
   font-style: italic;
+  margin-left: 8px;
+}
+
+.footer-left-text {
+  float: left;
+  margin-right: 16px;
 }
 </style>
 
@@ -25,14 +31,31 @@ footer {
 footer
   .container
     .footer-content
-      span.footer-right-text Built at {{ builtAt }}
+      span.footer-left-text(v-if="!authorized")
+        nuxt-link.nodeco-inline(to="/login") Login
+      span.footer-left-text(v-if="authorized")
+        nuxt-link.nodeco-inline(to="/logout") Logout
+      span.footer-left-text(v-if="authorized")
+        nuxt-link.nodeco-inline(to="/file") File
+
+      span.footer-right-text Built at {{ builtAt | date('YYYY-MM-DD') }}
 </template>
 
 
 <script>
+import fecha from 'fecha'
+import { mapState } from 'vuex'
+
 export default {
-  data: () => ({
-    builtAt: process.env.builtAt
-  })
+  computed: {
+    ...mapState([
+      'authorized'
+    ]),
+    ...{
+      builtAt() {
+        return new Date(process.env.builtAt)
+      }
+    }
+  }
 }
 </script>

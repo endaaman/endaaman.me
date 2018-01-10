@@ -52,7 +52,8 @@ export const actions = {
       fd.append(file.name.toLowerCase(), file)
     }
     try {
-      const { data } = await rootGetters.api.post('files' + (dir || `/${dir}`), fd, {
+      const path = '/files' + (dir ? `/${dir}` : '')
+      const { data } = await rootGetters.api.post(path, fd, {
         timeout: 10 * 60 * 1000,  // 10min
       })
     } catch (e) {

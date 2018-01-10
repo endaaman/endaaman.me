@@ -20,7 +20,8 @@
 }
 
 .article-subs {
-  margin: 16px auto;
+  margin: 8px auto;
+  font-size: 16px;
   text-align: center;
 }
 
@@ -47,7 +48,7 @@
       li
         nuxt-link(to="/") Home
       li
-        nuxt-link(:to="'/archive?category=' + category.slug") {{ category.name }}
+        nuxt-link(:to="'/?category=' + category.slug") {{ category.name }}
       li
         nuxt-link(:to="'/' + category.slug + '/' + article.slug") {{ article.title }}
 
@@ -58,9 +59,9 @@
       .article-sub {{ article.date | date }}
       .article-sub(v-if="article.tags.length > 0") ・
       .article-sub(v-for="tag in article.tags")
-        nuxt-link.tag.is-white(:to="'/archive?tag=' + tag") {{ tag }}
+        nuxt-link.tag.is-white(:to="'/?tag=' + tag") {{ tag }}
       .article-sub(v-if="authorized")
-        nuxt-link(:to="'/-/' + article.slug + '/edit'") edit
+        nuxt-link(:to="'/' + relative + '/edit'") edit
     .article-delimiter
   div
     my-markdown {{ article.content }}
@@ -76,11 +77,6 @@ function toSlug(s1, s2) {
 
 export default {
   async fetch ({ store, params, error }) {
-    await Promise.all([
-      store.dispatch('article/getArticles'),
-      store.dispatch('category/getCategories'),
-    ])
-
     const { s1, s2 } = params
     if (!store.getters['article/findArticle'](toSlug(s1, s2))) {
       error({
@@ -90,6 +86,10 @@ export default {
     }
   },
   computed: {
+    relative() {
+      const { s1, s2 } = this.$route.params
+      return s1 + '/' + s2
+    },
     article() {
       const { s1, s2 } = this.$route.params
       const slug = toSlug(s1, s2)

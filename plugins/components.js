@@ -6,7 +6,8 @@ import Buefy, { Toast } from 'buefy'
 Vue.component('vue-markdown', VueMarkdown)
 // Vue.component('vue-editor', AceEditor)
 
-const components = ['Checkbox', 'Tag']
+
+const components = ['Checkbox', 'Tag', 'Pagination']
 for (const c of components) {
   Vue.component(Buefy[c].name, Buefy[c])
 }

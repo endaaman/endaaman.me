@@ -36,6 +36,10 @@ export const actions = {
       commit('setToken', token)
       await dispatch('checkAuth')
     }
+    await Promise.all([
+      dispatch('article/getArticles'),
+      dispatch('category/getCategories'),
+    ])
   },
   async login({ getters, commit, dispatch }, { password }) {
     let error = null

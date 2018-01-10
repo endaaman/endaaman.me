@@ -30,32 +30,23 @@ aside.sidebar
   h2 Category
   ul
     li(v-for="category in categories")
-      nuxt-link(:to="'/archive?category=' + category.slug") {{ category.name }}
+      nuxt-link(:to="'/?category=' + category.slug") {{ category.name }}
+    li
+      nuxt-link(:to="'/?category=-'") 雑記
 
   h2 Tags
   ul
     li(v-for="tag in tags")
-      nuxt-link(:to="'/archive?tag=' + tag.name") {{ tag.name }} ({{tag.count}})
+      nuxt-link(:to="'/?tag=' + tag.name") {{ tag.name }} ({{tag.count}})
 
-  h2 Accounts
+  h2 Links
   ul
+    li(v-for="article in specialArticles")
+      nuxt-link(:to="'/-/' + article.slug") {{article.title}}
     li
       a(href="http://twitter.com/endaaman") Twitter
     li
       a(href="http://github.com/endaaman") GitHub
-
-  h2 Links
-  ul
-    li
-      nuxt-link(to="/archive") Archive
-    li(v-for="article in specialArticles")
-      nuxt-link(:to="'/-/' + article.slug") {{article.title}}
-    li(v-if="authorized")
-      nuxt-link(to="/file") File Management
-    li(v-if="!authorized")
-      nuxt-link(to="/login") Login
-    li(v-if="authorized")
-      nuxt-link(to="/logout") Logout
 </template>
 
 <script>

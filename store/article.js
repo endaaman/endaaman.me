@@ -35,23 +35,34 @@ export const getters = {
   getSpecialArticles(state) {
     return state.articles.filter(a => a.visiblity === 'special')
   },
-  getDefaultArticles(state) {
+  getNormalArticles(state) {
+    return state.articles.filter(a => a.visiblity !== 'special')
+  },
+  getHomeArticles(state) {
     return state.articles.filter(a => a.visiblity === 'default')
   },
-  getTags() {
+  getHomeArticlesByPage(state) {
+    return (page) => {
+      const OFFSET = 3
+      const results = []
+      const a = page * OFFSET
+      const b = a + OFFSET
+      const aa = state.articles.filter(a => a.visiblity !== 'special')
+      return aa.slice(a, b)
+    }
+  },
+  getTags(state) {
     const counts = {}
-    // for (const article of state.articles) {
-    //   const { tags } = article
-    //   for (const tag of tags) {
-    //     if (tag in counts) {
-    //       counts[tag] = counts[tag] + 1
-    //     } else {
-    //       counts[tag] = 1
-    //     }
-    //   }
-    // }
-
-    counts['hoge'] = 2
+    for (const article of state.articles) {
+      const { tags } = article
+      for (const tag of tags) {
+        if (tag in counts) {
+          counts[tag] = counts[tag] + 1
+        } else {
+          counts[tag] = 1
+        }
+      }
+    }
 
     const tags = []
     for (const key of Object.keys(counts)) {
@@ -60,6 +71,7 @@ export const getters = {
         count: counts[key],
       })
     }
+    tags.sort((a, b) => b.count - a.count)
     return tags
   }
 }
