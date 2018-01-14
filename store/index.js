@@ -28,13 +28,12 @@ export const mutations = {
 
 export const actions = {
   async nuxtServerInit ({ commit, dispatch }, { req }) {
-    if (!req.headers.cookie) {
-      return
-    }
-    const { token } = cookieParser.parse(req.headers.cookie)
-    if (token) {
-      commit('setToken', token)
-      await dispatch('checkAuth')
+    if (req.headers.cookie) {
+      const { token } = cookieParser.parse(req.headers.cookie)
+      if (token) {
+        commit('setToken', token)
+        await dispatch('checkAuth')
+      }
     }
     await Promise.all([
       dispatch('article/getArticles'),

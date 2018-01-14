@@ -4,8 +4,32 @@
 
 <template lang="pug">
 .container-article-edit
-  p edit
+  form
+    .field.is-horizontal
+      .field-label.is-normal
+        label.label Slug
+      .field-body
+        .field
+          .control.is-expanded
+            input.input(type="text" placeholder="Name")
 
+    .field.is-horizontal
+      .field-label.is-normal
+        label.label Dep
+      .field-body
+        .field.is-narrow
+          .control
+            .select.is-fullwidth
+              select
+                option hoge
+                option fuga
+                option piyo
+
+  div
+    pre {{ JSON.stringify(article, null, 2) }}
+
+  div
+    pre {{ JSON.stringify(category, null, 2) }}
 </template>
 
 <script>
@@ -16,16 +40,12 @@ function toSlug(s1, s2) {
 }
 
 export default {
+  layout: 'simple',
   async fetch ({ store, params, error }) {
-    await Promise.all([
-      store.dispatch('article/getArticles'),
-      store.dispatch('category/getCategories'),
-    ])
-
     const { s1, s2 } = params
     if (!store.getters['article/findArticle'](toSlug(s1, s2))) {
       error({
-        statusCode:404,
+        statusCode: 404,
         message: 'This article could not be found',
       })
     }

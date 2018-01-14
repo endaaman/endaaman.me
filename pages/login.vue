@@ -12,10 +12,9 @@
   .notification.is-danger(v-if="errorMessage")
     button.delete(@click="errorMessage = ''")
     | {{ errorMessage }}
-  p 俺用
   form(v-on:submit.prevent="performLogin")
     .field
-      label.lavel Password
+      label.lavel 俺用
       p.control
         input.input(type="password" placeholder="Password" ref="password")
     .field
@@ -26,7 +25,6 @@
 import { mapState } from 'vuex'
 
 export default {
-  layout: 'simple',
   data: () => ({
     isLoading: false,
     errorMessage: '',

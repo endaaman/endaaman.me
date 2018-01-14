@@ -17,11 +17,17 @@ module.exports = {
     ]
   },
   css: [
+    { src: 'mdi/css/materialdesignicons.css', lang: 'css'},
     { src: 'highlight.js/styles/vs.css', lang: 'css'},
     { src: '@/css/bulma.scss', lang: 'scss'},
     { src: '@/css/app.scss', lang: 'scss'},
   ],
    build: {
+    extend (config) {
+      // config.module.rules.push({
+      //   test: /\.(eot|woff|woff2|svg|ttf)([\?]?.*)$/, loader: "file-loader",
+      // })
+    },
     postcss: {
       plugins: {
         'postcss-custom-properties': false, // supress bulma warning
@@ -38,8 +44,5 @@ module.exports = {
   plugins: [
     '~plugins/components',
     '~plugins/my-components',
-  ],
-  modules: [
-    'nuxt-material-design-icons',
   ],
 }

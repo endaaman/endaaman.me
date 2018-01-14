@@ -19,8 +19,8 @@
     "highlight.js": "^9.12.0",
     "markdown-it-attrs": "^1.2.1",
     "markdown-it-container": "^2.0.0",
+    "mdi": "^2.1.19",
     "nuxt": "^1.0.0",
-    "nuxt-material-design-icons": "^1.0.4",
     "vue2-ace-editor": "0.0.3"
   },
   "devDependencies": {

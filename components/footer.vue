@@ -7,8 +7,9 @@ footer {
   line-height: 24px;
   font-size: 14px;
 
-  background-color: $black-ter;
-  color: $white-ter;
+  // background-color: $black-ter;
+  // color: $white-ter;
+  border-top: solid 1px $black-ter
 }
 
 .footer-content {
@@ -37,13 +38,11 @@ footer
         nuxt-link.nodeco-inline(to="/logout") Logout
       span.footer-left-text(v-if="authorized")
         nuxt-link.nodeco-inline(to="/file") File
-
       span.footer-right-text Built at {{ builtAt | date('YYYY-MM-DD') }}
 </template>
 
 
 <script>
-import fecha from 'fecha'
 import { mapState } from 'vuex'
 
 export default {

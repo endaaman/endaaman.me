@@ -2,30 +2,26 @@
 @import "../css/variables";
 
 .content.md-content {
-  // h2 {
-  //   margin: 48px 0;
-  //   line-height: 48px;
-  //   font-size: $size-4;
-  //   border-bottom: solid 2px $border;
-  // }
-
   h2 {
-    margin: 32px 0 16px;
-    padding: 16px;
+    margin: 48px 0 24px;
+    line-height: 48px;
     font-size: $size-4;
-    border-left: solid 2px $border;
-    color: $black-ter;
+    border-bottom: solid 2px $border;
+    font-weight: bold;
   }
 
   h3 {
-    margin: 32px 0 16px;
-    font-size: $size-5;
-    color: #FDABCD;
+    margin: 24px 0;
+    padding: 16px;
+    font-size: $size-6;
+    border-left: solid 2px $black-ter;
+    font-weight: bold;
+    // color: $black-ter;
   }
 
   p {
-    line-height: 1.5rem;
-    margin: 1.5rem 0;
+    line-height: 24px;
+    margin: 24px 0;
   }
   .fl {
     float: left;

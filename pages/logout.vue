@@ -17,7 +17,6 @@
 
 <script>
 export default {
-  layout: 'simple',
   data: () => ({
     loading: false,
     errorMessage: '',
