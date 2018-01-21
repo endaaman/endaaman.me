@@ -6,11 +6,8 @@ $breakpoint: 720px;
 @media screen and (min-width: $breakpoint) {
   .row {
     display: flex;
-    // flex-direction: row-reverse;
     width: 100%;  // this is needed for horizontal grow
     height: 100vh;
-
-    // flex-grow: 2;
   }
 
   .col-main {
@@ -29,9 +26,7 @@ $breakpoint: 720px;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-
-    // height: 100%;
-    background-color: $black-ter;
+    height: 100%;
   }
 
   .hamburger {
@@ -72,7 +67,7 @@ $sidebar-width: 320px;
   z-index: 100;
 
   background-color: $black-ter;
-  opacity: .3;
+  opacity: .7;
 }
 
 .overlay-active {
@@ -85,22 +80,23 @@ $sidebar-width: 320px;
 }
 
 
-$hm-size: 32px;
-$hm-x: 12px;
+$hm-size: 40px;
+$hm-x: 24px;
+$hm-y: 24px;
 .hamburger {
   z-index: 101;
   content: $hm-size;
   position: fixed;
-  top: ($my-header-hight - $hm-size) / 2;
   right: $hm-x;
+  top: $hm-y;
   width: $hm-size;
   height: $hm-size;
   border: 1px solid $black-ter;
 }
 
 
-$bar-y: 7px;
-$bar-width: 22px;
+$bar-y: 8px;
+$bar-width: 24px;
 $bar-weight: 2px;
 
 .hamburger-bar {
@@ -115,11 +111,17 @@ $bar-weight: 2px;
 }
 
 .hamburger-is-times {
+  border-color: $white-ter;
+  .hamburger-bar {
+    background-color: $white-ter;
+  }
+
   .hamburger-bar.hamburger-bar1 {
     transform: rotate(45deg);
   }
 
   .hamburger-bar.hamburger-bar2 {
+    transform: translateX(20%);
     opacity: 0;
   }
 
@@ -134,6 +136,7 @@ $bar-weight: 2px;
   }
 
   .hamburger-bar.hamburger-bar2 {
+    transform: translateX(0);
     opacity: 1;
   }
 
@@ -152,35 +155,41 @@ $bar-weight: 2px;
 </style>
 
 <template lang="pug">
-.root
+.row
   .overlay(@click="closeSidebar", :class="{ 'overlay-active': isSidebarActive }", ref="overlay")
-  // my-header
-  .row
-    a.hamburger(:class="{ 'hamburger-is-times': isSidebarActive, 'hamburger-is-bars': !isSidebarActive }", @click="toggleSidebar")
-      .hamburger-bar.hamburger-bar1
-      .hamburger-bar.hamburger-bar2
-      .hamburger-bar.hamburger-bar3
-    .col-sidebar(:class="{ 'col-sidebar-active': isSidebarActive }")
-      my-sidebar
-    .col-main
-      .section
-        nuxt
-    // my-footer
+  a.hamburger(:class="{ 'hamburger-is-times': isSidebarActive, 'hamburger-is-bars': !isSidebarActive }", @click="toggleSidebar")
+    .hamburger-bar.hamburger-bar1
+    .hamburger-bar.hamburger-bar2
+    .hamburger-bar.hamburger-bar3
+  .col-sidebar(:class="{ 'col-sidebar-active': isSidebarActive }")
+    my-sidebar
+  .col-main(:class="{ 'noscroll': isSidebarActive }")
+    nuxt
+  // my-footer
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import debounce from 'debounce'
 
+
+const breakpoint = 720
+
 export default {
-  data: () => ({
-    isSidebarActive: false,
-  }),
+  created() {
+    if (!process.isServer) {
+      this.$store.dispatch('nuxtClientInit')
+    }
+  },
   mounted() {
     window.addEventListener('resize', debounce(this.onResize, 100))
+    this.onResize()
   },
   methods: {
     onResize() {
       this.closeSidebar()
+      const isSmall = !window.matchMedia(`(min-width: ${breakpoint}px)`).matches
+      this.$store.dispatch('layout/setIsSmallScrern', isSmall)
     },
     toggleSidebar() {
       if (this.isSidebarActive) {
@@ -190,15 +199,18 @@ export default {
       }
     },
     closeSidebar() {
-      this.isSidebarActive = false
+      this.$store.dispatch('layout/closeSidebar')
       document.documentElement.classList.remove('noscroll')
       document.body.classList.remove('noscroll')
     },
     activateSidebar() {
-      this.isSidebarActive = true
+      this.$store.dispatch('layout/openSidebar')
       document.documentElement.classList.add('noscroll')
       document.body.classList.add('noscroll')
     },
+  },
+  computed: {
+    ...mapState('layout', ['isSidebarActive', 'isSmallScreen']),
   }
 }
 </script>

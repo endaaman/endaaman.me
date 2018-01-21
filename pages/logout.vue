@@ -8,7 +8,7 @@
 </style>
 
 <template lang="pug">
-.container-logout
+.container-logout.section
   p さようなら、俺
   form(v-on:submit.prevent="performLogout")
     .field

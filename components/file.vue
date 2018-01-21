@@ -74,7 +74,7 @@
             span /
           span(v-else) {{ file.name }}
         td {{ formatByteSize(file.size) }}
-        td.is-hidden-touch {{ formatTime(file.mtime) }}
+        td.is-hidden-touch {{ file.mtime | date('YYYY年MM月DD日 HH時mm分') }}
 
 </template>
 
@@ -195,9 +195,6 @@ export default {
         suffix = dir + '/' + dirName
       }
       return '/file?q=' + suffix
-    },
-    formatTime(time) {
-      return fecha.format(new Date(time), 'YYYY年MM月DD日 HH時mm分')
     },
     formatByteSize(size, precision = 1) {
       if (isNaN(parseFloat(size)) || !isFinite(size)) {

@@ -39,8 +39,6 @@ $breakpoint: 720px;
 <template lang="pug">
 .root
   my-header
-  .container
-    .section
-      nuxt
+  nuxt
   my-footer
 </template>

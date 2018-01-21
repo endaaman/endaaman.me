@@ -1,20 +1,20 @@
 <style scoped lang="scss">
 @import "../css/variables";
 
+
 .sidebar {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
-  flex: 1;
-
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
 
-  background-color: $black-ter;
   color: $white-ter;
 }
 
-.section {
+.sidebar-main {
+  background-color: $black-ter;
+  padding: 24px;
   flex: 1;
   flex-grow: 1;
 }
@@ -28,12 +28,60 @@ h2 {
   border-bottom: solid 2px $white-ter;
 }
 
-ul.links {
-  margin-bottom: 36px;
+.category-title {
+  user-select: none;
+  margin-top: 16px;
   li {
-    line-height: 24px;
-    &:last-child {
-      margin-bottom: 0;
+    padding-left: 16px;
+    text-indent: -16px;
+  }
+  & > a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    &:hover {
+      font-weight: bold;
+    }
+  }
+}
+
+.articles-by-category {
+  margin-left: 16px;
+  margin-right: 0;
+  li {
+    margin: 12px 0;
+    a {
+      color: $white-ter;
+      &:hover {
+        text-decoration: underline;
+      }
+      &.is-active {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.tag.is-inversed {
+  background-color: transparent;
+  border-color: $white-ter;
+  color: $white-ter;
+  &:hover {
+    background-color: $white-ter;
+    color: $black-ter;
+  }
+}
+
+
+.special-title {
+  user-select: none;
+  margin-top: 16px;
+  & > a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    &:hover {
+      font-weight: bold;
     }
   }
 }
@@ -61,8 +109,8 @@ ul.links {
   background-color: $black-ter;
   border: solid 1px $white-ter;
   &:hover {
-    border-color: $primary;
-    color: $primary;
+    background-color: $white-ter;
+    color: $black-ter;
   }
 }
 
@@ -70,10 +118,11 @@ ul.links {
   margin-bottom: 16px;
 }
 
-footer {
-  margin-top: auto 0;
-  padding: 12px 24px;
+.sidebar-footer  {
+  margin-top: auto;
+  padding: 48px 24px 12px;
   font-size: $size-7;
+  background-color: $black-ter;
 }
 
 .footer-right-text {
@@ -86,30 +135,40 @@ footer {
   margin-right: 16px;
   font-style: italic;
 }
+
+.is-primay {
+  color: $primary;
+}
 </style>
 
 <template lang="pug">
 aside.sidebar
-  .section
+  .sidebar-main
     my-logo
 
     h2 Category
-    ul.links
-      li(v-for="category in categories")
-        nuxt-link(:to="'/?category=' + category.slug") {{ category.name }}
-      li
-        nuxt-link(:to="'/?category=-'") 雑記
+    .category-title(v-for="cat in categoryItems")
+      a.nodeco-inline(@click="cat.open = !cat.open")
+        i.mdi.is-primay(:class="{ 'mdi-chevron-right': !cat.open, 'mdi-chevron-down': cat.open }")
+        span(:class="{ 'has-text-weight-bold': cat.open }") {{ cat.name }}
+      ul.articles-by-category(v-if="cat.open")
+        li(v-for="a in getArticlesByParent(cat.slug)")
+          span.is-primay ・
+          nuxt-link(:to="a.getHref()", :class="{ 'is-active': a.getHref() === $route.path }") {{ a.title }}
 
     h2 Tags
-    ul.links
-      li(v-for="tag in tags")
-        nuxt-link(:to="'/?tag=' + tag.name") {{ tag.name }} ({{tag.count}})
+    .tags
+      nuxt-link.tag.is-white.is-inversed(v-for="tag in tags", :to="'/?tag=' + tag.name", :key="tag.name")
+        | {{ tag.name }} ({{tag.count}})
 
-    ul.links
-      li(v-for="article in specialArticles")
-        nuxt-link(:to="'/-/' + article.slug") {{article.title}}
+    h2 Links
+    .special-title(v-for="a in specialArticles")
+      nuxt-link.nodeco-inline(:to="a.getHref()")
+        i.mdi.mdi-rhombus-outline.is-primay
+        | &#x20;
+        span {{ a.title }}
 
-  footer
+  footer.sidebar-footer
     .field
       p.control.has-icons-left
         input.input.is-rounded(type="text", placeholder="Seach...")
@@ -125,7 +184,10 @@ aside.sidebar
         a.social-link.is-small(href="http://github.com/endaaman")
           i.mdi.mdi-github-face
 
-    span.footer-left-text Built at {{ builtAt | date('YYYY-MM-DD') }}
+    span.footer-left-text
+      | Built with&#x20;
+      i.mdi.mdi-heart.is-primay
+      | &#x20;at {{ builtAt | date('YYYY-MM-DD') }}
 
     span.footer-right-text(v-if="!authorized")
       nuxt-link.nodeco-inline(to="/login") Login
@@ -138,21 +200,64 @@ aside.sidebar
 <script>
 import { mapState, mapGetters } from 'vuex'
 
+
 export default {
+  mounted() {
+    this.$el.addEventListener('click', (event) => {
+      if (event.target.href && this.isSmallScreen) {
+        this.$store.dispatch('layout/closeSidebar')
+      }
+    })
+  },
+  data() {
+    return {
+      categoryItems: [],
+    }
+  },
+  created() {
+    const cc = this.categories.map((c) => ({
+      name: c.name,
+      slug: c.slug,
+      open: false,
+    })).concat([{
+      name: '雑記',
+      slug: null,
+      open: false,
+    }])
+
+    const sp = this.$route.path.split('/')
+    if (sp.length > 2) {
+      const slug = sp[1] === '-' ? null : sp[1]
+      for (const c of cc) {
+        if (c.slug === slug) {
+          c.open = true
+        }
+      }
+    }
+    this.categoryItems = cc
+  },
   computed: {
     ...mapState([
-      'authorized'
+      'authorized',
+    ]),
+    ...mapState('layout', [
+      'isSmallScreen',
     ]),
     ...mapState('category', [
       'categories',
     ]),
     ...mapGetters('article', {
-      specialArticles: 'getSpecialArticles',
+      specialArticles: 'specialArticles',
       tags: 'getTags',
     }),
     builtAt() {
       return new Date(process.env.builtAt)
-    }
+    },
   },
+  methods: {
+    getArticlesByParent(parent) {
+      return this.$store.getters['article/getArticlesByParent'](parent)
+    },
+  }
 }
 </script>

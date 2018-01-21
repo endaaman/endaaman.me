@@ -11,12 +11,18 @@
   }
 
   h3 {
-    margin: 24px 0;
+    margin: 24px 0 24px;
     padding: 16px;
     font-size: $size-6;
     border-left: solid 2px $black-ter;
     font-weight: bold;
     // color: $black-ter;
+  }
+
+  h4 {
+    margin: 24px 0 24px;
+    font-size: $size-6;
+    font-weight: bold;
   }
 
   p {
@@ -49,6 +55,7 @@
 import hljs from 'highlight.js'
 import mdItAttrs from 'markdown-it-attrs'
 import mdItContainer from 'markdown-it-container'
+import mdItMultimdTable from 'markdown-it-multimd-table'
 
 export default {
   data: () => ({
@@ -58,8 +65,15 @@ export default {
       breaks: false,
       plugins: [
         mdItAttrs,
+        mdItMultimdTable,
       ],
       override(md) {
+        // const org = md.renderer.rules.table_open
+        // md.renderer.rules.table_open = (...args) => {
+        //   const token = args[0][args[1]]
+        //   token.attrs = [['class', 'variable-class']]
+        //   return org(...args)
+        // }
         // md.use(mdItContainer, 'spoiler', {
         //   validate(params) {
         //   },

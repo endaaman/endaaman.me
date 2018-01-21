@@ -7,9 +7,9 @@ footer {
   line-height: 24px;
   font-size: 14px;
 
-  // background-color: $black-ter;
-  // color: $white-ter;
-  border-top: solid 1px $black-ter
+  background-color: $black-ter;
+  color: $white-ter;
+  // border-top: solid 1px $black-ter
 }
 
 .footer-content {

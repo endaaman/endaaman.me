@@ -20,6 +20,7 @@ module.exports = {
     { src: 'mdi/css/materialdesignicons.css', lang: 'css'},
     { src: 'highlight.js/styles/vs.css', lang: 'css'},
     { src: '@/css/bulma.scss', lang: 'scss'},
+    { src: '@/css/katex.scss', lang: 'scss'},
     { src: '@/css/app.scss', lang: 'scss'},
   ],
    build: {
@@ -42,6 +43,7 @@ module.exports = {
     }
   },
   plugins: [
+    { src: '~plugins/ga', ssr: false },
     '~plugins/components',
     '~plugins/my-components',
   ],

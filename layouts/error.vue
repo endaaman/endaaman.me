@@ -9,7 +9,7 @@
 </style>
 
 <template lang="pug">
-.container-error
+.container-error.section
   h1 {{error.statusCode}}
   p {{error.message}}
   nuxt-link(to="/") Home
@@ -17,7 +17,6 @@
 
 <script>
 export default {
-  layout: 'simple',
   props: ['error'],
 }
 </script>

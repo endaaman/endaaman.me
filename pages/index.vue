@@ -42,31 +42,33 @@
 </style>
 
 <template lang="pug">
-.container-archive
-  nav.breadcrumb(aria-label="breadcrumbs", v-if="qTag || qCategory")
-    ul
-      li
-        nuxt-link(to="/") Home
-      li(v-if="qCategory")
-        nuxt-link(:to="'/archive?category=' + qCategory")
-          | {{ qCategory === '-' ? '雑記' : qCategory }}
+.container-home.container
+  .section
+    nav.breadcrumb(aria-label="breadcrumbs")
+      ul
+        li
+          nuxt-link(to="/") Home
+        li(v-if="!qCategory && !qTag")
+          a(disabled)
+        li(v-if="qCategory")
+          nuxt-link(:to="'/archive?category=' + qCategory")
+            | {{ qCategory === '-' ? '雑記' : qCategory }}
+        li(v-if="qTag")
+          nuxt-link(:to="'/?tag=' + qTag") タグ: {{ qTag }}
 
-      li(v-if="qTag")
-        nuxt-link(:to="'/?tag=' + qTag") タグ: {{ qTag }}
-
-  nuxt-link.article-item(v-for="article in articles", :key="article.slug", :to="getHref(article)")
-    .article-title {{article.title}}
-    .article-subtitle {{article.digest}}
-    .article-sub
-      .article-date
-        | {{ article.date | date}}
-      .article-tags
-        .tags
-          .tag.is-white(
-            v-for="tag in article.tags",
-            :key="tag",
-            @click.prevent="navigate"
-            :data-href="'/?tag=' + tag") {{ tag }}
+    nuxt-link.article-item(v-for="a in articles", :key="a.slug", :to="a.getHref()")
+      .article-title {{ a.title }}
+      .article-subtitle {{ a.digest }}
+      .article-sub
+        .article-date
+          | {{ a.date | date }}
+        .article-tags
+          .tags
+            .tag.is-white(
+              v-for="tag in a.tags",
+              :key="tag",
+              @click.prevent="navigate"
+              :data-href="'/?tag=' + tag") {{ tag }}
 </template>
 
 <script>
@@ -85,7 +87,7 @@ export default {
   },
   computed: {
     ...mapGetters('article', {
-      allArticles: 'getNormalArticles',
+      allArticles: 'normalArticles',
     }),
     ...{
       qCategory() {
@@ -100,16 +102,9 @@ export default {
         if (tag) {
           articles = articles.filter((a) => a.tags.includes(tag))
         }
-        if (category === '-') {
-          articles = articles.filter((a) => a.slug.split('/').length === 1 )
-        } else if (category) {
-          articles = articles.filter((a) => {
-            const splitted = a.slug.split('/')
-            if (splitted.length !== 2) {
-              return false
-            }
-            return splitted[0] === category
-          })
+        if (category) {
+          const parent = category === '-' ? null : category
+          articles = articles.filter((a) => a.parent === parent )
         }
         return articles
       }

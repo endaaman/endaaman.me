@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
-    "start": "nuxt start",
+    "start": "HOST=0.0.0.0 nuxt start",
     "generate": "nuxt generate"
   },
   "dependencies": {
@@ -17,8 +17,10 @@
     "debounce": "^1.1.0",
     "fecha": "^2.3.2",
     "highlight.js": "^9.12.0",
+    "katex": "^0.9.0-beta",
     "markdown-it-attrs": "^1.2.1",
     "markdown-it-container": "^2.0.0",
+    "markdown-it-multimd-table": "^3.1.0",
     "mdi": "^2.1.19",
     "nuxt": "^1.0.0",
     "vue2-ace-editor": "0.0.3"
@@ -28,5 +30,10 @@
     "pug": "^2.0.0-rc.4",
     "pug-loader": "^2.3.0",
     "sass-loader": "^6.0.6"
+  },
+  "config": {
+    "nuxt": {
+      "host": "0.0.0.0"
+    }
   }
 }

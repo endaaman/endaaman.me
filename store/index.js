@@ -2,6 +2,10 @@ import axios from 'axios'
 import cookieParser from 'cookie'
 import browserCookie from 'browser-cookies'
 
+
+export const plugins = [
+]
+
 export const state = () => ({
   authorized: false,
   token: null,
@@ -39,6 +43,9 @@ export const actions = {
       dispatch('article/getArticles'),
       dispatch('category/getCategories'),
     ])
+  },
+  nuxtClientInit({ commit }) {
+    commit('article/wrap')
   },
   async login({ getters, commit, dispatch }, { password }) {
     let error = null

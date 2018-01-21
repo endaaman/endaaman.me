@@ -1,3 +1,5 @@
+import { Article } from '../models'
+
 export const state = () => ({
   articles: [],
   isFetched: false,
@@ -5,8 +7,11 @@ export const state = () => ({
 
 export const mutations = {
   setArticles(state, items) {
-    state.articles = items
+    state.articles = items.map((a) => new Article(a))
     state.isFetched = true
+  },
+  wrap(state, items) {
+    state.articles = state.articles.map((a) => new Article(a))
   },
 }
 
@@ -24,31 +29,28 @@ export const actions = {
 }
 
 export const getters = {
-  hasArticles(state) {
-    return state.articles.length > 0
-  },
-  findArticle(state) {
-    return (slug) => {
-      return state.articles.find(a => a.slug === slug)
-    }
-  },
-  getSpecialArticles(state) {
+  specialArticles(state) {
     return state.articles.filter(a => a.visiblity === 'special')
   },
-  getNormalArticles(state) {
+  normalArticles(state) {
     return state.articles.filter(a => a.visiblity !== 'special')
   },
-  getHomeArticles(state) {
+  homeArticles(state) {
     return state.articles.filter(a => a.visiblity === 'default')
   },
-  getHomeArticlesByPage(state) {
-    return (page) => {
-      const OFFSET = 3
-      const results = []
-      const a = page * OFFSET
-      const b = a + OFFSET
-      const aa = state.articles.filter(a => a.visiblity !== 'special')
-      return aa.slice(a, b)
+  getArticle(state) {
+    return (parent, slug) => {
+      return state.articles.find(a => a.parent === parent && a.slug === slug)
+    }
+  },
+  getArticlesByParent(state) {
+    return (parent) => {
+      return state.articles.filter(a => {
+        if (!['default'].includes(a.visiblity)) {
+          return false
+        }
+        return a.parent === parent
+      })
     }
   },
   getTags(state) {
@@ -71,7 +73,13 @@ export const getters = {
         count: counts[key],
       })
     }
-    tags.sort((a, b) => b.count - a.count)
+    tags.sort((a, b) => {
+      const diff = b.count - a.count
+      if (diff !== 0) {
+        return diff
+      }
+      return a.name.localeCompare(b.name)
+    })
     return tags
   }
 }

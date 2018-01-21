@@ -8,7 +8,7 @@
 </style>
 
 <template lang="pug">
-.container-login
+.container-login.section
   .notification.is-danger(v-if="errorMessage")
     button.delete(@click="errorMessage = ''")
     | {{ errorMessage }}

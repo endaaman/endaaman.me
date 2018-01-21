@@ -4,8 +4,8 @@
 $logo-size: 140px;
 $accent-color: $primary;
 
-$wait: 1s;
-$t: .5s;
+$wait: .5s;
+$t: .7s;
 
 a.logo-container {
   color: inherit;
@@ -17,6 +17,7 @@ a.logo-container {
   width: $logo-size;
   margin: 24px auto;
 
+  user-select: none;
   &:hover {
     .logo {
       background-color: $accent-color;
@@ -28,16 +29,15 @@ a.logo-container {
   position: absolute;
   height: $logo-size;
   width: $logo-size;
-  // border-radius: $logo-size / 2;
   background-color: $white-ter;
+  transition: background-color ease 2s;
 
-  animation:
-    wait-rotated-scaled $wait,
-    grow $t ease $wait,
-    wait-rotated $t ease $wait+$t,
-    rotate $t ease $wait+$t*2;
-
-  transition: background-color ease 1s;
+  transform: rotate(-135deg) scale(0);
+  .animated-show & {
+    animation:
+      grow $t ease $wait normal forwards,
+      rotate $t ease $wait+$t normal forwards;
+  }
 }
 
 .logo-inner {
@@ -48,20 +48,12 @@ a.logo-container {
   width: $logo-size - 4px;
   background-color: $black-ter;
 
-  animation:
-    wait-rotated-scaled $wait+$t*0.5,
-    grow $t*1.5 ease $wait+$t*0.5,
-    rotate $t ease $wait+$t*2;
-}
-
-
-@keyframes wait-rotated-scaled {
-  from { transform: rotate(-45deg) scale(0); }
-  to { transform: rotate(-45deg) scale(0); }
-}
-@keyframes wait-rotated {
-  from { transform: rotate(-45deg) scale(1); }
-  to { transform: rotate(-45deg) scale(1); }
+  transform: rotate(-135deg) scale(0);
+  .animated-show & {
+    animation:
+      grow $t*0.8 ease $wait+$t*0.2 normal forwards,
+      rotate $t ease $wait+$t normal forwards;
+  }
 }
 
 @keyframes grow {
@@ -73,57 +65,78 @@ a.logo-container {
   to { transform: rotate(0deg) scale(1); }
 }
 
-
 .logo-title {
   line-height: $logo-size;
   text-align: center;
-
-  animation-name: delayedFadeIn;
-  animation-duration: $t*2;
-  animation-delay: $t*6;
-  animation-fill-mode: both;
+  transform: rotate(0deg) scale(1);
 }
 
-.accent {
+.accent-char {
   color: $primary;
-  // color: $white-ter;
-  // animation-name: delayedColor;
-  // animation-duration: $t;
-  // animation-delay: $t*7;
-  // animation-fill-mode: both;
+  opacity: 0;
+  .animated-show & {
+    animation: fadein $t*2 ease $wait+$t*3 normal both;
+  }
 }
 
 .normal-char {
   color: $white-ter;
-  animation-name: delayedColor;
-  animation-direction: reverse;
-  animation-duration: $t;
-  animation-delay: $t*7;
-  animation-fill-mode: both;
+  opacity: 0;
+  .animated-show & {
+    animation: fadein $t*2 ease $wait+$t*3.2 normal both;
+  }
 }
 
-@keyframes delayedFadeIn {
+@keyframes fadein {
   from { opacity: 0; }
   to { opacity: 1; }
-}
-@keyframes delayedColor {
-  from { color: $white-ter; }
-  to { color: $accent-color; }
 }
 
 </style>
 
 <template lang="pug">
-nuxt-link.logo-container(:to="'/'")
+nuxt-link.logo-container(ref="logo", :to="'/'", :class="{ 'animated-show': isAnimated }")
   .logo
   .logo-inner
   .logo-title
-    span.accent E
+    span.accent-char E
     span.normal-char NDAAMAN
-    span.accent .
+    span.accent-char .
     span.normal-char ME
 </template>
 
-
 <script>
+import { mapState } from 'vuex'
+
+export default {
+  data() {
+    return {
+      isAnimated: false ,
+    }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      if (!this.isSmallScreen) {
+        this.isAnimated = true
+      }
+    })
+  },
+  watch: {
+    isSidebarActive(flag) {
+      if (flag) {
+        this.isAnimated = true
+      }
+    },
+    isSmallScreen(flag) {
+      if (!cur) {
+        this.isAnimated = true
+      }
+    },
+  },
+  computed: {
+    ...mapState('layout', [
+      'isSmallScreen', 'isSidebarActive',
+    ]),
+  }
+}
 </script>

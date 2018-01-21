@@ -16,7 +16,7 @@
 </style>
 
 <template lang="pug">
-.container-file
+.section
   nav.breadcrumb(aria-label="breadcrumbs")
     ul
       li
