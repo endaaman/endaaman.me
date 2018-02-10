@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@endaaman/vue-markdown": "^2.2.4",
+    "autosize": "^4.0.0",
     "axios": "^0.17.1",
     "browser-cookies": "^1.2.0",
     "buefy": "^0.6.2",

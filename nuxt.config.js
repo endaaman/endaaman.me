@@ -17,11 +17,11 @@ module.exports = {
     ]
   },
   css: [
-    { src: 'mdi/css/materialdesignicons.css', lang: 'css'},
-    { src: 'highlight.js/styles/vs.css', lang: 'css'},
-    { src: '@/css/bulma.scss', lang: 'scss'},
-    { src: '@/css/katex.scss', lang: 'scss'},
-    { src: '@/css/app.scss', lang: 'scss'},
+    { src: 'mdi/css/materialdesignicons.css', lang: 'css' },
+    { src: 'highlight.js/styles/vs.css', lang: 'css' },
+    { src: '@/css/bulma.scss', lang: 'scss' },
+    { src: '@/css/katex.scss', lang: 'scss' },
+    { src: '@/css/app.scss', lang: 'scss' },
   ],
    build: {
     extend (config) {

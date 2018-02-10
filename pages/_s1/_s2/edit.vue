@@ -4,56 +4,88 @@
 
 <template lang="pug">
 .container-article-edit.section
-  form
-    .field.is-horizontal
-      .field-label.is-normal
-        label.label Slug
-      .field-body
-        .field
-          .control.is-expanded
-            input.input(type="text" placeholder="Name")
+  b-tabs(v-model="activeTab", :animated="false")
+    b-tab-item(label="Options")
+      form
+        b-field(label="Slug", horizontal)
+          b-input(v-model="article.slug", placeholder="Slug", expanded)
 
-    .field.is-horizontal
-      .field-label.is-normal
-        label.label Dep
-      .field-body
-        .field.is-narrow
-          .control
-            .select.is-fullwidth
-              select
-                option hoge
-                option fuga
-                option piyo
+        b-field(label="Title", horizontal)
+          b-input(v-model="article.title", placeholder="Title", expanded)
 
-  div
-    pre {{ JSON.stringify(article, null, 2) }}
+        b-field(label="Digest", horizontal)
+          b-input(v-model="article.digest", placeholder="Digest", expanded)
 
-  hr
+        b-field(label="Category", horizontal)
+          b-select(placeholder="Select a topic", v-model="article.parent")
+            option(
+              v-for="c in categories"
+              :value="c.slug"
+              :key="c.slug"
+            ) {{ c.name }}
 
-  div
-    pre {{ JSON.stringify(category, null, 2) }}
+        b-field(label="Tags", horizontal)
+          b-taginput(
+            v-model="article.tags"
+            icon="label"
+            placeholder="Tags")
+
+        b-field(label="Aliases", horizontal)
+          b-taginput(
+            v-model="article.aliases"
+            icon="label"
+            placeholder="Aliases")
+
+        b-field(label="Date", horizontal)
+          b-datepicker(
+            inline,
+            :date-parser="dateParser",
+            :date-formatter="dateFormatter",
+            placeholder="Pick a date",
+            icon="calendar-today")
+
+    b-tab-item(label="Content")
+        b-field(label="Content", horizontal)
+          b-input(
+            ref="textarea"
+            type="textarea",
+            placeholder="Content")
+
+  p
+    // pre {{ JSON.stringify(article, null, 2) }}
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import autosize from 'autosize'
+import fecha from 'fecha'
+
 
 export default {
   layout: 'simple',
-  async fetch ({ store, params, error }) {
-    const { s1, s2 } = params
-    const parent = s1 === '-' ? null : s1
-    if (!store.getters['article/getArticle'](parent, s2)) {
-      error({
-        statusCode: 404,
-        message: 'This article could not be found',
-      })
+  created() {
+    // this.article = {...this.baseArticle}
+    this.article = this.baseArticle.copy()
+  },
+  mounted() {
+    autosize(this.$refs.textarea.$el.querySelector('textarea'))
+  },
+  data() {
+    return {
+      article: {},
+      activeTab: 0,
     }
   },
-  validate({ store }) {
-    return store.state.authorized
+  validate({ store, params }) {
+    if (!store.state.authorized) {
+      return false
+    }
+    const { s1, s2 } = params
+    const parent = s1 === '-' ? null : s1
+    return store.getters['article/getArticle'](parent, s2)
   },
   computed: {
-    article() {
+    baseArticle() {
       const { s1, s2 } = this.$route.params
       const parent = s1 === '-' ? null : s1
       return this.$store.getters['article/getArticle'](parent, s2)
@@ -70,6 +102,17 @@ export default {
       const category = this.$store.getters['category/findCategory'](slug)
       return category || { slug, name: slug }
     },
+    ...mapState('category', ['categories'])
   },
+  methods: {
+    dateParser(date) {
+      console.log(date)
+      return new Date(date)
+    },
+    dateFormatter(date) {
+      console.log(date)
+      return fecha.format(date, 'YYYY-MM-DD')
+    }
+  }
 }
 </script>

@@ -40,6 +40,7 @@ export const getters = {
   },
   getArticle(state) {
     return (parent, slug) => {
+      // return state.articles.find(a => matchParent(parent) && a.slug === slug)
       return state.articles.find(a => a.parent === parent && a.slug === slug)
     }
   },
@@ -65,7 +66,6 @@ export const getters = {
         }
       }
     }
-
     const tags = []
     for (const key of Object.keys(counts)) {
       tags.push({

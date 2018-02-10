@@ -178,6 +178,7 @@ const breakpoint = 720
 export default {
   created() {
     if (!process.isServer) {
+      console.log('cli init')
       this.$store.dispatch('nuxtClientInit')
     }
   },

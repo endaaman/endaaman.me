@@ -84,15 +84,10 @@
 import { mapState } from 'vuex'
 
 export default {
-  async fetch ({ store, params, error }) {
+  validate({ store, params }) {
     const { s1, s2 } = params
     const parent = s1 === '-' ? null : s1
-    if (!store.getters['article/getArticle'](parent, s2)) {
-      error({
-        statusCode:404,
-        message: 'This article could not be found',
-      })
-    }
+    return store.getters['article/getArticle'](parent, s2)
   },
   computed: {
     relative() {
@@ -101,20 +96,18 @@ export default {
     },
     article() {
       const { s1, s2 } = this.$route.params
-    const parent = s1 === '-' ? null : s1
+      const parent = s1 === '-' ? null : s1
       return this.$store.getters['article/getArticle'](parent, s2)
     },
     category() {
-      const splitted = this.article.slug.split('/')
-      if (splitted.length < 2) {
+      const { parent } = this.article
+      if (!parent) {
         return {
           slug: '-',
           name: '雑記',
         }
       }
-      const slug = splitted[0]
-      const category = this.$store.getters['category/findCategory'](slug)
-      return category || { slug, name: slug }
+      return this.$store.getters['category/findCategory'](parent)
     },
     ...mapState([
       'authorized',

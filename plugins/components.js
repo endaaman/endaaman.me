@@ -7,7 +7,18 @@ Vue.component('vue-markdown', VueMarkdown)
 // Vue.component('vue-editor', AceEditor)
 
 
-const components = ['Checkbox', 'Tag', 'Pagination']
+const components = [
+  'Checkbox',
+  'Datepicker',
+  'Field',
+  'Input',
+  'Pagination',
+  'Select',
+  'TabItem',
+  'Tabs',
+  'Tag',
+  'Taginput',
+]
 for (const c of components) {
   Vue.component(Buefy[c].name, Buefy[c])
 }

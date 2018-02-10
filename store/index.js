@@ -4,6 +4,8 @@ import browserCookie from 'browser-cookies'
 
 
 export const plugins = [
+  function(store) {
+  },
 ]
 
 export const state = () => ({
