@@ -17,7 +17,7 @@ $input-hover-border-color: $grey;
 $button-border-color: $black-ter;
 $button-hover-border-color: $grey;
 
-$text: $black-ter;
+$text: $grey-darker;
 
 $weight-medium : 400;
 $weight-semibold : 400;
@@ -46,4 +46,14 @@ $family-code: $family-monospace;
 $body-primary: $family-sans-serif;
 
 
-$my-header-hight: 72px;
+$breakpoint: 720px;
+
+$header-title-height: 24px;
+$header-sub-height: 16px;
+$header-padding: 16px;
+$header-margin: 8px;
+$header-height: $header-sub-height + $header-title-height + $header-padding * 2 + $header-margin;
+
+// $sidebar-bg: $grey-darker;
+// $sidebar-bg: $grey-darker;
+$sidebar-bg: $black-ter;

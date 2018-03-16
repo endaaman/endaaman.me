@@ -9,6 +9,8 @@
 - search
 - google analytics
 - comment
+- next article
+- related article(same category, same tags)
 
 - file preview
 - file editor

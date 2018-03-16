@@ -1,8 +1,6 @@
 <style scoped lang="scss">
 @import "../css/variables";
 
-$breakpoint: 720px;
-
 @media screen and (min-width: $breakpoint) {
   .row {
     display: flex;
@@ -28,10 +26,6 @@ $breakpoint: 720px;
     min-height: 100vh;
     height: 100%;
   }
-
-  .hamburger {
-    display: none;
-  }
 }
 
 $sidebar-width: 320px;
@@ -48,12 +42,8 @@ $sidebar-width: 320px;
 
     overflow-y: auto;
     background-color: $white-ter;
-    transition: left ease .1s;
+    transition: left .1s ease;
     z-index: 101;
-  }
-
-  .hamburger {
-    display: block;
   }
 }
 
@@ -67,7 +57,7 @@ $sidebar-width: 320px;
   z-index: 100;
 
   background-color: $black-ter;
-  opacity: .7;
+  opacity: .5;
 }
 
 .overlay-active {
@@ -75,96 +65,22 @@ $sidebar-width: 320px;
 }
 
 .col-sidebar-active {
-  box-shadow: 0 0 8px gray;
+  box-shadow: 0 0 8px $black;
+  transition: left .1s ease .2s;
   left: 0;
-}
-
-
-$hm-size: 40px;
-$hm-x: 24px;
-$hm-y: 24px;
-.hamburger {
-  z-index: 101;
-  content: $hm-size;
-  position: fixed;
-  right: $hm-x;
-  top: $hm-y;
-  width: $hm-size;
-  height: $hm-size;
-  border: 1px solid $black-ter;
-}
-
-
-$bar-y: 8px;
-$bar-width: 24px;
-$bar-weight: 2px;
-
-.hamburger-bar {
-  position: absolute;
-  width: $bar-width;
-  height: $bar-weight;
-  background-color: $black-ter;
-  transition: opacity ease 0.3s, transform ease 0.3s;
-
-  left: ($hm-size - $bar-width) / 2 - 1px;
-  top: ($hm-size - $bar-weight) / 2 - 1px;
-}
-
-.hamburger-is-times {
-  border-color: $white-ter;
-  .hamburger-bar {
-    background-color: $white-ter;
-  }
-
-  .hamburger-bar.hamburger-bar1 {
-    transform: rotate(45deg);
-  }
-
-  .hamburger-bar.hamburger-bar2 {
-    transform: translateX(20%);
-    opacity: 0;
-  }
-
-  .hamburger-bar.hamburger-bar3 {
-    transform: rotate(-45deg);
-  }
-}
-
-.hamburger-is-bars {
-  .hamburger-bar.hamburger-bar1 {
-    transform: translateY($bar-y);
-  }
-
-  .hamburger-bar.hamburger-bar2 {
-    transform: translateX(0);
-    opacity: 1;
-  }
-
-  .hamburger-bar.hamburger-bar3 {
-    transform: translateY(-$bar-y);
-  }
-}
-
-
-.hamburger-on-header {
-  border-color: $white-ter;
-  .hamburger-bar {
-    background-color: $white-ter;
-  }
 }
 </style>
 
 <template lang="pug">
 .row
   .overlay(@click="closeSidebar", :class="{ 'overlay-active': isSidebarActive }", ref="overlay")
-  a.hamburger(:class="{ 'hamburger-is-times': isSidebarActive, 'hamburger-is-bars': !isSidebarActive }", @click="toggleSidebar")
-    .hamburger-bar.hamburger-bar1
-    .hamburger-bar.hamburger-bar2
-    .hamburger-bar.hamburger-bar3
+  my-hamburger(:isActive="isSidebarActive", :isInversed="scrollTop < 20", @click="toggleSidebar", v-show="isSmallScreen")
   .col-sidebar(:class="{ 'col-sidebar-active': isSidebarActive }")
     my-sidebar
   .col-main(:class="{ 'noscroll': isSidebarActive }")
-    nuxt
+    my-header
+    .main-inner
+      nuxt
   // my-footer
 </template>
 
@@ -178,19 +94,28 @@ const breakpoint = 720
 export default {
   created() {
     if (!process.isServer) {
-      console.log('cli init')
       this.$store.dispatch('nuxtClientInit')
     }
   },
+  data() {
+    return {
+      scrollTop: 0,
+    }
+  },
   mounted() {
-    window.addEventListener('resize', debounce(this.onResize, 100))
+    window.addEventListener('resize', debounce(this.onResize, 50))
+    window.addEventListener('scroll', debounce(this.onScroll, 50))
     this.onResize()
+    this.onScroll()
   },
   methods: {
     onResize() {
       this.closeSidebar()
       const isSmall = !window.matchMedia(`(min-width: ${breakpoint}px)`).matches
-      this.$store.dispatch('layout/setIsSmallScrern', isSmall)
+      this.$store.dispatch('layout/setIsSmallScreen', isSmall)
+    },
+    onScroll() {
+      this.scrollTop = document.documentElement.scrollTop
     },
     toggleSidebar() {
       if (this.isSidebarActive) {

@@ -86,7 +86,6 @@ export default {
   layout: 'simple',
   async fetch ({ store, route }) {
     const dir = route.query.q || ''
-    console.log(route)
     await store.dispatch('file/getFiles', { dir })
   },
   data: () => ({

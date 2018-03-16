@@ -2,45 +2,40 @@
 @import "../../../css/variables";
 
 .article-heading {
-  margin: 24px 0 48px;
+  margin: 0px 0 36px;
 }
 
 .article-date {
+  font-size: $size-7;
   line-height: 24px;
-  margin: 12px 0;
   color: $text-light;
+  margin-bottom: 8px;
 }
 
 .article-title {
-  font-size: 36px;
+  font-size: $size-3;
   line-height: 48px;
-  margin: 12px 0;
-  // text-align: center;
+  @media screen and (max-width: $breakpoint) {
+    font-size: $size-4;
+    line-height: 32px;
+  }
+
+  font-weight: bold;
+  margin-bottom: 8px;
   a {
-    color: inherit;
+    color: $grey-darker;
   }
 }
 
 .article-digest {
-  font-size: 16px;
+  font-size: $size-7;
   line-height: 24px;
-  margin: 12px 0;
+  margin-bottom: 8px;
   // text-align: center;
 }
 
-.article-subs {
-  margin: 12px auto;
-  font-size: 16px;
-  height: 24px;
-  line-height: 24px;
-}
-
 .article-sub {
-  display: inline-block;
-  margin: 0 4px;
-  .tag {
-    line-height: 22px;
-  }
+  margin-bottom: 8px;
 }
 
 .article-delimiter {
@@ -52,17 +47,8 @@
 </style>
 
 <template lang="pug">
-.container-article-show.container
+.container-article-show
   .section
-    nav.breadcrumb(aria-label="breadcrumbs")
-      ul
-        li
-          nuxt-link(to="/") Home
-        li(v-if="article.visiblity !== 'special'")
-          nuxt-link(:to="'/?category=' + category.slug") {{ category.name }}
-        li
-          // nuxt-link(:to="'/' + category.slug + '/' + article.slug") {{ article.title }}
-
     .article-heading
       .article-date
         | {{ article.date | date }}
@@ -71,10 +57,11 @@
           nuxt-link(:to="article.getHref() + '/edit'") edit
       h1.article-title
         nuxt-link(:to="article.getHref()") {{ article.title }}
-      h2.article-digest(v-if="article.digest") {{ article.digest }}
-      .article-subs(v-if="article.tags.length > 0")
-        .article-sub(v-for="tag in article.tags")
-          nuxt-link.tag.is-white(:to="'/?tag=' + tag") {{ tag }}
+      .article-sub
+        h2.article-digest(v-if="article.digest") {{ article.digest }}
+      .article-sub(v-if="article.tags.length > 0")
+        .tags
+          nuxt-link.tag.is-white(v-for="tag in article.tags", :to="'/?tag=' + tag" :key="tag") {{ tag }}
 
     // .article-delimiter
     my-markdown {{ article.content }}
@@ -89,6 +76,12 @@ export default {
     const parent = s1 === '-' ? null : s1
     return store.getters['article/getArticle'](parent, s2)
   },
+  created() {
+    this.$store.dispatch('layout/setActiveArticle', this.article)
+  },
+  beforeDestroy() {
+    this.$store.dispatch('layout/setActiveArticle', null)
+  },
   computed: {
     relative() {
       const { s1, s2 } = this.$route.params
@@ -101,13 +94,7 @@ export default {
     },
     category() {
       const { parent } = this.article
-      if (!parent) {
-        return {
-          slug: '-',
-          name: '雑記',
-        }
-      }
-      return this.$store.getters['category/findCategory'](parent)
+      return this.$store.getters['category/findCategory'](parent || '-')
     },
     ...mapState([
       'authorized',

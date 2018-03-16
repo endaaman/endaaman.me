@@ -1,7 +1,6 @@
 <style scoped lang="scss">
 @import "../css/variables";
 
-
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -13,7 +12,7 @@
 }
 
 .sidebar-main {
-  background-color: $black-ter;
+  background-color: $sidebar-bg;
   padding: 24px;
   flex: 1;
   flex-grow: 1;
@@ -68,7 +67,7 @@ h2 {
   color: $white-ter;
   &:hover {
     background-color: $white-ter;
-    color: $black-ter;
+    color: $sidebar-bg;
   }
 }
 
@@ -106,11 +105,14 @@ h2 {
   // border-radius: 50%;
 
   color: $white-ter;
-  background-color: $black-ter;
+  background-color: $sidebar-bg;
   border: solid 1px $white-ter;
+  transition: width .3s ease;
   &:hover {
     background-color: $white-ter;
-    color: $black-ter;
+    color: $sidebar-bg;
+    width: auto;
+    padding: 0 4px;
   }
 }
 
@@ -122,7 +124,7 @@ h2 {
   margin-top: auto;
   padding: 48px 24px 12px;
   font-size: $size-7;
-  background-color: $black-ter;
+  background-color: $sidebar-bg;
 }
 
 .footer-right-text {
@@ -152,14 +154,14 @@ aside.sidebar
         i.mdi.is-primay(:class="{ 'mdi-chevron-right': !cat.open, 'mdi-chevron-down': cat.open }")
         span(:class="{ 'has-text-weight-bold': cat.open }") {{ cat.name }}
       ul.articles-by-category(v-if="cat.open")
-        li(v-for="a in getArticlesByParent(cat.slug)")
+        li(v-for="a in getArticlesByParent(cat.category.getValue())")
           span.is-primay ・
           nuxt-link(:to="a.getHref()", :class="{ 'is-active': a.getHref() === $route.path }") {{ a.title }}
 
     h2 Tags
     .tags
       nuxt-link.tag.is-white.is-inversed(v-for="tag in tags", :to="'/?tag=' + tag.name", :key="tag.name")
-        | {{ tag.name }} ({{tag.count}})
+        | {{ tag.name }} ({{ tag.count }})
 
     h2 Links
     .special-title(v-for="a in specialArticles")
@@ -169,20 +171,20 @@ aside.sidebar
         span {{ a.title }}
 
   footer.sidebar-footer
-    .field
-      p.control.has-icons-left
-        input.input.is-rounded(type="text", placeholder="Seach...")
-        span.icon.is-left
-          i.mdi.mdi-magnify
-
+    // .field
+    //   p.control.has-icons-left
+    //     input.input.is-rounded(type="text", placeholder="Seach...")
+    //     span.icon.is-left
+    //       i.mdi.mdi-magnify
     ul.social-links
       li
         a.social-link.is-small(href="http://twitter.com/endaaman")
           i.mdi.mdi-twitter
-          | @endaaman
+          span.link-text @endaaman
       li
         a.social-link.is-small(href="http://github.com/endaaman")
           i.mdi.mdi-github-face
+          span.link-text @endaaman
 
     span.footer-left-text
       | Built with&#x20;
@@ -200,30 +202,24 @@ aside.sidebar
 <script>
 import { mapState, mapGetters } from 'vuex'
 
-
 export default {
-  mounted() {
-    this.$el.addEventListener('click', (event) => {
-      if (event.target.href && this.isSmallScreen) {
-        this.$store.dispatch('layout/closeSidebar')
-      }
-    })
-  },
   data() {
     return {
       categoryItems: [],
+    }
+  },
+  watch: {
+    $route(v) {
+      this.$store.dispatch('layout/closeSidebar')
     }
   },
   created() {
     const cc = this.categories.map((c) => ({
       name: c.name,
       slug: c.slug,
+      category: c,
       open: false,
-    })).concat([{
-      name: '雑記',
-      slug: null,
-      open: false,
-    }])
+    }))
 
     const sp = this.$route.path.split('/')
     if (sp.length > 2) {

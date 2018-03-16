@@ -48,6 +48,7 @@ export const actions = {
   },
   nuxtClientInit({ commit }) {
     commit('article/wrap')
+    commit('category/wrap')
   },
   async login({ getters, commit, dispatch }, { password }) {
     let error = null

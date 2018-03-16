@@ -1,6 +1,7 @@
 <style scoped lang="scss">
 @import "../css/variables";
 
+$logo-bg: $sidebar-bg;
 $logo-size: 140px;
 $accent-color: $primary;
 
@@ -46,7 +47,7 @@ a.logo-container {
   left: 2px;
   height: $logo-size - 4px;
   width: $logo-size - 4px;
-  background-color: $black-ter;
+  background-color: $sidebar-bg;
 
   transform: rotate(-135deg) scale(0);
   .animated-show & {
@@ -128,7 +129,7 @@ export default {
       }
     },
     isSmallScreen(flag) {
-      if (!cur) {
+      if (!flag) {
         this.isAnimated = true
       }
     },

@@ -6,15 +6,15 @@
     margin: 48px 0 24px;
     line-height: 48px;
     font-size: $size-4;
-    border-bottom: solid 2px $border;
+    // border-bottom: solid 2px $border;
     font-weight: bold;
   }
 
   h3 {
-    margin: 24px 0 24px;
-    padding: 16px;
+    margin: 48px 0 24px;
+    // padding: 16px;
     font-size: $size-6;
-    border-left: solid 2px $black-ter;
+    // border-left: solid 2px $black-ter;
     font-weight: bold;
     // color: $black-ter;
   }
@@ -28,6 +28,7 @@
   p {
     line-height: 24px;
     margin: 24px 0;
+    font-size: $size-6;
   }
   .fl {
     float: left;
@@ -41,6 +42,11 @@
   }
   .center {
     text-align: center;
+  }
+
+  // markdown-it-container
+  .indented {
+    margin: 16px;
   }
 }
 </style>
@@ -74,12 +80,19 @@ export default {
         //   token.attrs = [['class', 'variable-class']]
         //   return org(...args)
         // }
-        // md.use(mdItContainer, 'spoiler', {
-        //   validate(params) {
-        //   },
-        //   render(tokens, idx) {
-        //   }
-        // })
+        md.use(mdItContainer, 'indent', {
+          validate(params) {
+            return params.trim().match(/^indent\s+(.*)$/);
+          },
+          render(tokens, idx) {
+            const m = tokens[idx].info.trim().match(/^indent\s+(.*)$/);
+            if (tokens[idx].nesting === 1) {
+              return '<div class="indented">' + md.utils.escapeHtml(m[1]) + '\n';
+            } else {
+              return '</div>\n';
+            }
+          }
+        })
       }
     }
   }),
@@ -99,7 +112,6 @@ export default {
 
     this.$el.querySelectorAll('pre > code').forEach((e) => {
       let isCode = false
-
       let splitted = null
       e.classList.forEach((c) => {
         splitted = c.split('language-')

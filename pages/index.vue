@@ -8,21 +8,20 @@
   padding: 8px 16px;
   margin-top: 36px;
   border-left: 2px solid $black-ter;
-  /* background-color: $white-ter; */
   &:first-child {
     margin-top: 0;
   }
   &:hover {
     background-color: $white-ter;
-    /* border-left-color: $primary; */
   }
 
   .article-title {
     font-size: 24px;
     line-height: 36px;
   }
-  .article-subtitle {
-    font-size: 16px;
+  .article-digest {
+    position: relative;
+    font-size: $size-7;
     line-height: 24px;
   }
   .article-sub {
@@ -32,7 +31,7 @@
   .article-date {
     float: left;
     color: $text-light;
-    /* font-size: $size-7; */
+    font-size: $size-7;
   }
   .article-tags {
     margin: 0;
@@ -44,21 +43,9 @@
 <template lang="pug">
 .container-home.container
   .section
-    nav.breadcrumb(aria-label="breadcrumbs")
-      ul
-        li
-          nuxt-link(to="/") Home
-        li(v-if="!qCategory && !qTag")
-          a(disabled)
-        li(v-if="qCategory")
-          nuxt-link(:to="'/archive?category=' + qCategory")
-            | {{ qCategory === '-' ? '雑記' : qCategory }}
-        li(v-if="qTag")
-          nuxt-link(:to="'/?tag=' + qTag") タグ: {{ qTag }}
-
     nuxt-link.article-item(v-for="a in articles", :key="a.slug", :to="a.getHref()")
       .article-title {{ a.title }}
-      .article-subtitle {{ a.digest }}
+      .article-digest {{ a.getDigest() }}
       .article-sub
         .article-date
           | {{ a.date | date }}
@@ -83,17 +70,25 @@ export default {
       const splitted = article.slug.split('/')
       const l = splitted.length
       return l == 2 ? article.slug : '/-/' + splitted[l - 1]
-    }
+    },
+  },
+  created() {
+    this.$store.dispatch('layout/setActiveCategory', this.category)
+    this.$store.dispatch('layout/setActiveTag', this.tag)
+  },
+  beforeDestroy() {
+    this.$store.dispatch('layout/setActiveCategory', null)
+    this.$store.dispatch('layout/setActiveTag', null)
   },
   computed: {
     ...mapGetters('article', {
       allArticles: 'normalArticles',
     }),
     ...{
-      qCategory() {
-        return this.$route.query.category
+      category() {
+        return this.$store.getters['category/findCategory'](this.$route.query.category)
       },
-      qTag() {
+      tag() {
         return this.$route.query.tag
       },
       articles() {

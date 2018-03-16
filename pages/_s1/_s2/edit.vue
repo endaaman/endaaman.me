@@ -16,6 +16,9 @@
         b-field(label="Digest", horizontal)
           b-input(v-model="article.digest", placeholder="Digest", expanded)
 
+        b-field(label="Date", horizontal)
+          b-input(type="date", v-model="article.date", placeholder="Date", expanded)
+
         b-field(label="Category", horizontal)
           b-select(placeholder="Select a topic", v-model="article.parent")
             option(
@@ -36,20 +39,12 @@
             icon="label"
             placeholder="Aliases")
 
-        b-field(label="Date", horizontal)
-          b-datepicker(
-            inline,
-            :date-parser="dateParser",
-            :date-formatter="dateFormatter",
-            placeholder="Pick a date",
-            icon="calendar-today")
-
     b-tab-item(label="Content")
-        b-field(label="Content", horizontal)
-          b-input(
-            ref="textarea"
-            type="textarea",
-            placeholder="Content")
+      b-field(label="Content", horizontal)
+        b-input(
+          ref="textarea"
+          type="textarea",
+          placeholder="Content")
 
   p
     // pre {{ JSON.stringify(article, null, 2) }}
@@ -92,13 +87,7 @@ export default {
     },
     category() {
       const splitted = this.article.slug.split('/')
-      if (splitted.length < 2) {
-        return {
-          slug: '-',
-          name: '雑記',
-        }
-      }
-      const slug = splitted[0]
+      const slug = splitted.length < 2 ? '-' : splitted[0]
       const category = this.$store.getters['category/findCategory'](slug)
       return category || { slug, name: slug }
     },
@@ -106,7 +95,6 @@ export default {
   },
   methods: {
     dateParser(date) {
-      console.log(date)
       return new Date(date)
     },
     dateFormatter(date) {

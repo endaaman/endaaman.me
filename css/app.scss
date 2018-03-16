@@ -43,9 +43,10 @@ pre {
   padding: 24px;
 }
 
-// fix for flex parent
 .container {
-  width: 100%;
+  margin-left: 0;
+  max-width: 720px;
+  width: 100%; // fix for flex parent
 }
 
 .noscroll {
