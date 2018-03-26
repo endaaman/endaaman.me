@@ -46,5 +46,6 @@ module.exports = {
     { src: '~plugins/ga', ssr: false },
     '~plugins/components',
     '~plugins/my-components',
+    '~plugins/vuex-router-sync',
   ],
 }

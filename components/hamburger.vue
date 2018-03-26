@@ -18,6 +18,10 @@ $hm-y: ($header-height - $hm-size) / 2;
   width: $hm-size;
   height: $hm-size;
   border: 1px solid $hm-color;
+  transition: border-color ease 0.3s;
+  .hamburger-bar {
+    transition: background-color ease 0.3s;
+  }
 }
 
 .hamburger-is-inversed {

@@ -19,6 +19,10 @@
     // color: $black-ter;
   }
 
+  h2 + h3 {
+    margin-top: 24px;
+  }
+
   h4 {
     margin: 24px 0 24px;
     font-size: $size-6;

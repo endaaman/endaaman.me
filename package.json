@@ -8,11 +8,11 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "@endaaman/vue-markdown": "^2.2.4",
-    "autosize": "^4.0.0",
+    "@endaaman/vue-markdown": "^2.2.5",
+    "autosize": "^4.0.1",
     "axios": "^0.18.0",
     "browser-cookies": "^1.2.0",
-    "buefy": "^0.6.3",
+    "buefy": "0.6.3",
     "bulma": "^0.6.2",
     "cookie": "^0.3.1",
     "debounce": "^1.1.0",
@@ -22,13 +22,13 @@
     "markdown-it-attrs": "^1.2.1",
     "markdown-it-container": "^2.0.0",
     "markdown-it-multimd-table": "^3.1.1",
-    "mdi": "^2.1.99",
+    "mdi": "^2.2.43",
     "nuxt": "^1.4.0",
-    "vue2-ace-editor": "0.0.8"
+    "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {
-    "node-sass": "^4.7.2",
-    "pug": "^2.0.1",
+    "node-sass": "^4.8.3",
+    "pug": "^2.0.3",
     "pug-loader": "^2.3.0",
     "sass-loader": "^6.0.7"
   },

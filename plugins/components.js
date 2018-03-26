@@ -12,6 +12,7 @@ const components = [
   'Datepicker',
   'Field',
   'Input',
+  'Icon',
   'Pagination',
   'Select',
   'TabItem',

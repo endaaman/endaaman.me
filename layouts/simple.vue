@@ -13,12 +13,11 @@ $breakpoint: 720px;
 
 <template lang="pug">
 .root
+  my-common
   my-header
   .container
     nuxt
-  my-footer
 </template>
-
 
 <script>
 export default {

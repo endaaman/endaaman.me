@@ -1,12 +1,3 @@
-<style scoped lang="scss">
-@import "../css/variables";
-
-.container-logout {
-  margin: 0 auto;
-  max-width: 480px;
-}
-</style>
-
 <template lang="pug">
 .container-logout.section
   p さようなら、俺

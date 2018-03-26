@@ -1,5 +1,5 @@
 <style scoped lang="scss">
-@import "../css/variables";
+@import "../../css/variables";
 
 .file-filename {
   font-family: $family-monospace;
@@ -16,16 +16,7 @@
 </style>
 
 <template lang="pug">
-.section
-  nav.breadcrumb(aria-label="breadcrumbs")
-    ul
-      li
-        nuxt-link(to="/") Home
-      li
-        nuxt-link(to="/file") File Management
-      li(v-for="c in crumbs")
-        nuxt-link(:to="'/file?q=' + c.dir") {{ c.name }}
-
+.container-admin-file
   .notification.is-danger(v-if="errorMessage")
     button.delete(@click="errorMessage = ''")
     div(v-html="errorMessage")
@@ -58,6 +49,14 @@
     .tag(v-for="u in uploadings", :key="u.name")
       | {{ u.name }}&nbsp;&nbsp;
       button.delete.is-small(@click="unselectUploading(u)")
+
+  nav.breadcrumb.is-small(aria-label="breadcrumbs")
+    ul
+      li
+        nuxt-link(to="/admin/file") Root
+      li(v-for="c in crumbs")
+        nuxt-link(:to="'/admin/file?q=' + c.dir") {{ c.name }}
+      li
 
   table.table.is-fullwidth
     thead
@@ -109,14 +108,14 @@ export default {
     parentLink() {
       const dir = this.$route.query.q
       if (!dir) {
-        return '/file'
+        return '/admin/file'
       }
       const splitted = dir.split('/')
       splitted.pop()
       if (splitted.length === 0) {
-        return '/file'
+        return '/admin/file'
       }
-      return '/file?q=' + splitted.join('/')
+      return '/admin/file?q=' + splitted.join('/')
     },
     isRoot() {
       return !this.$route.query.q
@@ -202,7 +201,7 @@ export default {
       } else {
         suffix = dir + '/' + dirName
       }
-      return '/file?q=' + suffix
+      return '/admin/file?q=' + suffix
     },
     formatTime(time) {
       return fecha.format(new Date(time), 'YYYY年MM月DD日 HH時mm分')

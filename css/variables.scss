@@ -7,8 +7,8 @@ $link: $primary;
 
 $body-background-color: $white;
 
-$border: $black-ter;
-$border-hover: $grey;
+$border: $grey-darker;
+$border-hover: $grey-light;
 
 $control-radius: 0;
 $input-border-color: $black-ter;
@@ -45,8 +45,8 @@ $family-primary: $family-sans-serif;
 $family-code: $family-monospace;
 $body-primary: $family-sans-serif;
 
-
-$breakpoint: 720px;
+$desktop: $tablet;
+$breakpoint: $tablet;
 
 $header-title-height: 24px;
 $header-sub-height: 16px;

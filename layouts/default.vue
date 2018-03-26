@@ -73,8 +73,9 @@ $sidebar-width: 320px;
 
 <template lang="pug">
 .row
-  .overlay(@click="closeSidebar", :class="{ 'overlay-active': isSidebarActive }", ref="overlay")
-  my-hamburger(:isActive="isSidebarActive", :isInversed="scrollTop < 20", @click="toggleSidebar", v-show="isSmallScreen")
+  my-common
+  .overlay(@click="closeSidebar", :class="{ 'overlay-active': isSidebarActive }")
+  my-hamburger(:isActive="isSidebarActive", :isInversed="scrollTop < 40", @click="toggleSidebar", v-show="isSmallScreen")
   .col-sidebar(:class="{ 'col-sidebar-active': isSidebarActive }")
     my-sidebar
   .col-main(:class="{ 'noscroll': isSidebarActive }")
@@ -85,18 +86,13 @@ $sidebar-width: 320px;
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import debounce from 'debounce'
 
 
 const breakpoint = 720
 
 export default {
-  created() {
-    if (!process.isServer) {
-      this.$store.dispatch('nuxtClientInit')
-    }
-  },
   data() {
     return {
       scrollTop: 0,
@@ -117,23 +113,16 @@ export default {
     onScroll() {
       this.scrollTop = document.documentElement.scrollTop
     },
-    toggleSidebar() {
-      if (this.isSidebarActive) {
-        this.closeSidebar()
-      } else {
-        this.activateSidebar()
-      }
-    },
-    closeSidebar() {
-      this.$store.dispatch('layout/closeSidebar')
-      document.documentElement.classList.remove('noscroll')
-      document.body.classList.remove('noscroll')
-    },
-    activateSidebar() {
-      this.$store.dispatch('layout/openSidebar')
-      document.documentElement.classList.add('noscroll')
-      document.body.classList.add('noscroll')
-    },
+    ...mapActions('layout', [
+      'closeSidebar',
+      'toggleSidebar',
+    ]),
+  },
+  watch: {
+    isSidebarActive(flag) {
+      document.documentElement.classList.toggle('noscroll', flag)
+      document.body.classList.toggle('noscroll', flag)
+    }
   },
   computed: {
     ...mapState('layout', ['isSidebarActive', 'isSmallScreen']),

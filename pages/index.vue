@@ -7,7 +7,7 @@
 
   padding: 8px 16px;
   margin-top: 36px;
-  border-left: 2px solid $black-ter;
+  border-left: 2px solid $grey-darker;
   &:first-child {
     margin-top: 0;
   }
@@ -52,7 +52,7 @@
         .article-tags
           .tags
             .tag.is-white(
-              v-for="tag in a.tags",
+              v-for="tag in a.getTags()",
               :key="tag",
               @click.prevent="navigate"
               :data-href="'/?tag=' + tag") {{ tag }}
@@ -62,44 +62,32 @@
 import { mapState, mapGetters } from 'vuex'
 
 export default {
+  // validate() {
+  //   // validate category and tag query
+  // },
   methods: {
     navigate(e) {
       this.$router.push(e.target.dataset['href'])
     },
-    getHref(article) {
-      const splitted = article.slug.split('/')
-      const l = splitted.length
-      return l == 2 ? article.slug : '/-/' + splitted[l - 1]
-    },
-  },
-  created() {
-    this.$store.dispatch('layout/setActiveCategory', this.category)
-    this.$store.dispatch('layout/setActiveTag', this.tag)
-  },
-  beforeDestroy() {
-    this.$store.dispatch('layout/setActiveCategory', null)
-    this.$store.dispatch('layout/setActiveTag', null)
   },
   computed: {
     ...mapGetters('article', {
       allArticles: 'normalArticles',
     }),
     ...{
-      category() {
-        return this.$store.getters['category/findCategory'](this.$route.query.category)
-      },
-      tag() {
-        return this.$route.query.tag
-      },
       articles() {
-        let articles = this.allArticles
+        let articles = [...this.allArticles]
         const { tag, category } = this.$route.query
         if (tag) {
-          articles = articles.filter((a) => a.tags.includes(tag))
+          articles = articles.filter((a) => a.getTags().includes(tag))
         }
         if (category) {
           const parent = category === '-' ? null : category
           articles = articles.filter((a) => a.parent === parent )
+        }
+        if (!category) {
+          // if not searched by category, sort by date
+          articles.sort((a, b) => a.compareByDate(b))
         }
         return articles
       }

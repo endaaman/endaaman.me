@@ -1,4 +1,5 @@
 import { Category } from '../models'
+import { NO_CATEGORY_NAME, NO_CATEGORY_SLUG } from '../constants'
 
 export const state = () => ({
   categories: [],
@@ -9,8 +10,8 @@ export const mutations = {
   setCategories(state, items) {
     state.categories = items
     state.categories.push(new Category({
-      slug: '-',
-      name: '雑記',
+      slug: NO_CATEGORY_SLUG,
+      name: NO_CATEGORY_NAME,
     }))
     state.isFetched = true
   },
@@ -34,6 +35,11 @@ export const actions = {
 
 export const getters = {
   findCategory(state) {
+    return (slug) => {
+      return state.categories.find(c => c.slug === slug)
+    }
+  },
+  getCategoryBySlug(state) {
     return (slug) => {
       return state.categories.find(c => c.slug === slug)
     }

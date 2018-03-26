@@ -9,6 +9,7 @@
   height: 100%;
 
   color: $white-ter;
+  overflow-y: scroll;
 }
 
 .sidebar-main {
@@ -147,21 +148,24 @@ h2 {
 aside.sidebar
   .sidebar-main
     my-logo
-
     h2 Category
-    .category-title(v-for="cat in categoryItems")
-      a.nodeco-inline(@click="cat.open = !cat.open")
-        i.mdi.is-primay(:class="{ 'mdi-chevron-right': !cat.open, 'mdi-chevron-down': cat.open }")
-        span(:class="{ 'has-text-weight-bold': cat.open }") {{ cat.name }}
-      ul.articles-by-category(v-if="cat.open")
-        li(v-for="a in getArticlesByParent(cat.category.getValue())")
+    .category-title(v-for="cat in categoryItems" v-if="cat.category.getArticles().length > 0")
+      a.nodeco-inline(@click="cat.isActive = !cat.isActive")
+        i.mdi.is-primay(:class="{ 'mdi-chevron-right': !cat.isActive, 'mdi-chevron-down': cat.isActive }")
+        span(:class="{ 'has-text-weight-bold': cat.isActive }") {{ cat.name }}
+      ul.articles-by-category(v-if="cat.isActive")
+        li(v-for="a in cat.category.getArticles()")
           span.is-primay ・
           nuxt-link(:to="a.getHref()", :class="{ 'is-active': a.getHref() === $route.path }") {{ a.title }}
 
     h2 Tags
     .tags
-      nuxt-link.tag.is-white.is-inversed(v-for="tag in tags", :to="'/?tag=' + tag.name", :key="tag.name")
-        | {{ tag.name }} ({{ tag.count }})
+      nuxt-link.tag.is-white(
+        v-for="tag in tagItems",
+        :to="'/?tag=' + tag.name",
+        :key="tag.name",
+        :class="{ 'is-inversed': !tag.isActive }"
+        ) {{ tag.name }} ({{ tag.count }})
 
     h2 Links
     .special-title(v-for="a in specialArticles")
@@ -196,7 +200,7 @@ aside.sidebar
     span.footer-right-text(v-if="authorized")
       nuxt-link.nodeco-inline(to="/logout") Logout
     span.footer-right-text(v-if="authorized")
-      nuxt-link.nodeco-inline(to="/file") File
+      nuxt-link.nodeco-inline(to="/admin") Admin
 </template>
 
 <script>
@@ -206,31 +210,43 @@ export default {
   data() {
     return {
       categoryItems: [],
-    }
-  },
-  watch: {
-    $route(v) {
-      this.$store.dispatch('layout/closeSidebar')
+      tagItems: [],
     }
   },
   created() {
-    const cc = this.categories.map((c) => ({
+    this.categoryItems  = this.categories.map((c) => ({
       name: c.name,
       slug: c.slug,
       category: c,
-      open: false,
+      isActive:
+      (this.activeCategory && c.slug === this.activeCategory.slug)
+      ||
+      (this.activeArticle && c.slug === this.activeArticle.getCategorySlug()),
     }))
-
-    const sp = this.$route.path.split('/')
-    if (sp.length > 2) {
-      const slug = sp[1] === '-' ? null : sp[1]
-      for (const c of cc) {
-        if (c.slug === slug) {
-          c.open = true
-        }
+    this.tagItems = this.tags.map((t) => ({
+      isActive: this.activeTag === t.name,
+      ...t
+    }))
+  },
+  watch: {
+    $route(route) {
+      this.$store.dispatch('layout/closeSidebar')
+    },
+    activeTag(tag) {
+      for (const t of this.tagItems) {
+        t.isActive = t.name === tag
       }
-    }
-    this.categoryItems = cc
+    },
+    activeCategory() {
+      for (const c of this.categoryItems) {
+        c.isActive = c.isActive || (this.activeCategory && c.slug === this.activeCategory.slug)
+      }
+    },
+    activeArticle() {
+      for (const c of this.categoryItems) {
+        c.isActive = c.isActive || (this.activeArticle && c.slug === this.activeArticle.getCategorySlug())
+      }
+    },
   },
   computed: {
     ...mapState([
@@ -242,18 +258,19 @@ export default {
     ...mapState('category', [
       'categories',
     ]),
+    ...mapGetters([
+      'activeCategory',
+      'activeArticle',
+      'activeTag',
+    ]),
     ...mapGetters('article', {
       specialArticles: 'specialArticles',
-      tags: 'getTags',
+      tags: 'tagAggregations',
+      articleMap: 'articleMapKeyByParent',
     }),
     builtAt() {
       return new Date(process.env.builtAt)
     },
   },
-  methods: {
-    getArticlesByParent(parent) {
-      return this.$store.getters['article/getArticlesByParent'](parent)
-    },
-  }
 }
 </script>

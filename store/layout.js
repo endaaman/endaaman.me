@@ -1,6 +1,6 @@
 export const state = () => ({
   isSidebarActive: false,
-  isSmallScreen: false,
+  isSmallScreen: true,
   activeArticle: null,
   activeCategory: null,
   activeTag: null,
@@ -13,10 +13,11 @@ export const mutations = {
   setIsSmallScreen(state, flag) {
     state.isSmallScreen = flag
   },
+
   setActiveArticle(state, article) {
     state.activeArticle = article
   },
-  setActiveTap(state, tap) {
+  setActiveTag(state, tag) {
     state.activeTag = tag
   },
   setActiveCategory(state, category) {
@@ -31,14 +32,17 @@ export const actions = {
   openSidebar({ commit }) {
     commit('setIsSidebarActive', true)
   },
+  toggleSidebar({ commit, state }) {
+    commit('setIsSidebarActive', !state.isSidebarActive)
+  },
   setIsSmallScreen({ commit }, flag) {
     commit('setIsSmallScreen', flag)
   },
   setActiveArticle({ commit }, article) {
     commit('setActiveArticle', article)
   },
-  setActiveTap({ commit }, tag) {
-    commit('setActiveArticle', tag)
+  setActiveTag({ commit }, tag) {
+    commit('setActiveTag', tag)
   },
   setActiveCategory({ commit }, category) {
     commit('setActiveCategory', category)

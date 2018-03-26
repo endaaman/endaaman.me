@@ -5,11 +5,10 @@
   margin: 0px 0 36px;
 }
 
-.article-date {
+.article-dates {
   font-size: $size-7;
   line-height: 24px;
   color: $text-light;
-  margin-bottom: 8px;
 }
 
 .article-title {
@@ -44,27 +43,101 @@
   height: 2px;
   background-color: $black-ter;
 }
+
+hr.article-bottom-divider {
+  margin: 48px 0 24px;
+}
+
+.article-navigators {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+
+a.article-navigator {
+  display: flex;
+  flex-direction: column;
+  width: 48%;
+  overflow: hidden;
+  // white-space: wrap;
+  // text-overflow: ellipsis;
+  // display: block;
+  color: $black-ter;
+  text-decoration: inherit;
+  border: 1px solid $border;
+  font-size: 14px;
+  padding: 6px 12px;
+  .article-navigator-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    .article-navigator-inner {
+      // no styles needed
+    }
+  }
+  .article-navigator-guide {
+    flex-grow: 0;
+    text-align: center;
+    font-size: 12px;
+    color: $grey-dark;
+  }
+
+  &:hover {
+    border-color: $border-hover;
+    .article-navigator-content {
+      color: $border-hover;
+    }
+  }
+}
 </style>
 
 <template lang="pug">
 .container-article-show
   .section
     .article-heading
-      .article-date
-        | {{ article.date | date }}
-        span(v-if="authorized")
-          | ・
+      .article-sub.article-dates
+        span カテゴリ：
+        nuxt-link(:to="'/?category=' + article.getCategory().slug") {{ article.getCategory().name }}
+        span ・{{ article.date | date }}
+        template(v-if="authorized")
+          span ・
           nuxt-link(:to="article.getHref() + '/edit'") edit
       h1.article-title
         nuxt-link(:to="article.getHref()") {{ article.title }}
-      .article-sub
-        h2.article-digest(v-if="article.digest") {{ article.digest }}
-      .article-sub(v-if="article.tags.length > 0")
+      .article-sub.article-digest(v-if="article.digest")
+        | {{ article.digest }}
+      .article-sub.article-tags(v-if="article.getTags().length > 0")
         .tags
-          nuxt-link.tag.is-white(v-for="tag in article.tags", :to="'/?tag=' + tag" :key="tag") {{ tag }}
+          nuxt-link.tag.is-white(v-for="tag in article.getTags()", :to="'/?tag=' + tag" :key="tag") {{ tag }}
 
     // .article-delimiter
     my-markdown {{ article.content }}
+
+    .article-bottom(v-if="prevArticle || nextArticle")
+      hr.article-bottom-divider
+      .article-navigators
+        nuxt-link.article-navigator(v-if="prevArticle", :to="prevArticle.getHref()")
+          .article-navigator-guide
+            i.mdi.mdi-chevron-double-left
+            | 前の記事
+          .article-navigator-content
+            .article-navigator-inner
+              // span Firefoxでgtkのdarkテーマを使うときのカスタムCSS
+              span {{ prevArticle.title }}
+        .article-navigator(v-else)
+        nuxt-link.article-navigator(v-if="nextArticle", :to="nextArticle.getHref()")
+          .article-navigator-guide
+            | 次の記事
+            i.mdi.mdi-chevron-double-right
+          .article-navigator-content
+            .article-navigator-inner
+              // span Neomakeを使いこなせ！
+              span {{ nextArticle.title }}
 </template>
 
 <script>
@@ -73,33 +146,24 @@ import { mapState } from 'vuex'
 export default {
   validate({ store, params }) {
     const { s1, s2 } = params
-    const parent = s1 === '-' ? null : s1
-    return store.getters['article/getArticle'](parent, s2)
-  },
-  created() {
-    this.$store.dispatch('layout/setActiveArticle', this.article)
-  },
-  beforeDestroy() {
-    this.$store.dispatch('layout/setActiveArticle', null)
+    return store.getters['article/getArticleByRelative'](s1 + '/' + s2)
   },
   computed: {
-    relative() {
-      const { s1, s2 } = this.$route.params
-      return s1 + '/' + s2
-    },
     article() {
-      const { s1, s2 } = this.$route.params
-      const parent = s1 === '-' ? null : s1
-      return this.$store.getters['article/getArticle'](parent, s2)
+      return this.$store.getters['activeArticle']
     },
-    category() {
-      const { parent } = this.article
-      return this.$store.getters['category/findCategory'](parent || '-')
+    siblingArticles() {
+      return this.article.getSiblings()
+    },
+    prevArticle() {
+      return this.siblingArticles[0]
+    },
+    nextArticle() {
+      return this.siblingArticles[1]
     },
     ...mapState([
       'authorized',
     ])
   },
 }
-
 </script>

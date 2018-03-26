@@ -1,10 +1,13 @@
 import axios from 'axios'
 import cookieParser from 'cookie'
 import browserCookie from 'browser-cookies'
+import { Article, Category } from '../models'
 
 
 export const plugins = [
   function(store) {
+    Article.store = store
+    Category.store = store
   },
 ]
 
@@ -59,6 +62,7 @@ export const actions = {
       await dispatch('article/fetchArticles')
     } catch (e) {
       error = e
+      return { error }
     }
     return { error }
   },
@@ -89,5 +93,42 @@ export const getters = {
       baseURL: process.env.apiRoot,
       headers,
     })
+  },
+  activeCategory(state, getters) {
+    if (!state.route) {
+      return null
+    }
+    if (state.route.name !== 'index') {
+      return null
+    }
+    const categorySlug = state.route.query.category
+    if (!categorySlug) {
+      return null
+    }
+    return getters['category/findCategory'](categorySlug)
+  },
+  activeTag(state, getters) {
+    if (!state.route) {
+      return null
+    }
+    if (state.route.name !== 'index') {
+      return null
+    }
+    const tag = state.route.query.tag
+    const tags = getters['article/tags']
+    if (!tags.includes(tag)) {
+      return null
+    }
+    return tag
+  },
+  activeArticle(state, getters) {
+    if (!state.route) {
+      return null
+    }
+    if (state.route.name !== 's1-s2') {
+      return null
+    }
+    const { s1, s2 } = state.route.params
+    return getters['article/getArticleByRelative'](s1 + '/' + s2)
   },
 }
