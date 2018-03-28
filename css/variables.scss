@@ -1,21 +1,23 @@
-@import "~bulma/sass/utilities/_all";
+@import "~bulma/sass/utilities/initial-variables";
+@import "~bulma/sass/utilities/functions";
 
 // General
 // $primary: #FDABCD;
 $primary: #F090B0;
+$primary-inverted: #0F6F4F;
 $link: $primary;
 
 $body-background-color: $white;
 
-$border: $grey-darker;
+$border: $grey;
 $border-hover: $grey-light;
 
 $control-radius: 0;
-$input-border-color: $black-ter;
-$input-hover-border-color: $grey;
+$input-border-color: $border;
+$input-hover-border-color: $border-hover;
 
-$button-border-color: $black-ter;
-$button-hover-border-color: $grey;
+$button-border-color: $border;
+$button-hover-border-color: $border-hover;
 
 $text: $grey-darker;
 
@@ -57,3 +59,5 @@ $header-height: $header-sub-height + $header-title-height + $header-padding * 2 
 // $sidebar-bg: $grey-darker;
 // $sidebar-bg: $grey-darker;
 $sidebar-bg: $black-ter;
+
+@import "~bulma/sass/utilities/derived-variables";

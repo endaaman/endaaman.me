@@ -8,11 +8,11 @@
 </style>
 
 <template lang="pug">
-.container.container-admin
+.container-admin
   .section
     .tabs
       ul
-        li(v-for="l in links", :key="l.label", :class="{ 'is-active': $route.path === l.href }")
+        li(v-for="l in links", :key="l.label", :class="{ 'is-active': isActive(l) }")
           nuxt-link(:to="l.href") {{ l.label }}
 
     nuxt-child
@@ -23,6 +23,16 @@ import { mapState, mapGetters } from 'vuex'
 
 export default {
   layout: 'simple',
+  methods: {
+    isActive(l) {
+      const { path } = this.$route
+      if (l.href === '/admin') {
+        return path === l.href
+      } else {
+        return path.startsWith(l.href)
+      }
+    }
+  },
   computed: {
     links() {
       return [

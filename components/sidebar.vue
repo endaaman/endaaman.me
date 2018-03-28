@@ -221,7 +221,7 @@ export default {
       isActive:
       (this.activeCategory && c.slug === this.activeCategory.slug)
       ||
-      (this.activeArticle && c.slug === this.activeArticle.getCategorySlug()),
+      (this.activeArticle && !this.activeArticle.special && c.slug === this.activeArticle.getCategorySlug()),
     }))
     this.tagItems = this.tags.map((t) => ({
       isActive: this.activeTag === t.name,
@@ -244,7 +244,7 @@ export default {
     },
     activeArticle() {
       for (const c of this.categoryItems) {
-        c.isActive = c.isActive || (this.activeArticle && c.slug === this.activeArticle.getCategorySlug())
+        c.isActive = c.isActive || (this.activeArticle && !this.activeArticle.special && c.slug === this.activeArticle.getCategorySlug())
       }
     },
   },

@@ -6,7 +6,7 @@
 }
 
 .file-control {
-  @include clearfix
+  overflow: hidden;
   margin: 8px 0;
   li {
     float: left;
@@ -22,8 +22,6 @@
     div(v-html="errorMessage")
 
   ul.file-control
-    li
-      nuxt-link.button.is-small(:to="parentLink" :disabled="isRoot") Parent dir
     li
       button.button.is-small.is-info(
         @click="reload",
@@ -70,10 +68,11 @@
         td
           b-checkbox(v-model="selectedFiles", :native-value="file.name")
         td.file-filename
-          span(v-if="file.is_dir")
+          template(v-if="file.is_dir")
             nuxt-link(:to="buildSubLink(file.name)") {{ file.name }}
-            span /
-          span(v-else) {{ file.name }}
+            span &nbsp;/
+          template(v-else)
+            span {{ file.name }}
         td {{ formatByteSize(file.size) }}
         td.is-hidden-touch {{ formatTime(file.mtime) }}
 

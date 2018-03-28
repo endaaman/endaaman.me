@@ -15,8 +15,7 @@ $breakpoint: 720px;
 .root
   my-common
   my-header
-  .container
-    nuxt
+  nuxt
 </template>
 
 <script>

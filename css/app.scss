@@ -52,3 +52,8 @@ pre {
 .noscroll {
   overflow: hidden !important;
 }
+
+.tabs + section.tab-content {
+  padding-left: 0;
+  padding-right: 0;
+}

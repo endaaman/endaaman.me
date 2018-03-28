@@ -88,7 +88,7 @@
 </style>
 
 <template lang="pug">
-header.header(:class="{ 'header-hidden': isSidebarActive, 'header-inverted': !isSmallScreen }")
+header.header(:class="{ 'header-hidden': isSidebarActive, 'header-inverted': !isSmallScreen }", v-if="isSizeCalculated")
   .header-title(v-if="isSmallScreen")
     nuxt-link.nodeco-inline(to='/')
       span.accent E
@@ -122,7 +122,10 @@ header.header(:class="{ 'header-hidden': isSidebarActive, 'header-inverted': !is
       nuxt-link.header-sub-item(:to="activeArticle.getHref()") {{ activeArticle.title }}
 
     template(v-if="isStaticCrumbVisible")
-      nuxt-link.header-sub-item(:to="this.$route.path") {{ staticBreadcrumb }}
+      span(v-for="(crumb, i) in staticBreadcrumbs", :key="crumb.href")
+        span.header-sub-item(v-if="i > 0") /
+        nuxt-link.header-sub-item(:to="crumb.href", v-if="crumb.href") {{ crumb.label }}
+        span.header-sub-item(v-else) {{ crumb.label }}
 
 </template>
 
@@ -179,26 +182,66 @@ export default {
     isStaticCrumbVisible() {
       return this.$route.name !== 's1-s2' && this.$route.name !== 'index'
     },
-    staticBreadcrumb() {
+    staticBreadcrumbs() {
       const defs = [{
         reg: /^login$/,
-        label: 'Login',
+        crumbs: [{
+          label: 'Login',
+          href: '/login',
+        }]
       }, {
         reg: /^logout$/,
-        label: 'Logout',
+        crumbs: [{
+          label: 'Logout',
+          href: '/logout',
+        }]
       }, {
-        reg: /^admin/,
-        label: 'Admin',
+        reg: /^admin$/,
+        crumbs: [{
+          label: 'Admin',
+          href: '/admin',
+        }]
+      }, {
+        reg: /^admin-article$/,
+        crumbs: [{
+          label: 'Admin',
+          href: '/admin',
+        }, {
+          label: 'Article',
+          href: '/admin/article',
+        }]
+      }, {
+        reg: /^admin-article-edit$/,
+        crumbs: [{
+          label: 'Admin',
+          href: '/admin',
+        }, {
+          label: 'Article',
+          href: '/admin/article',
+        }, {
+          label: 'Edit',
+        }]
+      }, {
+        reg: /^admin-file$/,
+        crumbs: [{
+          label: 'Admin',
+          href: '/admin',
+        }, {
+          label: 'File',
+          href: '/admin/file',
+        }]
       }]
-      for (const { reg, label } of defs) {
+      for (const { reg, crumbs } of defs) {
         if (reg.test(this.$route.name)) {
-          return label
+          console.log(crumbs)
+          return crumbs
         }
       }
     },
     ...mapState('layout', [
       'isSidebarActive',
       'isSmallScreen',
+      'isSizeCalculated',
     ]),
     ...mapGetters(['activeCategory', 'activeArticle', 'activeTag']),
     ...mapState('category', ['categories']),

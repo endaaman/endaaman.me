@@ -34,6 +34,63 @@
     margin: 24px 0;
     font-size: $size-6;
   }
+
+  ul, ol {
+    margin: 24px 0 24px 24px;
+  }
+
+  dl {
+    margin: 24px 0;
+    // TODO: use flex
+    overflow: hidden;
+    dt {
+      font-weight: bold;
+    }
+    dd {
+      margin: 0 0 12px 24px;
+    }
+    p {
+      margin: 0 0 12px;
+    }
+  }
+
+  pre {
+    margin: 24px 0;
+    padding: 6px 12px 6px;
+    &.hljs {
+      position: relative;
+      padding-top: 24px;
+      &:before {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        content: attr(data-language)"";
+        font-family: $family-monospace;
+        font-style: italic;
+        font-size: 12px;
+        line-height: 12px;
+        color: $grey-dark;
+      }
+    }
+  }
+
+  blockquote {
+    margin: 24px 0;
+    padding: 6px 12px 6px;
+  //   border-left: $grey-lighter solid 36px;
+  //   position: relative;
+  //   &:before {
+  //     position: absolute;
+  //     top: 50%;
+  //     transform: translateY(-50%);
+  //     left: -24px;
+  //     color: $white-ter;
+  //     content: '\F756';
+  //     font-family: 'Material Design Icons';
+  //     font-size: 36px;
+  //   }
+  }
+
   .fl {
     float: left;
   }

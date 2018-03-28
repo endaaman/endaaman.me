@@ -75,7 +75,7 @@ $sidebar-width: 320px;
 .row
   my-common
   .overlay(@click="closeSidebar", :class="{ 'overlay-active': isSidebarActive }")
-  my-hamburger(:isActive="isSidebarActive", :isInversed="scrollTop < 40", @click="toggleSidebar", v-show="isSmallScreen")
+  my-burger(:isActive="isSidebarActive", :isInversed="scrollTop < 40", @click="toggleSidebar", v-show="isSmallScreen")
   .col-sidebar(:class="{ 'col-sidebar-active': isSidebarActive }")
     my-sidebar
   .col-main(:class="{ 'noscroll': isSidebarActive }")
@@ -90,8 +90,6 @@ import { mapState, mapActions } from 'vuex'
 import debounce from 'debounce'
 
 
-const breakpoint = 720
-
 export default {
   data() {
     return {
@@ -99,17 +97,10 @@ export default {
     }
   },
   mounted() {
-    window.addEventListener('resize', debounce(this.onResize, 50))
     window.addEventListener('scroll', debounce(this.onScroll, 50))
-    this.onResize()
     this.onScroll()
   },
   methods: {
-    onResize() {
-      this.closeSidebar()
-      const isSmall = !window.matchMedia(`(min-width: ${breakpoint}px)`).matches
-      this.$store.dispatch('layout/setIsSmallScreen', isSmall)
-    },
     onScroll() {
       this.scrollTop = document.documentElement.scrollTop
     },
@@ -122,7 +113,7 @@ export default {
     isSidebarActive(flag) {
       document.documentElement.classList.toggle('noscroll', flag)
       document.body.classList.toggle('noscroll', flag)
-    }
+    },
   },
   computed: {
     ...mapState('layout', ['isSidebarActive', 'isSmallScreen']),

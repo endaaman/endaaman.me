@@ -1,10 +1,14 @@
 <style scoped lang="scss">
-// @import "../../../../css/variables";
+@import "../../../css/variables";
+
 </style>
 
 <template lang="pug">
-.container-article-edit.section
-  b-tabs(v-model="activeTab", :animated="false")
+.container-admin-article-edit
+  b-field()
+    button.button.is-primary Save
+
+  b-tabs(v-model="activeTab", :animated="false", type="is-boxed")
     b-tab-item(label="Options")
       form
         b-field(label="Slug", horizontal)
@@ -42,64 +46,33 @@
     b-tab-item(label="Content")
       b-field(label="Content", horizontal)
         b-input(
-          ref="textarea"
+          v-model="article.content",
+          ref="textarea",
           type="textarea",
+          rows="24",
           placeholder="Content")
 
-  p
-    // pre {{ JSON.stringify(article, null, 2) }}
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import autosize from 'autosize'
-import fecha from 'fecha'
-
 
 export default {
-  layout: 'simple',
-  created() {
-    // this.article = {...this.baseArticle}
-    this.article = this.baseArticle.copy()
-  },
   mounted() {
     autosize(this.$refs.textarea.$el.querySelector('textarea'))
   },
   data() {
     return {
-      article: {},
       activeTab: 0,
     }
   },
-  validate({ store, params }) {
-    if (!store.state.authorized) {
-      return false
-    }
-    const { s1, s2 } = params
-    const parent = s1 === '-' ? null : s1
-    return store.getters['article/getArticle'](parent, s2)
-  },
   computed: {
-    baseArticle() {
-      const { s1, s2 } = this.$route.params
-      const parent = s1 === '-' ? null : s1
-      return this.$store.getters['article/getArticle'](parent, s2)
-    },
-    category() {
-      const splitted = this.article.slug.split('/')
-      const slug = splitted.length < 2 ? '-' : splitted[0]
-      const category = this.$store.getters['category/findCategory'](slug)
-      return category || { slug, name: slug }
-    },
-    ...mapState('category', ['categories'])
-  },
-  methods: {
-    dateParser(date) {
-      return new Date(date)
-    },
-    dateFormatter(date) {
-      console.log(date)
-      return fecha.format(date, 'YYYY-MM-DD')
+    ...mapState('category', ['categories']),
+    article() {
+      const { relative } = this.$route.query
+      const org = this.$store.getters['article/getArticleByRelative'](relative)
+      return org.copy()
     }
   }
 }

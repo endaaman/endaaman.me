@@ -106,7 +106,7 @@ a.article-navigator {
         span ・{{ article.date | date }}
         template(v-if="authorized")
           span ・
-          nuxt-link(:to="article.getHref() + '/edit'") edit
+          nuxt-link(:to="'/admin/article?relative=' + article.getRelative()") edit
       h1.article-title
         nuxt-link(:to="article.getHref()") {{ article.title }}
       .article-sub.article-digest(v-if="article.digest")

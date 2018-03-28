@@ -1,17 +1,21 @@
 # TODOs
 
-- HOME
 - article CRUD
+- file upload/delete/rename
+- modal
 - markdown renderer
-- head
+- headers for SEO
 - redirect by aliases
+- redirect by old routing
 - twitter/youtube embed
-- search
 - google analytics
-- comment
-- next article
-- related article(same category, same tags)
 
+
+## passive
+
+- search
+- comment
+- related article(same category, same tags)
+- mkdir
 - file preview
 - file editor
-- mkdir

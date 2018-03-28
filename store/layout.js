@@ -1,6 +1,7 @@
 export const state = () => ({
   isSidebarActive: false,
   isSmallScreen: true,
+  isSizeCalculated: false,
   activeArticle: null,
   activeCategory: null,
   activeTag: null,
@@ -12,6 +13,9 @@ export const mutations = {
   },
   setIsSmallScreen(state, flag) {
     state.isSmallScreen = flag
+  },
+  setIsSizeCalculated(state, flag) {
+    state.isSizeCalculated = flag
   },
 
   setActiveArticle(state, article) {
@@ -37,6 +41,9 @@ export const actions = {
   },
   setIsSmallScreen({ commit }, flag) {
     commit('setIsSmallScreen', flag)
+  },
+  setIsSizeCalculated({ commit }, flag) {
+    commit('setIsSizeCalculated', flag)
   },
   setActiveArticle({ commit }, article) {
     commit('setActiveArticle', article)

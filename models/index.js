@@ -14,6 +14,9 @@ export class Article {
     return (parent || '-') + '/' + slug
   }
   matchByRelative(relative) {
+    if (!relative) {
+      return false
+    }
     const [ categorySlug, slug ] = relative.split('/')
     return this.getCategorySlug() === categorySlug && this.slug === slug 
   }
@@ -26,8 +29,11 @@ export class Article {
     }
     return [ NO_TAG_NAME ]
   }
+  serialize() {
+    return JSON.stringify(this)
+  }
   copy() {
-    return new Article(JSON.parse(JSON.stringify(this)))
+    return new Article(JSON.parse(this.serialize()))
   }
   getDigest() {
     if (this.digest) {
@@ -50,6 +56,19 @@ export class Article {
   }
   equals(another) {
     return this.parent === another.parent && this.slug === another.slug 
+  }
+  toPrintableJson() {
+    const contentLimit = 40
+    return {
+      ...this,
+      extra: {
+        relative: this.getRelative(),
+        href: this.getHref(),
+      },
+      content: this.content.length > contentLimit
+        ? (this.content.substr(0, contentLimit) + '...')
+        : this.content
+    }
   }
   getSiblings() {
     if (this.special) {
