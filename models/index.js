@@ -2,9 +2,24 @@ import fecha from 'fecha'
 import { NO_TAG_NAME, NO_CATEGORY_SLUG } from '../constants'
 
 
+const fieldOriginal = Symbol()
+
 export class Article {
   constructor(obj, store) {
-    Object.assign(this, obj)
+    Object.assign(this, obj || {
+      parent: null,
+      slug: '',
+      title: '' ,
+      aliases: [],
+      content: '',
+      image: '',
+      digest: '',
+      tags: [],
+      priority: 0,
+      private: false,
+      special: false,
+      date: fecha.format((new Date()), 'YYYY-MM-DD'),
+    })
   }
   getCategorySlug() {
     return this.parent || NO_CATEGORY_SLUG
@@ -33,7 +48,9 @@ export class Article {
     return JSON.stringify(this)
   }
   copy() {
-    return new Article(JSON.parse(this.serialize()))
+    const a = new Article(JSON.parse(this.serialize()))
+    a[fieldOriginal] = this
+    return a
   }
   getDigest() {
     if (this.digest) {
@@ -43,6 +60,9 @@ export class Article {
     const base = this.content.substring(0, 200)
     const tmp = base.replace(/#|`|:|-|\||\*|_/g, '').substring(0, threshold)
     return (tmp.length < threshold) ? tmp : (tmp + '...')
+  }
+  getOriginal() {
+    return this[fieldOriginal] || null
   }
   matchParent(parent) {
     if (parent === '-' && this.parent === null) {
@@ -54,10 +74,10 @@ export class Article {
     const slug = this.parent || NO_CATEGORY_SLUG
     return this.constructor.store.getters['category/getCategoryBySlug'](slug)
   }
-  equals(another) {
-    return this.parent === another.parent && this.slug === another.slug 
-  }
-  toPrintableJson() {
+  // equals(another) {
+  //   return this.parent === another.parent && this.slug === another.slug 
+  // }
+  toPrintable() {
     const contentLimit = 40
     return {
       ...this,
@@ -134,8 +154,14 @@ export class Article {
     }
     return this.slug.localeCompare(that.slug)
   }
+  equals(that) {
+    return this.serialize() === that.serialize()
+  }
+  equalsExceptForContent(that) {
+    return JSON.stringify({...this, ...{content: ''}}) === JSON.stringify({...that, ...{content: ''}})
+  }
 }
-
+    
 
 export class Category {
   constructor(obj) {

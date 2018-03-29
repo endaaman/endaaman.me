@@ -8,6 +8,11 @@
 
 <script>
 export default {
+  head() {
+    return {
+      title: 'Logout',
+    }
+  },
   data: () => ({
     loading: false,
     errorMessage: '',

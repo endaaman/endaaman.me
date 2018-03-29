@@ -7,19 +7,31 @@ export const state = () => ({
 })
 
 export const mutations = {
-  setArticles(state, items) {
+  set(state, items) {
     state.articles = items.map((a) => new Article(a))
     state.isFetched = true
   },
+  sort(state) {
+    const aa = [...state.articles]
+    aa.sort((a, b) => a.compare(b))
+    state.articles = aa
+  },
   wrap(state, items) {
     state.articles = state.articles.map((a) => new Article(a))
+  },
+  removeByRelative(state, relative) {
+    state.articles = state.articles.filter((a) => !a.matchByRelative(relative))
+  },
+  add(state, article) {
+    state.articles = [...state.articles, new Article(article)]
   },
 }
 
 export const actions = {
   async fetchArticles({ commit, getters, rootGetters }) {
-    const { data } = await rootGetters.api.get('/aa')
-    commit('setArticles', data)
+    const res = await rootGetters.api2('/aa')
+    commit('set', await res.json())
+    commit('sort')
   },
   async getArticles({ state, dispatch }) {
     if (state.isFetched) {
@@ -27,18 +39,55 @@ export const actions = {
     }
     await dispatch('fetchArticles')
   },
+
+  async createArticles({ commit, rootGetters }, { article }) {
+    const res = await rootGetters.api2('/aa/', {
+      method: 'POST',
+      body: article.serialize(),
+    })
+    if (!res.ok) {
+      return { error: await res.text() }
+    }
+    const data = new Article(await res.json())
+    commit('add', data)
+    commit('sort')
+    return { error: null, data }
+  },
+
+  async updateArticles({ commit, rootGetters }, { article }) {
+    const originalRelative = article.getOriginal().getRelative()
+    const res = await rootGetters.api2('/aa/' + originalRelative, {
+      method: 'PATCH',
+      body: article.serialize(),
+    })
+    if (!res.ok) {
+      return { error: await res.text() }
+    }
+    const data = new Article(await res.json())
+    commit('removeByRelative', originalRelative)
+    commit('add', data)
+    commit('sort')
+    return { error: null, data }
+  },
+
+  async deleteArticles({ commit, rootGetters }, { article }) {
+    const originalRelative = article.getOriginal().getRelative()
+    const res = await rootGetters.api2('/aa/' + originalRelative, {
+      method: 'DELETE',
+    })
+    if (!res.ok) {
+      return { error: await res.text() }
+    }
+    return { error: null }
+  }
 }
 
 export const getters = {
   specialArticles(state) {
-    const aa = state.articles.filter(a => a.special)
-    aa.sort((a, b) => a.compare(b))
-    return aa
+    return state.articles.filter(a => a.special)
   },
   normalArticles(state) {
-    const aa = state.articles.filter(a => !a.special)
-    aa.sort((a, b) => a.compare(b))
-    return aa
+    return state.articles.filter(a => !a.special)
   },
   getArticleByRelative(state) {
     return (relative) => {

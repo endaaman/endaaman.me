@@ -4,54 +4,22 @@
 </style>
 
 <template lang="pug">
-.container-admin-article-edit
-  b-field()
-    button.button.is-primary Save
+.container-admin-article-edit(v-if="originalArticle")
+  form(v-on:submit.prevent="update")
+    ul.list-inline
+      li
+        nuxt-link.button.is-small(:to="'/admin/article'") Back to list
+      li
+        nuxt-link.button.is-small(:to="originalArticle.getHref()") Show article
+      li
+        input.button.is-primary.is-small(type="submit", value="Update")
+      li.list-item-right
+        input.button.is-danger.is-small(type="button", @click="tryDelete", value="Delete")
 
-  b-tabs(v-model="activeTab", :animated="false", type="is-boxed")
-    b-tab-item(label="Options")
-      form
-        b-field(label="Slug", horizontal)
-          b-input(v-model="article.slug", placeholder="Slug", expanded)
-
-        b-field(label="Title", horizontal)
-          b-input(v-model="article.title", placeholder="Title", expanded)
-
-        b-field(label="Digest", horizontal)
-          b-input(v-model="article.digest", placeholder="Digest", expanded)
-
-        b-field(label="Date", horizontal)
-          b-input(type="date", v-model="article.date", placeholder="Date", expanded)
-
-        b-field(label="Category", horizontal)
-          b-select(placeholder="Select a topic", v-model="article.parent")
-            option(
-              v-for="c in categories"
-              :value="c.slug"
-              :key="c.slug"
-            ) {{ c.name }}
-
-        b-field(label="Tags", horizontal)
-          b-taginput(
-            v-model="article.tags"
-            icon="label"
-            placeholder="Tags")
-
-        b-field(label="Aliases", horizontal)
-          b-taginput(
-            v-model="article.aliases"
-            icon="label"
-            placeholder="Aliases")
-
-    b-tab-item(label="Content")
-      b-field(label="Content", horizontal)
-        b-input(
-          v-model="article.content",
-          ref="textarea",
-          type="textarea",
-          rows="24",
-          placeholder="Content")
-
+    my-article-form(
+      :article="edittingArticle",
+      :originalArticle="originalArticle",
+      @save="update")
 </template>
 
 <script>
@@ -59,21 +27,112 @@ import { mapState } from 'vuex'
 import autosize from 'autosize'
 
 export default {
-  mounted() {
-    autosize(this.$refs.textarea.$el.querySelector('textarea'))
+  validate({ redirect, query, store }) {
+    const { relative } = query
+    return store.getters['article/getArticleByRelative'](relative)
+  },
+  beforeRouteLeave(to, from, _next) {
+    const next = () => {
+      this.unbind()
+      _next()
+    }
+    if (this.isChanged) {
+      this.confirmPageLeave(next)
+      return
+    }
+    next()
   },
   data() {
     return {
-      activeTab: 0,
+      changedAlertMessage: 'Now you editting and there are some changes on the article. Ok to leaven this page?',
+      edittingArticle: null,
+      onBeforeUnload: (e) => {
+        if (this.isChanged) {
+          e.returnValue = this.changedAlertMessage
+        }
+      },
     }
   },
+  created() {
+    this.edittingArticle = this.originalArticle.copy()
+  },
+  mounted() {
+    window.addEventListener('beforeunload', this.onBeforeUnload, false)
+  },
+  beforeDestory() {
+    this.unbind()
+  },
   computed: {
-    ...mapState('category', ['categories']),
-    article() {
+    originalArticle() {
       const { relative } = this.$route.query
-      const org = this.$store.getters['article/getArticleByRelative'](relative)
-      return org.copy()
-    }
-  }
+      return this.$store.getters['article/getArticleByRelative'](relative)
+    },
+    isChanged() {
+      return !this.originalArticle.equals(this.edittingArticle)
+    },
+  },
+  methods: {
+    unbind() {
+      window.removeEventListener('beforeunload', this.onBeforeUnload)
+    },
+    async update() {
+      const loading = this.$loading.open()
+      const { error, data } = await this.$store.dispatch('article/updateArticles', {
+        article: this.edittingArticle
+      })
+      loading.close()
+      if (error) {
+        this.$dialog.alert({
+          title: 'Error',
+          message: error,
+          type: 'is-danger',
+        })
+        return
+      }
+      this.$router.push('/admin/article/edit?relative=' + data.getRelative())
+      await this.$nextTick()
+      this.edittingArticle = this.originalArticle.copy()
+      this.$toast.open({
+        message: 'Updated',
+        position: 'is-bottom',
+      })
+    },
+    async tryDelete() {
+      this.$dialog.confirm({
+        title: 'Confim delete',
+        message: `OK to delete 「${ this.edittingArticle.slug }」`,
+        cancelText: 'Cancel',
+        confirmText: 'OK',
+        type: 'is-danger',
+        onConfirm: () => { this.delete() }
+      })
+    },
+    async delete() {
+      const loading = this.$loading.open()
+      const { error } = await this.$store.dispatch('article/deleteArticles', {
+        article: this.edittingArticle
+      })
+      loading.close()
+      if (error) {
+        this.$dialog.alert({
+          title: 'Error',
+          message: error,
+          type: 'is-danger',
+        })
+        return
+      }
+      this.$router.push('/admin/article')
+      await this.$store.dispatch('article/fetchArticles')
+    },
+    confirmPageLeave(cb) {
+      this.$dialog.confirm({
+        message: this.changedAlertMessage,
+        cancelText: 'Cancel',
+        confirmText: 'OK',
+        type: 'is-danger',
+        onConfirm: () => cb()
+      })
+    },
+  },
 }
 </script>

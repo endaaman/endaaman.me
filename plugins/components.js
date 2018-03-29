@@ -1,33 +1,18 @@
 import Vue from 'vue'
-import VueMarkdown from '@endaaman/vue-markdown'
-// import AceEditor from 'vue2-ace-editor'
-import Buefy, { Toast } from 'buefy'
+import ArticleForm from '../components/article-form.vue'
+import Burger from '../components/burger.vue'
+import Common from '../components/common.vue'
+import Footer from '../components/footer.vue'
+import Header from '../components/header.vue'
+import Logo from '../components/logo.vue'
+import Markdown from '../components/markdown.vue'
+import Sidebar from '../components/sidebar.vue'
 
-Vue.component('vue-markdown', VueMarkdown)
-// Vue.component('vue-editor', AceEditor)
-
-
-const components = [
-  'Checkbox',
-  'Datepicker',
-  'Field',
-  'Icon',
-  'Input',
-  'Pagination',
-  'Select',
-  'TabItem',
-  'Table',
-  'TableColumn',
-  'Tabs',
-  'Tag',
-  'Taginput',
-]
-for (const c of components) {
-  Vue.component(Buefy[c].name, Buefy[c])
-}
-Vue.use({
-  install(Vue) {
-    Vue.prototype.$toast = Toast
-  }
-})
-// Vue.use(Buefy)
+Vue.component('my-article-form', ArticleForm)
+Vue.component('my-burger', Burger)
+Vue.component('my-common', Common)
+Vue.component('my-footer', Footer)
+Vue.component('my-header', Header)
+Vue.component('my-logo', Logo)
+Vue.component('my-markdown', Markdown)
+Vue.component('my-sidebar', Sidebar)

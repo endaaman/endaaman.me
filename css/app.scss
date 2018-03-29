@@ -57,3 +57,16 @@ pre {
   padding-left: 0;
   padding-right: 0;
 }
+
+ul.list-inline {
+  overflow: hidden;
+  margin: 12px 0;
+  li {
+    float: left;
+    margin-right: 12px;
+  }
+  li.list-item-right {
+    float: right;
+    margin-left: 12px;
+  }
+}

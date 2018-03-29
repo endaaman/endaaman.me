@@ -109,13 +109,19 @@
   .indented {
     margin: 16px;
   }
+
+  .no-content {
+    color: $grey;
+    font-style: italic;
+  }
 }
 </style>
 
 <template lang="pug">
 .md-content.content
-  vue-markdown(v-bind="mdProps")
+  vue-markdown(:source="source", v-bind="mdProps", v-if="source")
     slot
+  p.no-content(v-else) No content
 </template>
 
 <script>
@@ -125,6 +131,12 @@ import mdItContainer from 'markdown-it-container'
 import mdItMultimdTable from 'markdown-it-multimd-table'
 
 export default {
+  props: {
+    source: {
+      type: String,
+      default: '',
+    },
+  },
   data: () => ({
     mdProps: {
       linkify: false,

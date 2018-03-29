@@ -15,21 +15,24 @@
 
 <template lang="pug">
 .container-admin-article
-  b-field(grouped group-multiline)
-    b-select(placeholder="Category", size="is-small", v-model="selectedCategorySlug")
-      option(:value="null") すべて
-      option(v-for="c in categories", :key="c.slug", :value="c.slug") {{ c.name }}
+  ul.list-inline
+    li
+      nuxt-link.button.is-primary.is-small(to="/admin/article/new") New
+    li
+      b-select(placeholder="Category", size="is-small", v-model="selectedCategorySlug")
+        option(:value="null") すべて
+        option(v-for="c in categories", :key="c.slug", :value="c.slug") {{ c.name }}
+    li
+      b-select(placeholder="Tag", size="is-small", v-model="selectedTag")
+        option(:value="null") すべて
+        option(v-for="tag in tags", :key="tag.name", :value="tag.name") {{ tag.name }} ({{ tag.count }})
 
-    b-select(placeholder="Tag", size="is-small", v-model="selectedTag")
-      option(:value="null") すべて
-      option(v-for="tag in tags", :key="tag", :value="tag") {{ tag }}
-
-  b-table(:data="articleDate", :mobile-cards="false", detailed)
+  b-table(:data="articleDate", :mobile-cards="false", detailed, default-sort="date", default-sort-direction="desc")
     template(slot-scope="data")
       b-table-column(label="Relative", field="extra.relative", :visible="!isSmallScreen", :sortable="true")
         code {{ data.row.extra.relative }}
       b-table-column(label="Title", field="title", :sortable="true")
-        | {{ data.row.title }}
+        nuxt-link(:to="'/' + data.row.extra.relative") {{ data.row.title }}
         span.icon.has-text-danger(v-if="data.row.private")
           i.mdi.mdi-lock
         span.icon.has-text-info(v-if="data.row.special")
@@ -41,7 +44,7 @@
       b-table-column(label="Date", field="date", :sortable="true")
         | {{ data.row.date }}
     template(slot="detail", slot-scope="data")
-      pre.article-json {{ JSON.stringify(data.row, null, 2) }}
+      pre.article-json {{ data.row | json }}
 </template>
 
 <script>
@@ -58,7 +61,9 @@ export default {
     ...mapState('layout', ['isSmallScreen']),
     ...mapState('article', ['articles']),
     ...mapState('category', ['categories']),
-    ...mapGetters('article', ['tags']),
+    ...mapGetters('article', {
+      'tags': 'tagAggregations',
+    }),
     filteredArticles() {
       const c = this.selectedCategorySlug
       const t = this.selectedTag
@@ -74,7 +79,7 @@ export default {
       })
     },
     articleDate() {
-      return this.filteredArticles.map((a) => a.toPrintableJson())
+      return this.filteredArticles.map((a) => a.toPrintable())
     },
     columns() {
       return [

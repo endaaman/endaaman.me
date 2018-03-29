@@ -1,15 +1,15 @@
 # TODOs
 
-- article CRUD
-- file upload/delete/rename
-- modal
-- markdown renderer
-- headers for SEO
 - redirect by aliases
 - redirect by old routing
-- twitter/youtube embed
-- google analytics
+- file upload/delete/rename
+- file link
 
+## after deployment
+
+- SEO
+  - headers
+  - google analytics
 
 ## passive
 
@@ -19,3 +19,6 @@
 - mkdir
 - file preview
 - file editor
+- markdown renderer
+  - twitter/youtube embed
+  - image modal

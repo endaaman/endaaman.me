@@ -4,15 +4,6 @@
 .file-filename {
   font-family: $family-monospace;
 }
-
-.file-control {
-  overflow: hidden;
-  margin: 8px 0;
-  li {
-    float: left;
-    margin-right: 8px;
-  }
-}
 </style>
 
 <template lang="pug">
@@ -21,7 +12,7 @@
     button.delete(@click="errorMessage = ''")
     div(v-html="errorMessage")
 
-  ul.file-control
+  ul.list-inline
     li
       button.button.is-small.is-info(
         @click="reload",

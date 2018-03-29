@@ -43,6 +43,8 @@
 <template lang="pug">
 .container-home.container
   .section
+    nuxt-link(to="/s1") s1
+
     nuxt-link.article-item(v-for="a in articles", :key="a.slug", :to="a.getHref()")
       .article-title {{ a.title }}
       .article-digest {{ a.getDigest() }}
@@ -62,6 +64,11 @@
 import { mapState, mapGetters } from 'vuex'
 
 export default {
+  head() {
+    return {
+      title: 'Home',
+    }
+  },
   // validate() {
   //   // validate category and tag query
   // },

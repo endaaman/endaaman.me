@@ -5,6 +5,9 @@ module.exports = {
   },
   dev: process.env.NODE_ENV !== 'production',
   head: {
+    titleTemplate(title) {
+      return title ? `${title} - endaaman.me` : 'Endaaman.me'
+    },
     link: [
       {
         rel: 'stylesheet',
@@ -17,11 +20,12 @@ module.exports = {
     ]
   },
   css: [
-    { src: 'mdi/css/materialdesignicons.css', lang: 'css' },
-    { src: 'highlight.js/styles/vs.css', lang: 'css' },
+    'mdi/css/materialdesignicons.css',
+    'highlight.js/styles/vs.css',
     { src: '@/css/bulma.scss', lang: 'scss' },
     { src: '@/css/katex.scss', lang: 'scss' },
     { src: '@/css/app.scss', lang: 'scss' },
+    { src: '@/css/codemirror.scss', lang: 'scss' },
   ],
    build: {
     extend (config) {
@@ -43,9 +47,12 @@ module.exports = {
     }
   },
   plugins: [
-    { src: '~plugins/ga', ssr: false },
+    '~plugins/buefy',
+    { src: '~plugins/codemirror', ssr: false },
     '~plugins/components',
-    '~plugins/my-components',
+    '~plugins/filters',
+    { src: '~plugins/ga', ssr: false },
+    '~plugins/markdown',
     '~plugins/vuex-router-sync',
   ],
 }

@@ -23,6 +23,11 @@ import { mapState, mapGetters } from 'vuex'
 
 export default {
   layout: 'simple',
+  head() {
+    return {
+      title: 'Admin',
+    }
+  },
   methods: {
     isActive(l) {
       const { path } = this.$route
@@ -48,6 +53,11 @@ export default {
         }
       ]
     }
+  },
+  watch: {
+    $route(from, to, next) {
+      // console.log(from, to, next)
+    },
   },
 }
 </script>

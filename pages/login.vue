@@ -1,3 +1,12 @@
+<style scoped lang="scss">
+@import "../css/variables";
+
+// .container-login {
+//   margin: 0 auto;
+//   max-width: 480px;
+// }
+</style>
+
 <template lang="pug">
 .container-login.section
   .notification.is-danger(v-if="errorMessage")
@@ -16,6 +25,11 @@
 import { mapState } from 'vuex'
 
 export default {
+  head() {
+    return {
+      title: 'Logout',
+    }
+  },
   data: () => ({
     isLoading: false,
     errorMessage: '',
@@ -29,7 +43,6 @@ export default {
       })
       this.isLoading = false
 
-      console.log(this.$refs.password.value)
       if (error) {
         this.errorMessage = error.message
       } else {

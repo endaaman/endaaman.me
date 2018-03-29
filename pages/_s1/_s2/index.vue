@@ -101,22 +101,26 @@ a.article-navigator {
   .section
     .article-heading
       .article-sub.article-dates
-        span カテゴリ：
-        nuxt-link(:to="'/?category=' + article.getCategory().slug") {{ article.getCategory().name }}
-        span ・{{ article.date | date }}
+        template(v-if="!article.special")
+          span カテゴリ：
+          nuxt-link(:to="'/?category=' + article.getCategory().slug") {{ article.getCategory().name }}
+          span ・
+        span {{ article.date | date }}
         template(v-if="authorized")
           span ・
-          nuxt-link(:to="'/admin/article?relative=' + article.getRelative()") edit
+          nuxt-link(:to="'/admin/article/edit?relative=' + article.getRelative()") edit
+          span.icon.has-text-danger(v-if="article.private")
+            i.mdi.mdi-lock
       h1.article-title
         nuxt-link(:to="article.getHref()") {{ article.title }}
       .article-sub.article-digest(v-if="article.digest")
         | {{ article.digest }}
-      .article-sub.article-tags(v-if="article.getTags().length > 0")
+      .article-sub.article-tags(v-if="!article.special && article.getTags().length > 0")
         .tags
           nuxt-link.tag.is-white(v-for="tag in article.getTags()", :to="'/?tag=' + tag" :key="tag") {{ tag }}
 
     // .article-delimiter
-    my-markdown {{ article.content }}
+    my-markdown(:source="article.content")
 
     .article-bottom(v-if="prevArticle || nextArticle")
       hr.article-bottom-divider
@@ -144,6 +148,22 @@ a.article-navigator {
 import { mapState } from 'vuex'
 
 export default {
+  head() {
+      const meta = [{
+        name: 'description',
+        content: this.article.getDigest(),
+      }, ]
+    if (this.article.tags.length > 0) {
+      meta.push({
+        name: 'keywords',
+        content: this.article.tags.join(','),
+      })
+    }
+    return {
+      title: this.article.title,
+      meta,
+    }
+  },
   validate({ store, params }) {
     const { s1, s2 } = params
     return store.getters['article/getArticleByRelative'](s1 + '/' + s2)

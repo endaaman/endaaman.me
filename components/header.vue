@@ -222,6 +222,18 @@ export default {
           label: 'Edit',
         }]
       }, {
+        reg: /^admin-article-new$/,
+        crumbs: [{
+          label: 'Admin',
+          href: '/admin',
+        }, {
+          label: 'Article',
+          href: '/admin/article',
+        }, {
+          label: 'New',
+          href: '/admin/article/new',
+        }]
+      }, {
         reg: /^admin-file$/,
         crumbs: [{
           label: 'Admin',
@@ -233,7 +245,6 @@ export default {
       }]
       for (const { reg, crumbs } of defs) {
         if (reg.test(this.$route.name)) {
-          console.log(crumbs)
           return crumbs
         }
       }
