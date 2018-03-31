@@ -37,7 +37,6 @@ export default {
       edittingArticle: originalArticle.copy(),
       editting: true,
       onBeforeUnload: (e) => {
-        console.log(this.editting)
         if (this.editting && this.isChanged) {
           e.returnValue = this.changedAlertMessage
         }

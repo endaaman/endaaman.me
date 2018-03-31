@@ -22,8 +22,8 @@ export const mutations = {
 
 export const actions = {
   async fetchCategories({ commit, getters, rootGetters }) {
-    const { data } = await rootGetters.api.get('/categories')
-    commit('setCategories', data)
+    const res = await rootGetters.api('/categories')
+    commit('setCategories', await res.json())
   },
   async getCategories({ state, dispatch }) {
     if (state.isFetched) {

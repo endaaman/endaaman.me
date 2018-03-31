@@ -149,10 +149,10 @@ import { mapState } from 'vuex'
 
 export default {
   head() {
-      const meta = [{
-        name: 'description',
-        content: this.article.getDigest(),
-      }, ]
+    const meta = [{
+      name: 'description',
+      content: this.article.getDigest(),
+    }, ]
     if (this.article.tags.length > 0) {
       meta.push({
         name: 'keywords',

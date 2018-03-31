@@ -24,10 +24,9 @@
 
 <script>
 import { mapState } from 'vuex'
-import autosize from 'autosize'
 
 export default {
-  validate({ redirect, query, store }) {
+  validate({ redirect, query, store}) {
     const { relative } = query
     return store.getters['article/getArticleByRelative'](relative)
   },
@@ -93,8 +92,7 @@ export default {
       await this.$nextTick()
       this.edittingArticle = this.originalArticle.copy()
       this.$toast.open({
-        message: 'Updated',
-        position: 'is-bottom',
+        message: `Updated "${ this.edittingArticle.title }"`,
       })
     },
     async tryDelete() {
@@ -123,6 +121,9 @@ export default {
       }
       this.$router.push('/admin/article')
       await this.$store.dispatch('article/fetchArticles')
+      this.$toast.open({
+        message: `Deleted "${ this.edittingArticle.title }"`,
+      })
     },
     confirmPageLeave(cb) {
       this.$dialog.confirm({

@@ -18,5 +18,10 @@
 <script>
 export default {
   props: ['error'],
+  head() {
+    return {
+      title: this.error.statusCode,
+    }
+  }
 }
 </script>

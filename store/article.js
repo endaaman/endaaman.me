@@ -29,7 +29,7 @@ export const mutations = {
 
 export const actions = {
   async fetchArticles({ commit, getters, rootGetters }) {
-    const res = await rootGetters.api2('/aa')
+    const res = await rootGetters.api('/aa')
     commit('set', await res.json())
     commit('sort')
   },
@@ -41,9 +41,9 @@ export const actions = {
   },
 
   async createArticles({ commit, rootGetters }, { article }) {
-    const res = await rootGetters.api2('/aa/', {
+    const res = await rootGetters.api('/aa/', {
       method: 'POST',
-      body: article.serialize(),
+      json: article,
     })
     if (!res.ok) {
       return { error: await res.text() }
@@ -56,9 +56,9 @@ export const actions = {
 
   async updateArticles({ commit, rootGetters }, { article }) {
     const originalRelative = article.getOriginal().getRelative()
-    const res = await rootGetters.api2('/aa/' + originalRelative, {
+    const res = await rootGetters.api('/aa/' + originalRelative, {
       method: 'PATCH',
-      body: article.serialize(),
+      json: article,
     })
     if (!res.ok) {
       return { error: await res.text() }
@@ -72,7 +72,7 @@ export const actions = {
 
   async deleteArticles({ commit, rootGetters }, { article }) {
     const originalRelative = article.getOriginal().getRelative()
-    const res = await rootGetters.api2('/aa/' + originalRelative, {
+    const res = await rootGetters.api('/aa/' + originalRelative, {
       method: 'DELETE',
     })
     if (!res.ok) {

@@ -5,7 +5,12 @@
 
 <template lang="pug">
 .container-admin-article
-  pre {{ warnings | json }}
+  .content
+    h3 Status
+    pre {{ warnings | json }}
+
+    h3 Toke
+    pre {{ token }}
 </template>
 
 <script>
@@ -16,7 +21,7 @@ export default {
     await store.dispatch('fetchWarnings')
   },
   computed: {
-    ...mapState(['warnings']),
+    ...mapState(['warnings', 'token']),
   },
 }
 </script>

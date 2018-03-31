@@ -191,7 +191,7 @@ aside.sidebar
           span.link-text @endaaman
 
     span.footer-left-text
-      | Built with&#x20;
+      | Made with&#x20;
       i.mdi.mdi-heart.is-primay
       | &#x20;at {{ builtAt | date('YYYY-MM-DD') }}
 

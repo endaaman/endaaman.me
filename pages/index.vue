@@ -43,14 +43,16 @@
 <template lang="pug">
 .container-home.container
   .section
-    nuxt-link(to="/s1") s1
-
     nuxt-link.article-item(v-for="a in articles", :key="a.slug", :to="a.getHref()")
-      .article-title {{ a.title }}
-      .article-digest {{ a.getDigest() }}
+      .article-title
+        | {{ a.title }}
+      .article-digest
+        | {{ a.getDigest() }}
       .article-sub
         .article-date
           | {{ a.date | date }}
+          span.icon.has-text-danger(v-if="a.private")
+            i.mdi.mdi-lock
         .article-tags
           .tags
             .tag.is-white(

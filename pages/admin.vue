@@ -23,6 +23,7 @@ import { mapState, mapGetters } from 'vuex'
 
 export default {
   layout: 'simple',
+  middleware: 'auth',
   head() {
     return {
       title: 'Admin',
@@ -53,11 +54,6 @@ export default {
         }
       ]
     }
-  },
-  watch: {
-    $route(from, to, next) {
-      // console.log(from, to, next)
-    },
   },
 }
 </script>

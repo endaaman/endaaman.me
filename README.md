@@ -1,14 +1,14 @@
 # TODOs
 
-- redirect by aliases
-- redirect by old routing
-- file upload/delete/rename
-- file link
+- file
+  - link
+  - copy link
+- article sort order
 
 ## after deployment
 
 - SEO
-  - headers
+  - headers twitter/ogp
   - google analytics
 
 ## passive

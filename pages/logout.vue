@@ -23,7 +23,6 @@ export default {
       this.$router.push('/')
       this.$toast.open({
         message: 'Logged out',
-        position: 'is-bottom',
       })
     },
   }

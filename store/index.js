@@ -1,5 +1,4 @@
-import axios from 'axios'
-import urljoin from 'url-join'
+import urlJoin from 'url-join'
 import fetch from 'node-fetch'
 import cookieParser from 'cookie'
 import browserCookie from 'browser-cookies'
@@ -23,13 +22,20 @@ export const mutations = {
   setToken(state, token) {
     state.token = token
     if (!process.server) {
-      browserCookie.set('token', token, { expires: 365 })
+      browserCookie.set('token', token, {
+        expires: 365,
+      })
+      browserCookie.set('token', token, {
+        expires: 365,
+        domain: process.env.staticHost,
+      })
     }
   },
   clearToken(state) {
     state.token = null
     if (!process.server) {
       browserCookie.erase('token')
+      browserCookie.erase('token', { domain: process.env.staticHost, })
     }
   },
   setAuthorized(state, authorized) {
@@ -60,7 +66,7 @@ export const actions = {
     commit('category/wrap')
   },
   async login({ getters, commit, dispatch }, { password }) {
-    const res = await getters.api2('/sessions', {
+    const res = await getters.api('/sessions', {
       method: 'POST',
       json: { password },
     })
@@ -73,7 +79,7 @@ export const actions = {
     return { error: null }
   },
   async checkAuth({ getters, commit, dispatch }) {
-    const res = await getters.api2('/sessions')
+    const res = await getters.api('/sessions')
     if (!res.ok) {
       commit('clearToken')
     }
@@ -85,7 +91,7 @@ export const actions = {
     await dispatch('article/fetchArticles')
   },
   async fetchWarnings({ getters, commit, dispatch }) {
-    const res = await getters.api2('/misc/warnings', { method: 'GET' })
+    const res = await getters.api('/misc/warnings', { method: 'GET' })
     commit('setWarnings', await res.json())
   },
 }
@@ -96,29 +102,20 @@ export const getters = {
     if (token) {
       headers['Authorization'] = 'Bearer ' + token
     }
-    return axios.create({
-      baseURL: process.env.apiRoot,
-      headers,
-    })
-  },
-  api2({ token }) {
-    const headers = {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
-    if (token) {
-      headers['Authorization'] = 'Bearer ' + token
-    }
-    return (url, options) => {
-      const body = {}
-      if (options && options.json) {
-        body['body'] = JSON.stringify(options.json)
+    return (url, options = {}) => {
+      if (options.json) {
+        options['body'] = JSON.stringify(options.json)
+        headers['Content-Type'] = 'application/json'
       }
-      return fetch(urljoin(process.env.apiRoot, url), {
-        headers,
-        ...options,
-        ...body,
-      })
+      if (options.headers) {
+        options.headers = {
+          ...headers,
+          ...options.headers,
+        }
+      } else {
+        options.headers = headers
+      }
+      return fetch(urlJoin(process.env.apiRoot, url), options)
     }
   },
   activeCategory(state, getters) {

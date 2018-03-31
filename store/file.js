@@ -1,6 +1,4 @@
-import axios from 'axios'
-
-// export const namespaced = true
+import urlJoin from 'url-join'
 
 export const state = () => ({
   tree: {},
@@ -22,10 +20,10 @@ export const mutations = {
 }
 
 export const actions = {
-  async fetchFiles({ commit, getters, rootGetters }, { dir }) {
+  async fetchFiles({ commit, dispatch, getters, rootGetters }, { dir }) {
     dir = dir || ''
-    const { data } = await rootGetters.api.get('files/' + dir)
-    commit('SET_FILES', [ dir, data ])
+    const res = await rootGetters.api('files/' + dir)
+    commit('SET_FILES', [ dir, await res.json() ])
   },
   async getFiles({ commit, getters, dispatch }, { dir }) {
     dir = dir || ''
@@ -35,33 +33,48 @@ export const actions = {
     await dispatch('fetchFiles', { dir })
   },
   async deleteFile({ commit, dispatch, rootGetters }, { dir, name }) {
-    let error = null
-    try {
-      await rootGetters.api.delete('files/' + (dir ? `${dir}/${name}` : name))
-      commit('DELETE_FILE', [ dir, name ])
-    } catch (e) {
-      error = e.message
+    const res = await rootGetters.api('files/' + urlJoin(dir, name), { method: 'DELETE' })
+    if (!res.ok) {
+      return { error: await res.text() }
     }
-    return { error }
+    commit('DELETE_FILE', [ dir, name ])
+    return { error: null }
   },
   async uploadFiles({ commit, dispatch, rootGetters }, { dir, files }) {
     const fd = new FormData()
-    let error = null
     for (const file of files) {
       // NOTE: force lower case
       fd.append(file.name.toLowerCase(), file)
     }
-    try {
-      const path = '/files' + (dir ? `/${dir}` : '')
-      const { data } = await rootGetters.api.post(path, fd, {
-        timeout: 10 * 60 * 1000,  // 10min
-      })
-    } catch (e) {
-      error = e.message
-      return { error }
+    const res = await rootGetters.api(urlJoin('/files', dir), {
+      method: 'POST',
+      body: fd,
+      timeout: 10 * 60 * 1000,  // 10min
+    })
+    if (!res.ok) {
+      return { error: await res.text() }
     }
     await dispatch('fetchFiles', { dir })
-    return { error }
+    return { error: null }
+  },
+  async makeDir({ commit, dispatch, rootGetters }, { dir, name }) {
+    const res = await rootGetters.api('files/' + urlJoin(dir, name), { method: 'PUT' })
+    if (!res.ok) {
+      return { error: await res.text() }
+    }
+    await dispatch('fetchFiles', { dir })
+    return { error: null }
+  },
+  async moveFile({ commit, dispatch, rootGetters }, { dir, name, newDir, newName }) {
+    const res = await rootGetters.api('files/' + urlJoin(dir, name), {
+      method: 'PATCH',
+      json: { dest: urlJoin(newDir, newName) }
+    })
+    if (!res.ok) {
+      return { error: await res.text() }
+    }
+    await dispatch('fetchFiles', { dir })
+    return { error: null }
   },
 }
 
@@ -69,7 +82,7 @@ export const getters = {
   hasFiles(state) {
     return dir => dir in state.tree
   },
-  findFiles(state) {
+  getFiles(state) {
     return dir => state.tree[dir]
   },
 }
