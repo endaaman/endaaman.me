@@ -10,18 +10,14 @@ See also [endaaman/api.endaaman.me](https://github.com/endaaman/api.endaaman.me)
 
 ## TODOs
 
-- lint
-- category CRUD
-
-## after deployment
-
 - SEO
   - headers twitter/ogp
-  - google analytics
-
-## passive
-
+- lint
+- category CRUD
+- swipe sidebar
+- show loader when markdown compiling
 - article
+  - prev next inverse
   - search
   - comment
   - related article(same category, same tags)

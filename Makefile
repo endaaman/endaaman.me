@@ -8,7 +8,7 @@ dev:
 build:
 	docker build . -t endaaman/endaaman.me
 
-push:
+push: build
 	docker push endaaman/endaaman.me
 
 start: build

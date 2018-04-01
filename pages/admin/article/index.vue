@@ -27,20 +27,22 @@
         option(:value="null") すべて
         option(v-for="tag in tags", :key="tag.name", :value="tag.name") {{ tag.name }} ({{ tag.count }})
 
+    li
+      b-select(placeholder="Flag", size="is-small", v-model="selectedFlag")
+        option(:value="null") すべて
+        option(value="private") Private
+        option(value="special") Special
+
   b-table(:data="articleDate", :mobile-cards="false", detailed, default-sort="date", default-sort-direction="desc")
     template(slot-scope="data")
       b-table-column(label="Relative", field="extra.relative", :visible="!isSmallScreen", :sortable="true")
         code {{ data.row.extra.relative }}
       b-table-column(label="Title", field="title", :sortable="true")
-        nuxt-link(:to="'/' + data.row.extra.relative") {{ data.row.title }}
+        nuxt-link(:to="'/admin/article/edit?relative=' + data.row.extra.relative") {{ data.row.title }}
         span.icon.has-text-danger(v-if="data.row.private")
           i.mdi.mdi-lock
         span.icon.has-text-info(v-if="data.row.special")
           i.mdi.mdi-star-circle
-      b-table-column(label="", field="edit")
-        nuxt-link(:to="'/admin/article/edit?relative=' + data.row.extra.relative")
-          span.icon.has-text-success
-            i.mdi.mdi-pencil
       b-table-column(label="Date", field="date", :sortable="true")
         | {{ data.row.date }}
     template(slot="detail", slot-scope="data")
@@ -55,6 +57,7 @@ export default {
     return {
       selectedCategorySlug: null,
       selectedTag: null,
+      selectedFlag: null,
     }
   },
   computed: {
@@ -67,6 +70,7 @@ export default {
     filteredArticles() {
       const c = this.selectedCategorySlug
       const t = this.selectedTag
+      const f = this.selectedFlag
       return this.articles.filter((a) => {
         let flag = true
         if (c) {
@@ -74,6 +78,9 @@ export default {
         }
         if (t) {
           flag = flag && a.getTags().includes(t)
+        }
+        if (f) {
+          flag = flag && a[f]
         }
         return flag
       })

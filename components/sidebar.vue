@@ -33,7 +33,6 @@ h2 {
   margin-top: 16px;
   li {
     padding-left: 16px;
-    text-indent: -16px;
   }
   & > a {
     display: block;
@@ -157,6 +156,8 @@ aside.sidebar
         li(v-for="a in cat.category.getArticles()")
           span.is-primay ・
           nuxt-link(:to="a.getHref()", :class="{ 'is-active': a.getHref() === $route.path }") {{ a.title }}
+          span.icon.has-text-danger(v-if="a.private")
+            i.mdi.mdi-lock
 
     h2 Tags
     .tags
