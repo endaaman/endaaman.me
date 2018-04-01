@@ -1,7 +1,7 @@
 import urlJoin from 'url-join'
 import fetch from 'node-fetch'
 import cookieParser from 'cookie'
-import browserCookie from 'browser-cookies'
+import Cookies from 'js-cookie';
 import { Article, Category } from '../models'
 
 
@@ -15,44 +15,52 @@ export const plugins = [
 export const state = () => ({
   authorized: false,
   token: null,
+  host: '',
+  apiRoot: '',
+  staticRoot: '',
+  staticHost: '',
   warnings: null,
 })
 
 export const mutations = {
   setToken(state, token) {
     state.token = token
-    if (!process.server) {
-      browserCookie.set('token', token, {
-        expires: 365,
-      })
-      browserCookie.set('token', token, {
-        expires: 365,
-        domain: process.env.staticHost,
-      })
-    }
   },
   clearToken(state) {
     state.token = null
     if (!process.server) {
-      browserCookie.erase('token')
-      browserCookie.erase('token', { domain: process.env.staticHost, })
+      Cookies.erase('token', { domain: `.${ state.host }`, })
     }
   },
   setAuthorized(state, authorized) {
     state.authorized = authorized
   },
+  initHosts(state, host) {
+    const ssl = !!process.env.SSL
+    state.host = host
+    state.apiRoot = process.env.dev
+      ? 'http://localhost:3001'
+      : `${ ssl ? 'https' : 'http' }://api.${ host }`
+    state.staticRoot = process.env.dev
+      ? 'http://localhost:3002'
+      : `${ ssl ? 'https' : 'http' }://static.${ host }`
+    state.staticHost = process.env.dev
+      ? 'localhost:3002'
+      : `static.${ host }`
+  },
   setWarnings(state, warnings) {
     state.warnings = warnings
-  }
+  },
 }
 
 
 export const actions = {
   async nuxtServerInit ({ commit, dispatch }, { req }) {
+    commit('initHosts', req.headers.host)
     if (req.headers.cookie) {
       const { token } = cookieParser.parse(req.headers.cookie)
       if (token) {
-        commit('setToken', token)
+        dispatch('setToken', { token })
         await dispatch('checkAuth')
       }
     }
@@ -65,6 +73,15 @@ export const actions = {
     commit('article/wrap')
     commit('category/wrap')
   },
+  setToken({ commit, state }, { token }) {
+    commit('setToken', token)
+    if (!process.server) {
+      Cookies.set('token', token, {
+        expires: 365,
+        domain: `.${ state.host }`,
+      })
+    }
+  },
   async login({ getters, commit, dispatch }, { password }) {
     const res = await getters.api('/sessions', {
       method: 'POST',
@@ -73,7 +90,7 @@ export const actions = {
     if (!res.ok) {
       return { error: await res.text() }
     }
-    commit('setToken', (await res.json()).token)
+    dispatch('setToken', { token: (await res.json()).token })
     commit('setAuthorized', true)
     await dispatch('article/fetchArticles')
     return { error: null }
@@ -97,7 +114,7 @@ export const actions = {
 }
 
 export const getters = {
-  api({ token }) {
+  api({ token, apiRoot }) {
     const headers = {}
     if (token) {
       headers['Authorization'] = 'Bearer ' + token
@@ -115,7 +132,7 @@ export const getters = {
       } else {
         options.headers = headers
       }
-      return fetch(urlJoin(process.env.apiRoot, url), options)
+      return fetch(urlJoin(apiRoot, url), options)
     }
   },
   activeCategory(state, getters) {

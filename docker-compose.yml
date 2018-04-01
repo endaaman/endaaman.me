@@ -1,0 +1,8 @@
+endaaman-frontend:
+  build: .
+  environment:
+    - VIRTUAL_HOST=endaaman.test
+    - SITE_HOST=endaaman.test
+  extra_hosts:
+   - "api.endaaman.test:172.17.0.1"
+   - "static.endaaman.test:172.17.0.1"

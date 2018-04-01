@@ -128,7 +128,7 @@ a.article-navigator {
         nuxt-link.article-navigator(v-if="prevArticle", :to="prevArticle.getHref()")
           .article-navigator-guide
             i.mdi.mdi-chevron-double-left
-            | 前の記事
+            | 前の{{ article.getCategory().name }}の記事
           .article-navigator-content
             .article-navigator-inner
               // span Firefoxでgtkのdarkテーマを使うときのカスタムCSS
@@ -136,7 +136,7 @@ a.article-navigator {
         .article-navigator(v-else)
         nuxt-link.article-navigator(v-if="nextArticle", :to="nextArticle.getHref()")
           .article-navigator-guide
-            | 次の記事
+            | 次の{{ article.getCategory().name }}の記事
             i.mdi.mdi-chevron-double-right
           .article-navigator-content
             .article-navigator-inner

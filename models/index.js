@@ -33,7 +33,7 @@ export class Article {
       return false
     }
     const [ categorySlug, slug ] = relative.split('/')
-    return this.getCategorySlug() === categorySlug && this.slug === slug 
+    return this.getCategorySlug() === categorySlug && this.slug === slug
   }
   getHref() {
     return '/' + this.getRelative()
@@ -75,7 +75,7 @@ export class Article {
     return this.constructor.store.getters['category/getCategoryBySlug'](slug)
   }
   // equals(another) {
-  //   return this.parent === another.parent && this.slug === another.slug 
+  //   return this.parent === another.parent && this.slug === another.slug
   // }
   toPrintable() {
     const contentLimit = 40
@@ -101,59 +101,29 @@ export class Article {
     let matched = false
     for (const a of siblings) {
       if (matched) {
-        next = a
+        prev = a
         break
       }
       if (this.equals(a)) {
         matched = true
         continue
       }
-      prev = a
+      next = a
     }
     return [prev, next]
   }
 
-  compareByDate(that) {
-    let diff
-    const a = fecha.format(new Date(this.date), 'YYYY-MM-DD')
-    const b = fecha.format(new Date(that.date), 'YYYY-MM-DD')
-    diff = b.localeCompare(a)
-    if (diff !== 0) {
-      return diff
-    }
-    diff = that.priority - this.priority
-    if (diff !== 0) {
-      if (this.priority === 0) {
-        return 1
-      }
-      if (that.priority === 0) {
-        return -1
-      }
-      return diff
-    }
-    return this.slug.localeCompare(that.slug)
-  }
-
   compare(that) {
     let diff
-    diff = this.priority - that.priority
-    if (diff !== 0) {
-      if (this.priority === 0) {
-        return 1
-      }
-      if (that.priority === 0) {
-        return -1
-      }
-      return diff
-    }
     const a = fecha.format(new Date(this.date), 'YYYY-MM-DD')
     const b = fecha.format(new Date(that.date), 'YYYY-MM-DD')
     diff = b.localeCompare(a)
     if (diff !== 0) {
       return diff
     }
-    return this.slug.localeCompare(that.slug)
+    return that.slug.localeCompare(this.slug)
   }
+
   equals(that) {
     return this.serialize() === that.serialize()
   }
@@ -161,7 +131,7 @@ export class Article {
     return JSON.stringify({...this, ...{content: ''}}) === JSON.stringify({...that, ...{content: ''}})
   }
 }
-    
+
 
 export class Category {
   constructor(obj) {

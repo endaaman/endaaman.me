@@ -94,10 +94,6 @@ export default {
           const parent = category === '-' ? null : category
           articles = articles.filter((a) => a.parent === parent )
         }
-        if (!category) {
-          // if not searched by category, sort by date
-          articles.sort((a, b) => a.compareByDate(b))
-        }
         return articles
       }
     }
