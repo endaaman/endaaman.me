@@ -1,7 +1,7 @@
 import urlJoin from 'url-join'
 import fetch from 'node-fetch'
 import cookieParser from 'cookie'
-import Cookies from 'js-cookie';
+import Cookies from 'js-cookie'
 import { Article, Category } from '../models'
 
 
@@ -29,7 +29,7 @@ export const mutations = {
   clearToken(state) {
     state.token = null
     if (!process.server) {
-      Cookies.erase('token', { domain: `.${ state.host }`, })
+      Cookies.remove('token', { domain: `.${ state.host }`, })
     }
   },
   setAuthorized(state, authorized) {

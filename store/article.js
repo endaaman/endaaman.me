@@ -121,6 +121,9 @@ export const getters = {
         if (a === NO_TAG_NAME) {
           return 1
         }
+        if (b === NO_TAG_NAME) {
+          return -1
+        }
         return a.localeCompare(b)
       })
       return tags
@@ -157,6 +160,9 @@ export const getters = {
     tags.sort((a, b) => {
       if (a.name === NO_TAG_NAME) {
         return 1
+      }
+      if (b.name === NO_TAG_NAME) {
+        return -1
       }
       const diff = b.count - a.count
       if (diff !== 0) {
