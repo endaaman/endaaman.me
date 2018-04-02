@@ -94,60 +94,73 @@ a.article-navigator {
     }
   }
 }
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .2s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 </style>
 
 <template lang="pug">
 .container-article-show
-  .section
-    .article-heading
-      .article-sub.article-dates
-        template(v-if="!article.special")
-          span カテゴリ：
-          nuxt-link(:to="'/?category=' + article.getCategory().slug") {{ article.getCategory().name }}
-          span ・
-        span {{ article.date | date }}
-        template(v-if="authorized")
-          span ・
-          nuxt-link(:to="'/admin/article/edit?relative=' + article.getRelative()") edit
-          span.icon.has-text-danger(v-if="article.private")
-            i.mdi.mdi-lock
-      h1.article-title
-        nuxt-link(:to="article.getHref()") {{ article.title }}
-      .article-sub.article-digest(v-if="article.digest")
-        | {{ article.digest }}
-      .article-sub.article-tags(v-if="!article.special && article.getTags().length > 0")
-        .tags
-          nuxt-link.tag.is-white(v-for="tag in article.getTags()", :to="'/?tag=' + tag" :key="tag") {{ tag }}
+  transition(name="fade")
+    .section(v-show="visible")
+      .article-heading
+        .article-sub.article-dates
+          template(v-if="!article.special")
+            span カテゴリ：
+            nuxt-link(:to="'/?category=' + article.getCategory().slug") {{ article.getCategory().name }}
+            span ・
+          span {{ article.date | date }}
+          template(v-if="authorized")
+            span ・
+            nuxt-link(:to="'/admin/article/edit?relative=' + article.getRelative()") edit
+            span.icon.has-text-danger(v-if="article.private")
+              i.mdi.mdi-lock
+        h1.article-title
+          nuxt-link(:to="article.getHref()") {{ article.title }}
+        .article-sub.article-digest(v-if="article.digest")
+          | {{ article.digest }}
+        .article-sub.article-tags(v-if="!article.special && article.getTags().length > 0")
+          .tags
+            nuxt-link.tag.is-white(v-for="tag in article.getTags()", :to="'/?tag=' + tag" :key="tag") {{ tag }}
 
-    // .article-delimiter
-    my-markdown(:source="article.content")
+      // .article-delimiter
+      my-markdown(:source="article.content", @ready="onMarkdownReady")
 
-    .article-bottom(v-if="prevArticle || nextArticle")
-      hr.article-bottom-divider
-      .article-navigators
-        nuxt-link.article-navigator(v-if="prevArticle", :to="prevArticle.getHref()")
-          .article-navigator-guide
-            i.mdi.mdi-chevron-double-left
-            | 前の{{ article.getCategory().name }}の記事
-          .article-navigator-content
-            .article-navigator-inner
-              // span Firefoxでgtkのdarkテーマを使うときのカスタムCSS
-              span {{ prevArticle.title }}
-        .article-navigator(v-else)
-        nuxt-link.article-navigator(v-if="nextArticle", :to="nextArticle.getHref()")
-          .article-navigator-guide
-            | 次の{{ article.getCategory().name }}の記事
-            i.mdi.mdi-chevron-double-right
-          .article-navigator-content
-            .article-navigator-inner
-              // span Neomakeを使いこなせ！
-              span {{ nextArticle.title }}
+      .article-bottom(v-if="prevArticle || nextArticle")
+        hr.article-bottom-divider
+        .article-navigators
+          nuxt-link.article-navigator(v-if="prevArticle", :to="prevArticle.getHref()")
+            .article-navigator-guide
+              i.mdi.mdi-chevron-double-left
+              | 前の{{ article.getCategory().name }}の記事
+            .article-navigator-content
+              .article-navigator-inner
+                // span Firefoxでgtkのdarkテーマを使うときのカスタムCSS
+                span {{ prevArticle.title }}
+          .article-navigator(v-else)
+          nuxt-link.article-navigator(v-if="nextArticle", :to="nextArticle.getHref()")
+            .article-navigator-guide
+              | 次の{{ article.getCategory().name }}の記事
+              i.mdi.mdi-chevron-double-right
+            .article-navigator-content
+              .article-navigator-inner
+                // span Neomakeを使いこなせ！
+                span {{ nextArticle.title }}
 </template>
 
 <script>
 import { mapState } from 'vuex'
 
 export default {
+  data() {
+    return {
+      visible: false,
+    }
+  },
   head() {
     const a = this.article
     const meta = [
@@ -187,5 +200,10 @@ export default {
       'authorized',
     ])
   },
+  methods: {
+    onMarkdownReady() {
+      this.visible = true
+    }
+  }
 }
 </script>

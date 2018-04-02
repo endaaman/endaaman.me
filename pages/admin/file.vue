@@ -20,6 +20,8 @@
       button.button.is-small.is-primary(v-else @click="uploadFiles") Upload!
     li
       button.button.is-small.is-success(@click="tryMakeDir") Make dir
+    li
+      b-input(v-model="filterStr", placeholder="Filter", type="search", icon="magnify", size="is-small", rounded)
 
   .tags(v-if="uploadings.length > 0")
     .tag(v-for="u in uploadings", :key="u.name")
@@ -36,7 +38,7 @@
 
 
   p.has-text-grey(v-if="files.length === 0")
-    | There is no file in {{ dirStr }}
+    | There is no file in {{ dirStr }} or no matched files
 
   b-table(
     v-else
@@ -79,7 +81,7 @@
           template(v-else)
             a(:href="buildFileLink(data.row.name)", target="_blank") {{ data.row.name }}
       b-table-column(label="Size", field="size", :sortable="true")
-        span(:class="{ 'is-size-7': isSmallScreen }") {{ data.row.size | formatByteSize }}
+        span.nowrap(:class="{ 'is-size-7': isSmallScreen }") {{ data.row.size | formatByteSize }}
 
       b-table-column(label="Date", field="date", :sortable="true", :visible="!isSmallScreen")
         span {{ data.row.mtime | date('YYYY-MM-DD HH:mm') }}
@@ -105,6 +107,7 @@ export default {
     next()
   },
   data: () => ({
+    filterStr: '',
     uploadings: [],
   }),
   computed: {
@@ -123,7 +126,15 @@ export default {
       return !this.dir
     },
     files() {
-      return this.$store.getters['file/getFiles'](this.dir)
+      const files = this.$store.getters['file/getFiles'](this.dir)
+      const f = this.filterStr
+      return files.filter((file) => {
+        let flag = true
+        if (f) {
+          flag = flag && file.name.indexOf(f) > -1
+        }
+        return flag
+      })
     },
     crumbs() {
       if (!this.dir) {

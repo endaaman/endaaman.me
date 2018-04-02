@@ -198,6 +198,7 @@ export default {
         hljs.highlightBlock(e.parentElement)
       }
     })
+    this.$emit('ready')
   },
 }
 </script>

@@ -11,23 +11,21 @@ See also [endaaman/api.endaaman.me](https://github.com/endaaman/api.endaaman.me)
 ## TODOs
 
 - SEO
-  - headers twitter/ogp
-  - vmid
   - hero image
 - lint
 - category CRUD
 - swipe sidebar
-- show loader when markdown compiling
 - article
   - prev next inverse
   - search
   - comment
   - related article(same category, same tags)
+  - hot articles
 - admin
   - search article by text
 - file
   - copy link
-  - preview
+  - preview in detail
   - editor
 - markdown renderer
   - twitter/youtube embed
