@@ -11,5 +11,8 @@ build:
 push: build
 	docker push endaaman/endaaman.me
 
+pull:
+	docker pull endaaman/endaaman.me
+
 start: build
 	docker-compose up --build

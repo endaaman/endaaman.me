@@ -12,6 +12,8 @@ See also [endaaman/api.endaaman.me](https://github.com/endaaman/api.endaaman.me)
 
 - SEO
   - headers twitter/ogp
+  - vmid
+  - hero image
 - lint
 - category CRUD
 - swipe sidebar

@@ -149,18 +149,20 @@ import { mapState } from 'vuex'
 
 export default {
   head() {
-    const meta = [{
-      name: 'description',
-      content: this.article.getDigest(),
-    }, ]
-    if (this.article.tags.length > 0) {
-      meta.push({
-        name: 'keywords',
-        content: this.article.tags.join(','),
-      })
+    const a = this.article
+    const meta = [
+      { name: 'description', vmid: 'description', content: a.getDigest() },
+      { name: 'og:title', vmid: 'og:title', content: a.title },
+      { name: 'og:description', vmid: 'og:description', content: a.getDigest() },
+    ]
+    if (a.tags.length > 0) {
+      meta.push({ name: 'keywords', vmid: 'keywords', content: a.tags.join(',')})
+    }
+    if (a.image) {
+      meta.push({ name: 'og:image', vmid: 'og:image', content: a.image })
     }
     return {
-      title: this.article.title,
+      title: a.title,
       meta,
     }
   },

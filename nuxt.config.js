@@ -11,17 +11,20 @@ module.exports = {
       return title ? `${title} | endaaman.me` : 'endaaman.me'
     },
     link: [
-      {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css?family=Ubuntu|Ubuntu+Condensed|Ubuntu+Mono',
-      }, {
-        rel: 'icon',
-        href: '/favicon.ico',
-      },
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Ubuntu|Ubuntu+Condensed|Ubuntu+Mono', },
+      { rel: 'icon', href: '/favicon.ico', },
     ],
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { name: 'viewport', vmid: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { name: 'description', vmid: 'description', content: `endaaman's website` },
+      { property: 'og:title', vmid: 'og:title', content: 'endaaman.me' },
+      { property: 'og:type', vmid: 'og:type', content: 'article' },
+      { property: 'og:description', vmid: 'og:description', content: `endaaman's website` },
+      { property: 'og:image', vmid: 'og:image', content: '/endaaman.png' },
+      { property: 'og:sitename', vmid: 'og:sitename', content: `endaaman's website` },
+      { name: 'twitter:card', vmid: 'twitter:card', content: 'summary' },
+      { name: 'twitter:site', vmid: 'twitter:site', content: '@endaaman' },
     ]
   },
   css: [
@@ -60,7 +63,4 @@ module.exports = {
     '~plugins/markdown',
     '~plugins/vuex-router-sync',
   ],
-  // serverMiddleware: [
-  //   { path: '/static', handler: '~api/static' }
-  // ],
 }
