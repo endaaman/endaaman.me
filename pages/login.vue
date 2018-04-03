@@ -44,7 +44,11 @@ export default {
       this.isLoading = false
 
       if (error) {
-        this.errorMessage = error.message
+        this.$dialog.alert({
+          title: 'Error',
+          message: error,
+          type: 'is-danger',
+        })
       } else {
         this.$router.push('/')
         this.$toast.open({

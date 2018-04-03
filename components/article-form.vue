@@ -28,7 +28,7 @@ div
           p.control
             a.button(target="_blank", :href="article.image", :class="{ 'is-disabled': !article.image }") Check
         // p(v-if="article.image")
-        //   span check: 
+        //   span check:
         //   a(target="_blank", :href="article.image" ) {{ article.image }}
 
       b-field(label="Tags", horizontal)
@@ -82,6 +82,7 @@ export default {
       activeTab: 0,
       cmOptions: {
         tabSize: 2,
+        lineWrapping: true,
         autofocus: true,
         mode: 'text/x-markdown',
         lineNumbers: true,
