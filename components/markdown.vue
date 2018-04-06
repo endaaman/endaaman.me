@@ -74,6 +74,14 @@
     }
   }
 
+  .markdown-image {
+    cursor: zoom-in;
+  }
+  .markdown-video {
+    max-width: 100%;
+    width: 640px;
+  }
+
   blockquote {
     margin: 24px 0;
     padding: 6px 12px 6px;
@@ -101,6 +109,7 @@
     overflow: hidden;
     clear: both;
   }
+
   .center {
     text-align: center;
   }
@@ -119,9 +128,11 @@
 
 <template lang="pug">
 .md-content.content
-  vue-markdown(:source="source", v-bind="mdProps", v-if="source")
+  vue-markdown(:source="source", v-bind="mdProps", v-if="source", @rendered="onRendered")
     slot
   p.no-content(v-else) No content
+
+  div(ref="viewerContainer")
 </template>
 
 <script>
@@ -129,6 +140,7 @@ import hljs from 'highlight.js'
 import mdItAttrs from 'markdown-it-attrs'
 import mdItContainer from 'markdown-it-container'
 import mdItMultimdTable from 'markdown-it-multimd-table'
+import Viewer from 'viewerjs'
 
 export default {
   props: {
@@ -138,6 +150,7 @@ export default {
     },
   },
   data: () => ({
+    images: [],
     mdProps: {
       linkify: false,
       bre: false,
@@ -147,58 +160,90 @@ export default {
         mdItMultimdTable,
       ],
       override(md) {
-        // const org = md.renderer.rules.table_open
-        // md.renderer.rules.table_open = (...args) => {
-        //   const token = args[0][args[1]]
-        //   token.attrs = [['class', 'variable-class']]
-        //   return org(...args)
-        // }
-        md.use(mdItContainer, 'indent', {
-          validate(params) {
-            return params.trim().match(/^indent\s+(.*)$/);
+        const defaultImageRenderFunc = md.renderer.rules.image
+        md.renderer.rules.image = (...args) => {
+          const [ tokens, idx, options, env, self ] = args
+          const token = tokens[idx]
+          const src = token.attrs[token.attrIndex('src')][1]
+
+          const idxClass = token.attrIndex('class');
+          const cls = 'markdown-image'
+          if (idxClass < 0) {
+            token.attrPush(['class', cls])
+          } else {
+            token.attrs[idxClass][1] = cls
+          }
+          const html = defaultImageRenderFunc(...args)
+          return html
+        }
+        md.use(mdItContainer, 'video', {
+          validate(param) {
+            return param.trim().match(/^video\s+(.*)$/)
           },
-          render(tokens, idx) {
-            const m = tokens[idx].info.trim().match(/^indent\s+(.*)$/);
-            if (tokens[idx].nesting === 1) {
-              return '<div class="indented">' + md.utils.escapeHtml(m[1]) + '\n';
+          render(...args) {
+            const [ tokens, idx, options, env, self ] = args
+            const token = tokens[idx]
+            const m = token.info.trim().match(/^video\s+(.*)$/)
+            if (!m) {
+              // this should not be happened...
+              return ''
+            }
+            if (token.nesting === 1) {
+              return `<video class="markdown-video" src="${ m[1] }" controls>`
             } else {
-              return '</div>\n';
+              return '</video>\n'
             }
           }
         })
       }
     }
   }),
-  mounted () {
-    const $vm = this
-    Array
-      .from(this.$el.querySelectorAll('a'))
-      .forEach(link => {
-        link.addEventListener('click', e => {
-          const href = e.target.attributes.href.value
-          if (/^\//.test(href)) {
-            $vm.$router.push(href)
-            e.preventDefault()
+  methods: {
+    async onRendered() {
+      if (process.server) {
+        return
+      }
+      await this.$nextTick()
+      const $vm = this
+      Array
+        .from(this.$el.querySelectorAll('a'))
+        .forEach(link => {
+          link.addEventListener('click', e => {
+            const href = e.target.attributes.href.value
+            if (/^\//.test(href)) {
+              $vm.$router.push(href)
+              e.preventDefault()
+            }
+          })
+        })
+
+      this.$el.querySelectorAll('pre > code').forEach((e) => {
+        let isCode = false
+        let splitted = null
+        e.classList.forEach((c) => {
+          splitted = c.split('language-')
+          if (splitted.length === 2) {
+            isCode = true
+            return false
           }
         })
-      })
-
-    this.$el.querySelectorAll('pre > code').forEach((e) => {
-      let isCode = false
-      let splitted = null
-      e.classList.forEach((c) => {
-        splitted = c.split('language-')
-        if (splitted.length === 2) {
-          isCode = true
-          return false
+        if (isCode) {
+          e.parentElement.dataset.language = splitted[1]
+          hljs.highlightBlock(e.parentElement)
         }
       })
-      if (isCode) {
-        e.parentElement.dataset.language = splitted[1]
-        hljs.highlightBlock(e.parentElement)
+      for (const el of this.$el.querySelectorAll('.markdown-image')) {
+        const viewer = new Viewer(el ,{
+          navbar: false,
+          zoomRatio: 0.3,
+          container: this.$refs.viewerContainer,
+          url(image) {
+            return image.src.split('?')[0]
+          }
+        })
       }
-    })
-    this.$emit('ready')
+      this.$emit('ready')
+    },
   },
 }
 </script>

@@ -10,9 +10,12 @@ See also [endaaman/api.endaaman.me](https://github.com/endaaman/api.endaaman.me)
 
 ## TODOs
 
+- Use English as possible
 - SEO
   - hero image
 - lint
+- home
+  - pagination
 - category CRUD
 - swipe sidebar
 - article
@@ -24,10 +27,9 @@ See also [endaaman/api.endaaman.me](https://github.com/endaaman/api.endaaman.me)
 - admin
   - search article by text
 - file
-  - copy link
   - preview in detail
   - editor
 - markdown renderer
   - twitter/youtube embed
-  - image modal
   - card component
+  - horizontal/responsive images

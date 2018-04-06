@@ -30,6 +30,7 @@ module.exports = {
   css: [
     'mdi/css/materialdesignicons.css',
     'highlight.js/styles/vs.css',
+    'viewerjs/dist/viewer.css',
     { src: '@/css/bulma.scss', lang: 'scss' },
     { src: '@/css/katex.scss', lang: 'scss' },
     { src: '@/css/app.scss', lang: 'scss' },

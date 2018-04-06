@@ -110,7 +110,7 @@ a.article-navigator {
       .article-heading
         .article-sub.article-dates
           template(v-if="!article.special")
-            span カテゴリ：
+            span Category:&#x20;
             nuxt-link(:to="'/?category=' + article.getCategory().slug") {{ article.getCategory().name }}
             span ・
           span {{ article.date | date }}
@@ -136,19 +136,17 @@ a.article-navigator {
           nuxt-link.article-navigator(v-if="prevArticle", :to="prevArticle.getHref()")
             .article-navigator-guide
               i.mdi.mdi-chevron-double-left
-              | 前の{{ article.getCategory().name }}の記事
+              | Prev {{ article.getCategory().name }} entry
             .article-navigator-content
               .article-navigator-inner
-                // span Firefoxでgtkのdarkテーマを使うときのカスタムCSS
                 span {{ prevArticle.title }}
           .article-navigator(v-else)
           nuxt-link.article-navigator(v-if="nextArticle", :to="nextArticle.getHref()")
             .article-navigator-guide
-              | 次の{{ article.getCategory().name }}の記事
+              | Next {{ article.getCategory().name }} entry
               i.mdi.mdi-chevron-double-right
             .article-navigator-content
               .article-navigator-inner
-                // span Neomakeを使いこなせ！
                 span {{ nextArticle.title }}
 </template>
 

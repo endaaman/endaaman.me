@@ -41,7 +41,7 @@
     | There is no file in {{ dirStr }} or no matched files
 
   b-table(
-    v-else
+    v-else,
     :data="files",
     :mobile-cards="false",
     default-sort="directory",
@@ -72,6 +72,10 @@
             .media
               b-icon.media-left(icon="delete", type="is-danger")
               .media-content Delete
+          b-dropdown-item(@click="copyFileUrl(data.row.name)")
+            .media
+              b-icon.media-left(icon="clipboard", type="is-dark")
+              .media-content Copy
 
       b-table-column(label="Name", field="name", :sortable="true")
         span.file-filename
@@ -323,6 +327,18 @@ export default {
       }
       this.notify(`Moved "${ fileName }" from ${ this.dirStr } to "${ dest }"`)
     },
+
+    copyFileUrl(name) {
+      const url = this.buildFileLink(name)
+      const cb = (e) => {
+        e.preventDefault()
+        e.clipboardData.setData('text', url)
+        this.notify(`Copied "${ url }"`)
+        document.removeEventListener('copy', cb, false)
+      }
+      document.addEventListener('copy', cb)
+      document.execCommand('copy')
+    }
   }
 }
 </script>

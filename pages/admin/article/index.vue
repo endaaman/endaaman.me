@@ -1,8 +1,8 @@
 <style scoped lang="scss">
 @import "../../../css/variables";
 
-@media screen and (max-width: $breakpoint - 1) {
-  pre.article-json {
+.table-detail {
+  @media screen and (max-width: $breakpoint - 1) {
     max-width: calc(100vw - 120px);
   }
 }
@@ -46,7 +46,8 @@
       b-table-column(label="Date", field="date", :sortable="true")
         | {{ data.row.date }}
     template(slot="detail", slot-scope="data")
-      pre.article-json {{ data.row | json }}
+      .table-detail
+        pre {{ data.row | json }}
 </template>
 
 <script>
