@@ -38,12 +38,15 @@ export const mutations = {
   initHosts(state, host) {
     const ssl = !!process.env.SSL
     state.host = host
+
     state.apiRoot = process.env.dev
-      ? 'http://localhost:3001'
-      : `${ ssl ? 'https' : 'http' }://api.${ host }`
+      ? 'http://localhost:3001/v1'
+      : `${ ssl ? 'https' : 'http' }://api.${ host }/v1`
+
     state.staticRoot = process.env.dev
       ? 'http://localhost:3002'
       : `${ ssl ? 'https' : 'http' }://static.${ host }`
+
     state.staticHost = process.env.dev
       ? 'localhost:3002'
       : `static.${ host }`

@@ -54,19 +54,19 @@ div
           b-checkbox(v-model="article.special") Special
 
 
-    b-tab-item(:label="'Content' + (isContentChanged ? ' +' : '')")
+    b-tab-item(:label="'Body' + (isBodyChanged ? ' +' : '')")
       no-ssr(placeholder="Loading Codemirror...")
         codemirror(
           @keydown.page-down="onCtrlS"
           ref="elCm"
-          :value="article.content",
+          :value="article.body",
           :options="cmOptions",
           @ready="onCmReady",
           @input="onCmChanged")
 
     b-tab-item(label="Preview")
       no-ssr(placeholder="Loading markdown...")
-        my-markdown(:source="article.content")
+        my-markdown(:source="article.body")
 
     b-tab-item(label="JSON")
       pre {{ article.toPrintable() | json }}
@@ -120,11 +120,11 @@ export default {
   computed: {
     ...mapState('category', ['categories']),
     ...mapGetters('article', ['tags']),
-    isContentChanged() {
-      return this.originalArticle.content !== this.article.content
+    isBodyChanged() {
+      return this.originalArticle.body !== this.article.body
     },
     isOptionsChanged() {
-      return !this.originalArticle.equalsExceptForContent(this.article)
+      return !this.originalArticle.equalsExceptForBody(this.article)
     },
   },
   methods: {
@@ -136,7 +136,7 @@ export default {
       })
     },
     onCmChanged(value) {
-      this.article.content = value
+      this.article.body = value
     },
   },
 }

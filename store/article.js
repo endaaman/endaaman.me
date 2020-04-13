@@ -29,7 +29,7 @@ export const mutations = {
 
 export const actions = {
   async fetchArticles({ commit, getters, rootGetters }) {
-    const res = await rootGetters.api('/aa')
+    const res = await rootGetters.api('/articles')
     commit('set', await res.json())
     commit('sort')
   },

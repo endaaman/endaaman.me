@@ -128,7 +128,7 @@ a.article-navigator {
             nuxt-link.tag.is-white(v-for="tag in article.getTags()", :to="'/?tag=' + tag" :key="tag") {{ tag }}
 
       // .article-delimiter
-      my-markdown(:source="article.content", @ready="onMarkdownReady")
+      my-markdown(:source="article.body", @ready="onMarkdownReady")
 
       .article-bottom(v-if="prevArticle || nextArticle")
         hr.article-bottom-divider

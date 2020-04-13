@@ -57,7 +57,7 @@ export class Article {
       return this.digest
     }
     const threshold = 120
-    const base = this.content.substring(0, 200)
+    const base = this.body.substring(0, 200)
     const tmp = base.replace(/#|`|:|-|\||\*|_/g, '').substring(0, threshold)
     return (tmp.length < threshold) ? tmp : (tmp + '...')
   }
@@ -78,16 +78,16 @@ export class Article {
   //   return this.parent === another.parent && this.slug === another.slug
   // }
   toPrintable() {
-    const contentLimit = 40
+    const bodyLimit = 40
     return {
       ...this,
       extra: {
         relative: this.getRelative(),
         href: this.getHref(),
       },
-      content: this.content.length > contentLimit
-        ? (this.content.substr(0, contentLimit) + '...')
-        : this.content
+      body: this.body.length > body
+        ? (this.body.substr(0, bodyLimit) + '...')
+        : this.body
     }
   }
   getSiblings() {
@@ -127,8 +127,8 @@ export class Article {
   equals(that) {
     return this.serialize() === that.serialize()
   }
-  equalsExceptForContent(that) {
-    return JSON.stringify({...this, ...{content: ''}}) === JSON.stringify({...that, ...{content: ''}})
+  equalsExceptForBody(that) {
+    return JSON.stringify({...this, ...{body: ''}}) === JSON.stringify({...that, ...{body: ''}})
   }
 }
 
