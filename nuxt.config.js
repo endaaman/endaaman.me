@@ -36,8 +36,8 @@ module.exports = {
     { src: '@/css/app.scss', lang: 'scss' },
     { src: '@/css/codemirror.scss', lang: 'scss' },
   ],
-   build: {
-    extend (config) {
+  build: {
+    extend (_config) {
       // config.module.rules.push({
       //   test: /\.(eot|woff|woff2|svg|ttf)([\?]?.*)$/, loader: "file-loader",
       // })
@@ -50,7 +50,7 @@ module.exports = {
   },
   render: {
     bundleRenderer: {
-      shouldPreload: (file, type) => {
+      shouldPreload: (_file, type) => {
         return ['script', 'style', 'font'].includes(type)
       }
     }
