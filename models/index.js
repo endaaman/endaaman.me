@@ -7,11 +7,11 @@ const fieldOriginal = Symbol()
 export class Article {
   constructor(obj, store) {
     Object.assign(this, obj || {
-      parent: null,
+      parent: null, // TODO: use categorySlug
       slug: '',
       title: '' ,
       aliases: [],
-      content: '',
+      body: '',
       image: '',
       digest: '',
       tags: [],
@@ -85,7 +85,7 @@ export class Article {
         relative: this.getRelative(),
         href: this.getHref(),
       },
-      body: this.body.length > body
+      body: this.body.length > bodyLimit
         ? (this.body.substr(0, bodyLimit) + '...')
         : this.body
     }

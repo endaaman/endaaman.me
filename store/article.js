@@ -41,7 +41,7 @@ export const actions = {
   },
 
   async createArticles({ commit, rootGetters }, { article }) {
-    const res = await rootGetters.api('/aa/', {
+    const res = await rootGetters.api('/articles/', {
       method: 'POST',
       json: article,
     })
@@ -56,8 +56,8 @@ export const actions = {
 
   async updateArticles({ commit, rootGetters }, { article }) {
     const originalRelative = article.getOriginal().getRelative()
-    const res = await rootGetters.api('/aa/' + originalRelative, {
-      method: 'PATCH',
+    const res = await rootGetters.api('/articles/' + originalRelative, {
+      method: 'PUT',
       json: article,
     })
     if (!res.ok) {
@@ -72,7 +72,7 @@ export const actions = {
 
   async deleteArticles({ commit, rootGetters }, { article }) {
     const originalRelative = article.getOriginal().getRelative()
-    const res = await rootGetters.api('/aa/' + originalRelative, {
+    const res = await rootGetters.api('/articles/' + originalRelative, {
       method: 'DELETE',
     })
     if (!res.ok) {

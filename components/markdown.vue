@@ -198,6 +198,12 @@ export default {
       }
     }
   }),
+  mounted() {
+    if (!this.source) {
+      // if source is empty, trigger it instead
+      this.onRendered()
+    }
+  },
   methods: {
     async onRendered() {
       if (process.server) {

@@ -81,7 +81,7 @@ export const actions = {
     if (!process.server) {
       Cookies.set('token', token, {
         expires: 365,
-        domain: `.${ state.host }`,
+        // domain: `.${ state.host }`,
       })
     }
   },
@@ -93,13 +93,14 @@ export const actions = {
     if (!res.ok) {
       return { error: await res.text() }
     }
-    dispatch('setToken', { token: (await res.json()).token })
+    const result = await res.json()
+    dispatch('setToken', { token: result.token })
     commit('setAuthorized', true)
     await dispatch('article/fetchArticles')
     return { error: null }
   },
   async checkAuth({ getters, commit, dispatch }) {
-    const res = await getters.api('/sessions')
+    const res = await getters.api('/sessions', { method: 'GET' })
     if (!res.ok) {
       commit('clearToken')
     }
