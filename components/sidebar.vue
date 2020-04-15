@@ -222,7 +222,7 @@ export default {
       isActive:
       (this.activeCategory && c.slug === this.activeCategory.slug)
       ||
-      (this.activeArticle && !this.activeArticle.special && c.slug === this.activeArticle.getCategorySlug()),
+      (this.activeArticle && !this.activeArticle.special && c.slug === this.activeArticle.categorySlug),
     }))
     this.tagItems = this.tags.map((t) => ({
       isActive: this.activeTag === t.name,
@@ -245,7 +245,7 @@ export default {
     },
     activeArticle() {
       for (const c of this.categoryItems) {
-        c.isActive = c.isActive || (this.activeArticle && !this.activeArticle.special && c.slug === this.activeArticle.getCategorySlug())
+        c.isActive = c.isActive || (this.activeArticle && !this.activeArticle.special && c.slug === this.activeArticle.categorySlug)
       }
     },
   },
@@ -267,7 +267,7 @@ export default {
     ...mapGetters('article', {
       specialArticles: 'specialArticles',
       tags: 'tagAggregations',
-      articleMap: 'articleMapKeyByParent',
+      articleMap: 'articleMapKeyByCategory',
     }),
     builtAt() {
       return new Date(process.env.builtAt)

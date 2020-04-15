@@ -75,7 +75,7 @@ export default {
       return this.articles.filter((a) => {
         let flag = true
         if (c) {
-          flag = flag && a.getCategorySlug() === c
+          flag = flag && a.categorySlug === c
         }
         if (t) {
           flag = flag && a.getTags().includes(t)

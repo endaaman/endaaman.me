@@ -141,7 +141,7 @@ export default {
           return this.activeCategory.slug
         }
         if (this.activeArticle) {
-          return this.activeArticle.getCategorySlug()
+          return this.activeArticle.categorySlug
         }
         return null
       },

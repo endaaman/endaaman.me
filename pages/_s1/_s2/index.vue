@@ -111,7 +111,7 @@ a.article-navigator {
         .article-sub.article-dates
           template(v-if="!article.special")
             span Category:&#x20;
-            nuxt-link(:to="'/?category=' + article.getCategory().slug") {{ article.getCategory().name }}
+            nuxt-link(:to="'/?category=' + article.categorySlug") {{ article.getCategory().name }}
             span ・
           span {{ article.date | date }}
           template(v-if="authorized")

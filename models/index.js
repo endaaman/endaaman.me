@@ -7,7 +7,7 @@ const fieldOriginal = Symbol()
 export class Article {
   constructor(obj, store) {
     Object.assign(this, obj || {
-      parent: null, // TODO: use categorySlug
+      categorySlug: '-',
       slug: '',
       title: '' ,
       aliases: [],
@@ -21,19 +21,11 @@ export class Article {
       date: fecha.format((new Date()), 'YYYY-MM-DD'),
     })
   }
-  getCategorySlug() {
-    return this.parent || NO_CATEGORY_SLUG
-  }
   getRelative() {
-    const { parent, slug } = this
-    return (parent || '-') + '/' + slug
+    return this.categorySlug + '/' + this.slug
   }
   matchByRelative(relative) {
-    if (!relative) {
-      return false
-    }
-    const [ categorySlug, slug ] = relative.split('/')
-    return this.getCategorySlug() === categorySlug && this.slug === slug
+    return this.getRelative() === relative
   }
   getHref() {
     return '/' + this.getRelative()
@@ -64,19 +56,9 @@ export class Article {
   getOriginal() {
     return this[fieldOriginal] || null
   }
-  matchParent(parent) {
-    if (parent === '-' && this.parent === null) {
-      return true
-    }
-    return this.parent === parent
-  }
   getCategory() {
-    const slug = this.parent || NO_CATEGORY_SLUG
-    return this.constructor.store.getters['category/getCategoryBySlug'](slug)
+    return this.constructor.store.getters['category/getCategoryBySlug'](this.categorySlug)
   }
-  // equals(another) {
-  //   return this.parent === another.parent && this.slug === another.slug
-  // }
   toPrintable() {
     const bodyLimit = 40
     return {
@@ -94,8 +76,8 @@ export class Article {
     if (this.special) {
       return [null, null]
     }
-    const map = this.constructor.store.getters['article/articleMapKeyByParent']
-    const siblings = map[this.parent]
+    const map = this.constructor.store.getters['article/articleMapKeyByCategory']
+    const siblings = map[this.categorySlug]
     let prev = null
     let next = null
     let matched = false
@@ -141,7 +123,7 @@ export class Category {
     return this.slug === '-' ? null : this.slug
   }
   getArticles() {
-    const map = this.constructor.store.getters['article/articleMapKeyByParent']
+    const map = this.constructor.store.getters['article/articleMapKeyByCategory']
     return map[this.getValue()] || []
   }
 }

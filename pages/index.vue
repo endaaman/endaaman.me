@@ -86,13 +86,12 @@ export default {
     ...{
       articles() {
         let articles = [...this.allArticles]
-        const { tag, category } = this.$route.query
+        const { tag, category: categorySlug } = this.$route.query
         if (tag) {
           articles = articles.filter((a) => a.getTags().includes(tag))
         }
-        if (category) {
-          const parent = category === '-' ? null : category
-          articles = articles.filter((a) => a.parent === parent )
+        if (categorySlug) {
+          articles = articles.filter((a) => a.categorySlug === categorySlug )
         }
         return articles
       }

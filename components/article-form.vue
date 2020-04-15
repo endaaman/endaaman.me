@@ -15,7 +15,7 @@ div
         b-input(type="date", v-model="article.date", placeholder="Date", expanded)
 
       b-field(label="Category", horizontal)
-        b-select(v-model="article.parent")
+        b-select(v-model="article.categorySlug")
           option(
             v-for="c in categories",
             :value="c.getValue()",

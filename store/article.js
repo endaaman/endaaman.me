@@ -94,14 +94,14 @@ export const getters = {
       return state.articles.find(a => a.matchByRelative(relative))
     }
   },
-  articleMapKeyByParent(state, getters) {
+  articleMapKeyByCategory(state, getters) {
     const aa = getters['normalArticles']
     const map = {}
     for (const a of aa) {
-      if (map[a.parent]) {
-        map[a.parent].push(a)
+      if (map[a.categorySlug]) {
+        map[a.categorySlug].push(a)
       } else {
-        map[a.parent] = [a]
+        map[a.categorySlug] = [a]
       }
     }
     return map
@@ -134,7 +134,7 @@ export const getters = {
   },
   getTagsByCategorySlug(state, getters) {
     return (categorySlug) => {
-      return getters['getTags']((a) => a.getCategorySlug() === categorySlug)
+      return getters['getTags']((a) => a.categorySlug === categorySlug)
     }
   },
   tagAggregations(state, getters) {
