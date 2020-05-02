@@ -6,7 +6,7 @@ div
 import { mapState, mapActions } from 'vuex'
 import debounce from 'debounce'
 
-const breakpoint = 720
+const breakpoint = 768
 
 export default {
   beforeCreate() {
@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     onResize() {
-      const isSmall = !window.matchMedia(`(min-width: ${breakpoint}px)`).matches
+      const isSmall = window.matchMedia(`(max-width: ${breakpoint}px)`).matches
       this.$store.dispatch('layout/setIsSmallScreen', isSmall)
       this.closeSidebar()
     },

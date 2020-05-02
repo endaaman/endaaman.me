@@ -128,29 +128,19 @@ h2 {
 
 .social-link {
   $size: 24px;
-  display: block;
-  width: $size;
   height: $size;
   line-height: $size;
   text-align: center;
-  font-size: 16px;
-  // border-radius: 50%;
-
-  color: $white-ter;
-  background-color: $sidebar-bg;
-  border: solid 1px $white-ter;
-  transition: width .3s ease;
+  font-size: $size-2;
+  color: $grey;
   &:hover {
-    background-color: $white-ter;
-    color: $sidebar-bg;
-    width: auto;
-    padding: 0 4px;
+    color: $white-ter;
   }
 }
 
 .sidebar-footer  {
   margin-top: auto;
-  padding: 48px 24px 12px;
+  padding: 48px 16px 12px;
   font-size: $size-7;
   background-color: $sidebar-bg;
 }
@@ -210,13 +200,11 @@ aside.sidebar
   footer.sidebar-footer
     ul.social-links
       li
-        a.social-link.is-small(href="http://twitter.com/endaaman")
+        a.social-link(href="http://twitter.com/endaaman")
           i.mdi.mdi-twitter
-          span.link-text @endaaman
       li
-        a.social-link.is-small(href="http://github.com/endaaman")
+        a.social-link(href="http://github.com/endaaman")
           i.mdi.mdi-github-face
-          span.link-text @endaaman
 
     span.footer-left-text
       | Made with&#x20;

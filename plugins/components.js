@@ -10,6 +10,7 @@ import Sidebar from '../components/sidebar.vue'
 
 Vue.component('my-article-form', ArticleForm)
 Vue.component('my-burger', Burger)
+Vue.component('my-common', Common)
 Vue.component('my-footer', Footer)
 Vue.component('my-header', Header)
 Vue.component('my-logo', Logo)
