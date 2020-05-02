@@ -34,7 +34,7 @@
   line-height: $header-sub-height;
   font-size: $size-7;
 
-  overflow-x: hidden;
+  overflow: visible hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   a {
@@ -88,7 +88,7 @@
 </style>
 
 <template lang="pug">
-header.header(:class="{ 'header-hidden': isSidebarActive, 'header-inverted': !isSmallScreen }", v-if="isSizeCalculated")
+header.header(:class="{ 'header-hidden': isSidebarActive, 'header-inverted': !isSmallScreen }")
   .header-title(v-if="isSmallScreen")
     nuxt-link.nodeco-inline(to='/')
       span.accent E
@@ -118,8 +118,8 @@ header.header(:class="{ 'header-hidden': isSidebarActive, 'header-inverted': !is
           i.mdi.mdi-chevron-down
       span.header-sub-item /
 
-    template(v-if="isArticleCrumbVisible && activeArticle")
-      nuxt-link.header-sub-item(:to="activeArticle.getHref()") {{ activeArticle.title }}
+    <!-- template(v&#45;if="isArticleCrumbVisible &#38;&#38; activeArticle") -->
+    <!--   nuxt&#45;link.header&#45;sub&#45;item(:to="activeArticle.getHref()") {{ activeArticle.title }} -->
 
     template(v-if="isStaticCrumbVisible")
       span(v-for="(crumb, i) in staticBreadcrumbs", :key="crumb.href")

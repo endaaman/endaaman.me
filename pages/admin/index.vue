@@ -9,7 +9,7 @@
     h3 Status
     pre {{ warnings | json }}
 
-    h3 Toke
+    h3 Token
     pre {{ token }}
 </template>
 

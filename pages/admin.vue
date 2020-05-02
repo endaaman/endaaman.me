@@ -1,10 +1,5 @@
 <style scoped lang="scss">
 @import "../css/variables";
-
-.container-admin {
-
-}
-
 </style>
 
 <template lang="pug">

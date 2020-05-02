@@ -9,7 +9,7 @@
 </style>
 
 <template lang="pug">
-.container-error.section
+.container-error
   h1 {{error.statusCode}}
   p {{error.message}}
   nuxt-link(to="/") Home

@@ -13,7 +13,7 @@ $breakpoint: 720px;
 
 <template lang="pug">
 .root
-  my-common
+  // my-common
   my-header
   nuxt
 </template>

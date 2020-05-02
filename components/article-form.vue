@@ -1,6 +1,19 @@
+<style scoped lang="scss">
+@import "../css/variables";
+
+.add-margin-for-hidden-tags {
+  padding-top: 140px;
+}
+
+.scrollable-container {
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+</style>
 <template lang="pug">
 div
-  b-tabs(v-model="activeTab", :animated="false", type="is-boxed")
+  b-tabs(v-model="activeTab", :animated="false", type="is-boxed", ref="tabContentOptions")
     b-tab-item(:label="'Options' + (isOptionsChanged ? ' +' : '')")
       b-field(label="Slug", horizontal)
         b-input(v-model="article.slug", placeholder="Slug", expanded)
@@ -27,9 +40,6 @@ div
           b-input(v-model="article.image", placeholder="Image URL", expanded)
           p.control
             a.button(target="_blank", :href="article.image", :class="{ 'is-disabled': !article.image }") Check
-        // p(v-if="article.image")
-        //   span check:
-        //   a(target="_blank", :href="article.image" ) {{ article.image }}
 
       b-field(label="Tags", horizontal)
         b-taginput(
@@ -53,20 +63,23 @@ div
         p.control
           b-checkbox(v-model="article.special") Special
 
+      .add-margin-for-hidden-tags
 
     b-tab-item(:label="'Body' + (isBodyChanged ? ' +' : '')")
       no-ssr(placeholder="Loading Codemirror...")
-        codemirror(
-          @keydown.page-down="onCtrlS"
-          ref="elCm"
-          :value="article.body",
-          :options="cmOptions",
-          @ready="onCmReady",
-          @input="onCmChanged")
+        .scrollable-container(ref="elCmContainer")
+          codemirror(
+            @keydown.page-down="onCtrlS"
+            ref="elCm"
+            :value="article.body",
+            :options="cmOptions",
+            @ready="onCmReady",
+            @input="onCmChanged")
 
     b-tab-item(label="Preview")
       no-ssr(placeholder="Loading markdown...")
-        my-markdown(:source="article.body")
+        .scrollable-container(ref="elMdContainer")
+          my-markdown(:source="article.body")
 
     b-tab-item(label="JSON")
       pre {{ article.toPrintable() | json }}
@@ -74,12 +87,14 @@ div
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-
+import resize from '~/mixins/resize'
 
 export default {
+  mixins: [resize(100)],
   data() {
     return {
       activeTab: 0,
+      codemirror: null,
       cmOptions: {
         tabSize: 2,
         lineWrapping: true,
@@ -110,6 +125,9 @@ export default {
       if (tab === 1) {
         this.$refs.elCm.refresh()
       }
+      if (tab === 1 || tab === 2) {
+        this.adjustCotainerSize()
+      }
     },
     article: {
       handler(a) {
@@ -128,7 +146,21 @@ export default {
     },
   },
   methods: {
+    adjustCotainerSize() {
+      setTimeout(() => {
+        const height = window.innerHeight
+        const margin = 40
+        const cm = this.$refs.elCmContainer
+        const md = this.$refs.elMdContainer
+        cm.style.height = (height - cm.getBoundingClientRect().y - margin) + 'px'
+        md.style.height = (height - md.getBoundingClientRect().y - margin) + 'px'
+      }, 100)
+    },
+    onResize() {
+      this.adjustCotainerSize()
+    },
     onCmReady(cm) {
+      this.codemirror = cm
       cm.addKeyMap({
         'Ctrl-S': (cm) => {
           this.$emit('save')

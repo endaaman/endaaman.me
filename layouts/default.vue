@@ -80,8 +80,7 @@ $sidebar-width: 320px;
     my-sidebar
   .col-main(:class="{ 'noscroll': isSidebarActive }")
     my-header
-    .main-inner
-      nuxt
+    nuxt
   // my-footer
 </template>
 

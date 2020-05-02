@@ -2,6 +2,10 @@
 @import "../css/variables";
 
 .content.md-content {
+  *:first-child {
+    margin-top: 0px; /* delete margin for parent is flex */
+  }
+
   h2 {
     margin: 48px 0 24px;
     line-height: 48px;
@@ -60,6 +64,8 @@
   pre {
     margin: 24px 0;
     padding: 6px 12px 6px;
+    max-height: 600px;
+    overflow-y: auto;
     &.hljs {
       position: relative;
       padding-top: 24px;
@@ -87,7 +93,7 @@
 
   blockquote {
     margin: 24px 0;
-    padding: 6px 12px 6px;
+    padding: 16px;
     /* border-left: $grey-lighter solid 36px; */
     /* position: relative; */
     /* &:before { */

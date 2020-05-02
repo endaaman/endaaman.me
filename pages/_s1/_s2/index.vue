@@ -1,8 +1,11 @@
 <style scoped lang="scss">
 @import "../../../css/variables";
 
-.article-heading {
-  margin: 0px 0 36px;
+.article-container {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  min-height: calc(100vh - #{$header-height});
 }
 
 .article-dates {
@@ -37,11 +40,19 @@
   margin-bottom: 8px;
 }
 
+.article-body {
+  margin-top: 24px;
+}
+
 .article-delimiter {
   margin: 24px auto;
   width: 100%;
   height: 2px;
   background-color: $black-ter;
+}
+
+.article-bottom {
+  margin-top: auto;
 }
 
 hr.article-bottom-divider {
@@ -106,7 +117,7 @@ a.article-navigator {
 <template lang="pug">
 .container-article-show
   transition(name="fade")
-    .section(v-show="visible")
+    .article-container.section(v-show="visible")
       .article-heading
         .article-sub.article-dates
           template(v-if="!article.special")
@@ -128,7 +139,8 @@ a.article-navigator {
             nuxt-link.tag.is-white(v-for="tag in article.getTags()", :to="'/?tag=' + tag" :key="tag") {{ tag }}
 
       // .article-delimiter
-      my-markdown(:source="article.body", @ready="onMarkdownReady")
+      .article-body
+        my-markdown(:source="article.body", @ready="onMarkdownReady")
 
       .article-bottom(v-if="prevArticle || nextArticle")
         hr.article-bottom-divider

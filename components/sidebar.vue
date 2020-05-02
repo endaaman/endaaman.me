@@ -57,14 +57,14 @@ h2 {
       left: 6px;
       width: 1px;
       bottom: 0;
-      top: 0;
+      top: 8px;
       background-color: $grey;
     }
 
     li {
       position: relative;
       line-height: 1.25;
-      margin: 16px 16px;
+      margin: 8px 16px;
       a {
         display: block;
         font-size: $size-6;
@@ -264,7 +264,6 @@ export default {
       const activeEl = this.$el.querySelector('.articles-by-category .is-active')
       if (activeEl) {
         const container = activeEl.closest('.articles-by-category')
-        console.log(container.scrollTop, activeEl.offsetTop)
         if ((container.scrollTop > activeEl.offsetTop) || (container.scrollTop + container.offsetHeight < activeEl.offsetTop)) {
           container.scroll(0, activeEl.offsetTop - 64)
         }

@@ -29,7 +29,7 @@ module.exports = {
   },
   css: [
     'mdi/css/materialdesignicons.css',
-    'highlight.js/styles/vs.css',
+    'highlight.js/styles/github.css',
     'viewerjs/dist/viewer.css',
     { src: '@/css/bulma.scss', lang: 'scss' },
     { src: '@/css/katex.scss', lang: 'scss' },
