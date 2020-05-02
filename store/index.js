@@ -58,7 +58,7 @@ export const mutations = {
 
 
 export const actions = {
-  async nuxtServerInit ({ commit, dispatch }, { req }) {
+  async nuxtServerInit({ commit, dispatch }, { req }) {
     commit('initHosts', req.headers.host)
     if (req.headers.cookie) {
       const { token } = cookieParser.parse(req.headers.cookie)

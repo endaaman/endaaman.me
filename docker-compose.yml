@@ -1,8 +1,5 @@
 endaaman-frontend:
+  container_name: endaaman-front-dev
   build: .
   environment:
-    - VIRTUAL_HOST=endaaman.test
-    - SITE_HOST=endaaman.test
-  extra_hosts:
-   - "api.endaaman.test:172.17.0.1"
-   - "static.endaaman.test:172.17.0.1"
+    - VIRTUAL_HOST=api.endaaman.test,static.endaaman.test

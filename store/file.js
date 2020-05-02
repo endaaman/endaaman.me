@@ -43,8 +43,10 @@ export const actions = {
   async uploadFiles({ commit, dispatch, rootGetters }, { dir, files }) {
     const fd = new FormData()
     for (const file of files) {
+      console.log(file)
       // NOTE: force lower case
-      fd.append(file.name.toLowerCase(), file)
+      // fd.append(file.name.toLowerCase(), file)
+      fd.append("files", file)
     }
     const res = await rootGetters.api(urlJoin('/files', dir), {
       method: 'POST',
