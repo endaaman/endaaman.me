@@ -14,7 +14,7 @@
 
 .sidebar-main {
   background-color: $sidebar-bg;
-  padding: 24px;
+  padding: 16px;
   flex: 1;
   flex-grow: 1;
 }
@@ -30,10 +30,8 @@ h2 {
 
 .category-title {
   user-select: none;
-  margin-top: 16px;
-  li {
-    padding-left: 16px;
-  }
+  margin-top: 8px;
+  margin-bottom: 8px;
   & > a {
     display: block;
     text-decoration: none;
@@ -45,17 +43,51 @@ h2 {
 }
 
 .articles-by-category {
-  margin-left: 16px;
-  margin-right: 0;
-  li {
-    margin: 12px 0;
-    a {
-      color: $white-ter;
-      &:hover {
-        text-decoration: underline;
+  max-height: 400px;
+  overflow-y: auto;
+  ul {
+    position: relative;
+    margin-left: 0px;
+    margin-right: 0;
+    padding: 1px 0;
+
+    &:before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      width: 1px;
+      bottom: 0;
+      top: 0;
+      background-color: $grey;
+    }
+
+    li {
+      position: relative;
+      line-height: 1.25;
+      margin: 16px 16px;
+      a {
+        display: block;
+        font-size: $size-6;
+        color: $grey;
+        .date {
+          display: block;
+        font-size: $size-7;
+        }
       }
-      &.is-active {
-        text-decoration: underline;
+
+      &:hover, &.is-active {
+        a {
+          color: $white;
+        }
+        &:before {
+          position: absolute;
+          content: '';
+          left: -10px;
+          top: 0;
+          bottom: 0;
+          width: 1px;
+          background-color: $primary;
+        }
       }
     }
   }
@@ -116,10 +148,6 @@ h2 {
   }
 }
 
-.field {
-  margin-bottom: 16px;
-}
-
 .sidebar-footer  {
   margin-top: auto;
   padding: 48px 24px 12px;
@@ -148,22 +176,26 @@ aside.sidebar
   .sidebar-main
     my-logo
     h2 Category
-    .category-title(v-for="cat in categoryItems" v-if="cat.category.getArticles().length > 0")
+    .category-title(v-for="cat in categoryItems" v-if="cat.category.getArticles().length > 0" :key="cat.slug")
       a.nodeco-inline(@click="cat.isActive = !cat.isActive")
         i.mdi.is-primay(:class="{ 'mdi-chevron-right': !cat.isActive, 'mdi-chevron-down': cat.isActive }")
         span(:class="{ 'has-text-weight-bold': cat.isActive }") {{ cat.name }}
-      ul.articles-by-category(v-if="cat.isActive")
-        li(v-for="a in cat.category.getArticles()")
-          span.is-primay ・
-          nuxt-link(:to="a.getHref()", :class="{ 'is-active': a.getHref() === $route.path }") {{ a.title }}
-          span.icon.has-text-danger(v-if="a.private")
-            i.mdi.mdi-lock
+      .articles-by-category(v-if="cat.isActive", ref="articlesContainers")
+        ul
+          li(
+            v-for="a in cat.category.getArticles()",
+            :class="{ 'is-active': a.getHref() === $route.path }")
+            nuxt-link(:to="a.getHref()")
+              span.date {{ a.date }}
+              span {{ a.title }}
+              span.icon.has-text-danger(v-if="a.private")
+                i.mdi.mdi-lock
 
     h2 Tags
     .tags
       nuxt-link.tag.is-white(
         v-for="tag in tagItems",
-        :to="'/?tag=' + tag.name",
+        :to="tag.isActive ? '/' : '/?tag=' + tag.name",
         :key="tag.name",
         :class="{ 'is-inversed': !tag.isActive }"
         ) {{ tag.name }} ({{ tag.count }})
@@ -176,11 +208,6 @@ aside.sidebar
         span {{ a.title }}
 
   footer.sidebar-footer
-    // .field
-    //   p.control.has-icons-left
-    //     input.input.is-rounded(type="text", placeholder="Seach...")
-    //     span.icon.is-left
-    //       i.mdi.mdi-magnify
     ul.social-links
       li
         a.social-link.is-small(href="http://twitter.com/endaaman")
@@ -220,18 +247,34 @@ export default {
       slug: c.slug,
       category: c,
       isActive:
-      (this.activeCategory && c.slug === this.activeCategory.slug)
-      ||
-      (this.activeArticle && !this.activeArticle.special && c.slug === this.activeArticle.categorySlug),
+        (this.activeCategory && c.slug === this.activeCategory.slug)
+        ||
+        (this.activeArticle && !this.activeArticle.special && c.slug === this.activeArticle.categorySlug),
     }))
     this.tagItems = this.tags.map((t) => ({
       isActive: this.activeTag === t.name,
       ...t
     }))
   },
+  mounted() {
+    this.adjustScroll()
+  },
+  methods: {
+    adjustScroll() {
+      const activeEl = this.$el.querySelector('.articles-by-category .is-active')
+      if (activeEl) {
+        const container = activeEl.closest('.articles-by-category')
+        console.log(container.scrollTop, activeEl.offsetTop)
+        if ((container.scrollTop > activeEl.offsetTop) || (container.scrollTop + container.offsetHeight < activeEl.offsetTop)) {
+          container.scroll(0, activeEl.offsetTop - 64)
+        }
+      }
+    }
+  },
   watch: {
     $route(route) {
       this.$store.dispatch('layout/closeSidebar')
+      this.$nextTick(this.adjustScroll)
     },
     activeTag(tag) {
       for (const t of this.tagItems) {

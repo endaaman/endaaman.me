@@ -1,5 +1,5 @@
 import fecha from 'fecha'
-import { NO_TAG_NAME, NO_CATEGORY_SLUG } from '../constants'
+import { NO_TAG_NAME, } from '../constants'
 
 
 const fieldOriginal = Symbol()
@@ -119,11 +119,8 @@ export class Category {
   constructor(obj) {
     Object.assign(this, obj)
   }
-  getValue() {
-    return this.slug === '-' ? null : this.slug
-  }
   getArticles() {
     const map = this.constructor.store.getters['article/articleMapKeyByCategory']
-    return map[this.getValue()] || []
+    return map[this.slug] || []
   }
 }

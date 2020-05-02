@@ -31,11 +31,14 @@
 
   p {
     line-height: 24px;
-    margin: 24px 0;
     font-size: $size-6;
   }
 
-  ul, ol {
+  & > p {
+    margin: 24px 0;
+  }
+
+  & > ul, & > ol {
     margin: 24px 0 24px 24px;
   }
 
@@ -64,7 +67,7 @@
         position: absolute;
         top: 6px;
         left: 6px;
-        content: attr(data-language)"";
+        content: attr(data-filename)"";
         font-family: $family-monospace;
         font-style: italic;
         font-size: 12px;
@@ -85,18 +88,18 @@
   blockquote {
     margin: 24px 0;
     padding: 6px 12px 6px;
-  //   border-left: $grey-lighter solid 36px;
-  //   position: relative;
-  //   &:before {
-  //     position: absolute;
-  //     top: 50%;
-  //     transform: translateY(-50%);
-  //     left: -24px;
-  //     color: $white-ter;
-  //     content: '\F756';
-  //     font-family: 'Material Design Icons';
-  //     font-size: 36px;
-  //   }
+    /* border-left: $grey-lighter solid 36px; */
+    /* position: relative; */
+    /* &:before { */
+    /*   position: absolute; */
+    /*   top: 50%; */
+    /*   transform: translateY(-50%); */
+    /*   left: -24px; */
+    /*   color: $white-ter; */
+    /*   content: '\F756'; */
+    /*   font-family: 'Material Design Icons'; */
+    /*   font-size: 36px; */
+    /* } */
   }
 
   .fl {
@@ -178,23 +181,37 @@ export default {
         }
         md.use(mdItContainer, 'video', {
           validate(param) {
-            return param.trim().match(/^video\s+(.*)$/)
+            return param.trim().match(/^video\|(.+)/)
           },
-          render(...args) {
-            const [ tokens, idx, options, env, self ] = args
-            const token = tokens[idx]
-            const m = token.info.trim().match(/^video\s+(.*)$/)
-            if (!m) {
-              // this should not be happened...
-              return ''
-            }
-            if (token.nesting === 1) {
-              return `<video class="markdown-video" src="${ m[1] }" controls>`
+          render(tokens, idx, options, env, self) {
+            const url = tokens[idx].info.trim().match(/^video\|(.+)/)[1]
+            if (tokens[idx].nesting === 1) {
+              return `<video class="markdown-video" src="${ md.utils.escapeHtml(url) }" controls>`
             } else {
               return '</video>\n'
             }
           }
         })
+        md.use(mdItContainer, 'message', {
+          validate: function(param) {
+            const splitted = param.trim().split('|')
+            return splitted[0] === 'message' && splitted.length > 1
+          },
+          render(tokens, idx, options, env, self) {
+            const param = tokens[idx].info.trim()
+            const [_, mode, title] = param.split('|')
+            if (tokens[idx].nesting === 1) {
+              let heading = `<article class="message is-${mode}">`
+              if (title) {
+                heading += `<div class="message-header"><p>${md.utils.escapeHtml(title)}</p></div>`
+              }
+              return heading + `<div class="message-body">`
+            } else {
+              return '</div></article>'
+            }
+          }
+        })
+
       }
     }
   }),
@@ -225,16 +242,19 @@ export default {
 
       this.$el.querySelectorAll('pre > code').forEach((e) => {
         let isCode = false
-        let splitted = null
+        let lang = null
         e.classList.forEach((c) => {
-          splitted = c.split('language-')
+          const splitted = c.split('language-')
           if (splitted.length === 2) {
             isCode = true
+            lang = splitted[1]
             return false
           }
         })
         if (isCode) {
-          e.parentElement.dataset.language = splitted[1]
+          const [a, b] = lang.split('|')
+          e.parentElement.dataset.language = a
+          e.parentElement.dataset.filename = b || a
           hljs.highlightBlock(e.parentElement)
         }
       })

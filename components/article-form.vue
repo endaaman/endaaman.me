@@ -18,7 +18,7 @@ div
         b-select(v-model="article.categorySlug")
           option(
             v-for="c in categories",
-            :value="c.getValue()",
+            :value="c.slug",
             :key="c.slug",
           ) {{ c.name }}
 

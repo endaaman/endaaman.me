@@ -44,7 +44,7 @@ export const mutations = {
       : `${ ssl ? 'https' : 'http' }://api.${ host }/v1`
 
     state.staticRoot = process.env.dev
-      ? 'http://localhost:3002'
+      ? 'http://localhost:3001/static'
       : `${ ssl ? 'https' : 'http' }://static.${ host }`
 
     state.staticHost = process.env.dev

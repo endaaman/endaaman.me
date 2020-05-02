@@ -131,7 +131,6 @@ header.header(:class="{ 'header-hidden': isSidebarActive, 'header-inverted': !is
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { NO_CATEGORY_NAME, NO_CATEGORY_SLUG } from '../constants'
 
 export default {
   computed: {
