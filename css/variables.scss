@@ -1,3 +1,4 @@
+// @import "~bulma/sass/utilities/_all";
 @import "~bulma/sass/utilities/initial-variables";
 @import "~bulma/sass/utilities/functions";
 
@@ -61,3 +62,6 @@ $header-height: $header-sub-height + $header-title-height + $header-padding * 2 
 $sidebar-bg: $black-ter;
 
 @import "~bulma/sass/utilities/derived-variables";
+@import "~bulma/sass/utilities/animations.sass";
+@import "~bulma/sass/utilities/mixins.sass";
+@import "~bulma/sass/utilities/controls.sass";

@@ -31,10 +31,10 @@ module.exports = {
     'mdi/css/materialdesignicons.css',
     'highlight.js/styles/github.css',
     'viewerjs/dist/viewer.css',
+    'katex/dist/katex.min.css',
+    'codemirror/lib/codemirror.css',
     { src: '@/css/bulma.scss', lang: 'scss' },
-    { src: '@/css/katex.scss', lang: 'scss' },
     { src: '@/css/app.scss', lang: 'scss' },
-    { src: '@/css/codemirror.scss', lang: 'scss' },
   ],
   build: {
     extend (_config) {
@@ -57,11 +57,11 @@ module.exports = {
   },
   plugins: [
     '~plugins/buefy',
-    { src: '~plugins/codemirror', ssr: false },
     '~plugins/components',
     '~plugins/filters',
-    { src: '~plugins/ga', ssr: false },
     '~plugins/markdown',
     '~plugins/vuex-router-sync',
+    { src: '~plugins/codemirror', ssr: false },
+    { src: '~plugins/ga', ssr: false },
   ],
 }

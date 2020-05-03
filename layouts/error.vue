@@ -7,15 +7,16 @@
   }
 }
 </style>
-
 <template lang="pug">
+
 .container-error
   h1 {{error.statusCode}}
   p {{error.message}}
   nuxt-link(to="/") Home
-</template>
 
+</template>
 <script>
+
 export default {
   props: ['error'],
   head() {
