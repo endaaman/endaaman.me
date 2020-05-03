@@ -1,7 +1,7 @@
 <style scoped lang="scss">
 @import "../css/variables";
 
-.header {
+.header-root {
   background-color: $black-ter;
   // height: $header-height;
   color: $white-ter;
@@ -88,7 +88,7 @@
 </style>
 
 <template lang="pug">
-header.header(:class="{ 'header-hidden': isSidebarActive, 'header-inverted': !isSmallScreen }")
+.header-root(:class="{ 'header-hidden': isSidebarActive, 'header-inverted': !isSmallScreen }", v-if="isSizeCalculated")
   .header-title(v-if="isSmallScreen")
     nuxt-link.nodeco-inline(to='/')
       span.accent E

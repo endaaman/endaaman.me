@@ -3,19 +3,32 @@
 
 $breakpoint: 720px;
 
-.root {
+.simple-root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   height: 100%;
 }
+
+.row-header { }
+
+.row-main {
+  flex-grow: 1;
+  padding: 8px 24px 8px;
+
+  display: flex;
+  flex-direction: column;
+}
+
 </style>
 
 <template lang="pug">
-.root
+.simple-root
   my-common
-  my-header
-  nuxt
+  .row-header
+    my-header
+  .row-main
+    nuxt
 </template>
 
 <script>

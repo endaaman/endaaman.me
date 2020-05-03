@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     onResize() {
-      const isSmall = window.matchMedia(`(max-width: ${breakpoint}px)`).matches
+      const isSmall = !!window.matchMedia(`(max-width: ${breakpoint}px)`).matches
       this.$store.dispatch('layout/setIsSmallScreen', isSmall)
       this.closeSidebar()
     },

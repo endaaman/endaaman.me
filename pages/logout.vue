@@ -1,5 +1,5 @@
 <template lang="pug">
-.container-logout.section
+.logout-root
   p さようなら、俺
   form(v-on:submit.prevent="performLogout")
     .field
@@ -21,7 +21,7 @@ export default {
     async performLogout() {
       await this.$store.dispatch('logout')
       this.$router.push('/')
-      this.$toast.open({
+      this.$buefy.toast.open({
         message: 'Logged out',
       })
     },

@@ -10,7 +10,7 @@
 </style>
 
 <template lang="pug">
-.container-admin-file
+.admin-file-root
   ul.list-inline
     li
       button.button.is-small(@click="reload") Reload
@@ -169,7 +169,7 @@ export default {
       })
     },
     notify(message) {
-      this.$toast.open({
+      this.$buefy.toast.open({
         message: message,
         duration: 3000,
       })
@@ -199,7 +199,7 @@ export default {
     },
 
     async reload() {
-      const loading = this.$loading.open()
+      const loading = this.$buefy.loading.open()
       await this.$store.dispatch('file/fetchFiles', { dir: this.dir })
       loading.close()
       this.notify('Reloaded')
@@ -207,7 +207,7 @@ export default {
 
     async uploadFiles() {
       const dir = this.dir
-      const loading = this.$loading.open()
+      const loading = this.$buefy.loading.open()
       const { error } = await this.$store.dispatch('file/uploadFiles', { dir, files: this.uploadings })
       loading.close()
       this.uploadings = []
@@ -233,7 +233,7 @@ export default {
       })
     },
     async makeDir(name) {
-      const loading = this.$loading.open()
+      const loading = this.$buefy.loading.open()
       const { error } = await this.$store.dispatch('file/makeDir', { dir: this.dir, name })
       loading.close()
       if (error) {
@@ -255,7 +255,7 @@ export default {
     },
     async deleteFile(fileName) {
       const dir = this.dir
-      const loading = this.$loading.open()
+      const loading = this.$buefy.loading.open()
       const { error } = await this.$store.dispatch('file/deleteFile', { dir, name: fileName })
       loading.close()
       if (error) {
@@ -281,7 +281,7 @@ export default {
       })
     },
     async renameFile(fileName, newFileName) {
-      const loading = this.$loading.open()
+      const loading = this.$buefy.loading.open()
       const { error } = await this.$store.dispatch('file/moveFile', {
         dir: this.dir,
         name: fileName,
@@ -313,7 +313,7 @@ export default {
       })
     },
     async moveFile(fileName, dest) {
-      const loading = this.$loading.open()
+      const loading = this.$buefy.loading.open()
       const { error } = await this.$store.dispatch('file/moveFile', {
         dir: this.dir,
         name: fileName,

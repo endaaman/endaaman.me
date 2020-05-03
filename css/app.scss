@@ -17,7 +17,7 @@ a.nodeco-block {
 
 pre {
   border: solid 1px $border;
-  padding: 12px;
+  padding: 16px;
 }
 
 .tag.is-white {
@@ -27,16 +27,6 @@ pre {
     color: $white-ter;
     background-color: $grey-darker;
   }
-}
-
-.section {
-  padding: 24px;
-}
-
-.container {
-  margin-left: 0;
-  max-width: 720px;
-  width: 100%; // fix for flex parent
 }
 
 .noscroll {
@@ -54,14 +44,14 @@ pre {
 
 ul.list-inline {
   overflow: hidden;
-  margin: 12px 0;
+  margin: 16px 0;
   li {
     float: left;
-    margin-right: 12px;
+    margin-right: 16px;
   }
   li.list-item-right {
     float: right;
-    margin-left: 12px;
+    margin-left: 16px;
   }
 }
 

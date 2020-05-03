@@ -1,107 +1,104 @@
 <style scoped lang="scss">
 @import "../../../css/variables";
 
-.article-container {
+.article-show-root {
+  height: 100%;
+}
+
+.article-content {
   display: flex;
   flex-direction: column;
-  align-content: flex-start;
-  min-height: calc(100vh - #{$header-height});
+  height: 100%;
 }
 
-.article-dates {
-  font-size: $size-7;
-  line-height: 24px;
-  color: $text-light;
-}
-
-.article-title {
-  font-size: $size-3;
-  line-height: 48px;
-  @media screen and (max-width: $breakpoint) {
-    font-size: $size-4;
-    line-height: 32px;
+.article-heading {
+  margin-bottom: 16px;
+  .article-dates {
+    font-size: $size-7;
+    line-height: 24px;
+    color: $text-light;
   }
 
-  font-weight: bold;
-  margin-bottom: 8px;
-  a {
-    color: $grey-darker;
+  .article-title {
+    font-size: $size-3;
+    line-height: 48px;
+    @media screen and (max-width: $breakpoint) {
+      font-size: $size-4;
+      line-height: 32px;
+    }
+
+    font-weight: bold;
+    margin-bottom: 8px;
+    a {
+      color: $grey-darker;
+    }
   }
-}
 
-.article-digest {
-  font-size: $size-7;
-  line-height: 24px;
-  margin-bottom: 8px;
-  // text-align: center;
-}
+  .article-digest {
+    font-size: $size-7;
+    line-height: 24px;
+    margin-bottom: 8px;
+    // text-align: center;
+  }
 
-.article-sub {
-  margin-bottom: 8px;
+  .article-sub {
+    margin-bottom: 8px;
+  }
 }
 
 .article-body {
-  margin-top: 24px;
-}
-
-.article-delimiter {
-  margin: 24px auto;
-  width: 100%;
-  height: 2px;
-  background-color: $black-ter;
+  flex-grow: 1;
+  margin-bottom: 32px;
 }
 
 .article-bottom {
-  margin-top: auto;
-}
+  hr.article-bottom-divider {
+    margin-bottom: 16px;
+  }
 
-hr.article-bottom-divider {
-  margin: 48px 0 24px;
-}
+  .article-navigators {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 
-.article-navigators {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-
-a.article-navigator {
-  display: flex;
-  flex-direction: column;
-  width: 48%;
-  overflow: hidden;
-  // white-space: wrap;
-  // text-overflow: ellipsis;
-  // display: block;
-  color: $black-ter;
-  text-decoration: inherit;
-  border: 1px solid $border;
-  font-size: 14px;
-  padding: 6px 12px;
-  .article-navigator-content {
-    flex-grow: 1;
+  a.article-navigator {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    .article-navigator-inner {
-      // no styles needed
-    }
-  }
-  .article-navigator-guide {
-    flex-grow: 0;
-    text-align: center;
-    font-size: 12px;
-    color: $grey-dark;
-  }
-
-  &:hover {
-    border-color: $border-hover;
+    width: 48%;
+    overflow: hidden;
+    // white-space: wrap;
+    // text-overflow: ellipsis;
+    // display: block;
+    color: $black-ter;
+    text-decoration: inherit;
+    border: 1px solid $border;
+    font-size: 14px;
+    padding: 8px 16px;
     .article-navigator-content {
-      color: $border-hover;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      .article-navigator-inner {
+        // no styles needed
+      }
+    }
+    .article-navigator-guide {
+      flex-grow: 0;
+      text-align: center;
+      font-size: 12px;
+      color: $grey-dark;
+    }
+
+    &:hover {
+      border-color: $border-hover;
+      .article-navigator-content {
+        color: $border-hover;
+      }
     }
   }
 }
@@ -115,9 +112,9 @@ a.article-navigator {
 </style>
 
 <template lang="pug">
-.container-article-show
+.article-show-root
   transition(name="fade")
-    .article-container.section(v-show="visible")
+    .article-content(v-show="isMarkdownReady")
       .article-heading
         .article-sub.article-dates
           template(v-if="!article.special")
@@ -138,7 +135,6 @@ a.article-navigator {
           .tags
             nuxt-link.tag.is-white(v-for="tag in article.getTags()", :to="'/?tag=' + tag" :key="tag") {{ tag }}
 
-      // .article-delimiter
       .article-body
         my-markdown(:source="article.body", @ready="onMarkdownReady")
 
@@ -168,7 +164,7 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      visible: false,
+      isMarkdownReady: false,
     }
   },
   head() {
@@ -212,7 +208,7 @@ export default {
   },
   methods: {
     onMarkdownReady() {
-      this.visible = true
+      this.isMarkdownReady = true
     }
   }
 }

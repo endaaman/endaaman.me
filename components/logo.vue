@@ -8,7 +8,7 @@ $accent-color: $primary;
 $wait: .5s;
 $t: .7s;
 
-a.logo-container {
+a.logo-root {
   color: inherit;
   text-decoration: none;
   display: block;
@@ -96,7 +96,7 @@ a.logo-container {
 </style>
 
 <template lang="pug">
-nuxt-link.logo-container(ref="logo", :to="'/'", :class="{ 'animated-show': isAnimated }")
+nuxt-link.logo-root(ref="logo", :to="'/'", :class="{ 'animated-show': isAnimated }")
   .logo
   .logo-inner
   .logo-title

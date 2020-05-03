@@ -22,7 +22,7 @@
 h2 {
   line-height: 16px;
   padding: 8px 0;
-  margin: 24px 0 12px;
+  margin: 24px 0 16px;
 
   font-size: 16px;
   border-bottom: solid 2px $white-ter;

@@ -1,17 +1,32 @@
 <style scoped lang="scss">
 @import "../css/variables";
 
+.default-root {
+  min-height: 100vh;
+  height: 100vh;
+}
+
+.col-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  height: 100%;
+}
+
 @media screen and (min-width: $breakpoint) {
-  .row {
+  .default-root {
     display: flex;
     width: 100%;  // this is needed for horizontal grow
-    height: 100vh;
   }
 
   .col-main {
     flex: 3;
     overflow-y: auto;
+
+    margin-left: 0;
     min-width: 0; // this is needed for pre tag sizing
+    max-width: $breakpoint;
+    width: 100%; // fix for flex parent
   }
 
   .col-sidebar {
@@ -47,6 +62,13 @@ $sidebar-width: 320px;
   }
 }
 
+.row-header { }
+
+.row-main {
+  flex-grow: 1;
+  padding: 24px 24px 12px;
+}
+
 .overlay {
   display: none;
   position: fixed;
@@ -72,15 +94,17 @@ $sidebar-width: 320px;
 </style>
 
 <template lang="pug">
-.row
+.default-root
   my-common
   .overlay(@click="closeSidebar", :class="{ 'overlay-active': isSidebarActive }")
   my-burger(:isActive="isSidebarActive", :isInversed="scrollTop < 40", @click="toggleSidebar", v-show="isSmallScreen")
   .col-sidebar(:class="{ 'col-sidebar-active': isSidebarActive }")
     my-sidebar
   .col-main(:class="{ 'noscroll': isSidebarActive }")
-    my-header
-    nuxt
+    .row-header
+      my-header
+    .row-main
+      nuxt
   // my-footer
 </template>
 

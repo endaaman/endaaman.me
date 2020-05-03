@@ -1,16 +1,23 @@
-<template lang="pug">
-.container-admin-article-new
-  form(v-on:submit.prevent="create")
-    ul.list-inline
-      li
-        nuxt-link.button.is-small(:to="'/admin/article'") Back to list
-      li
-        input.button.is-primary.is-small(type="submit", value="Create")
+<style scoped lang="scss">
+.admin-article-new-root {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+</style>
 
-    my-article-form(
-      :article="edittingArticle",
-      :originalArticle="originalArticle",
-      @save="create")
+<template lang="pug">
+form.admin-article-new-root(v-on:submit.prevent="create")
+  ul.list-inline
+    li
+      nuxt-link.button.is-small(:to="'/admin/article'") Back to list
+    li
+      input.button.is-primary.is-small(type="submit", value="Create")
+
+  my-article-form(
+    :article="edittingArticle",
+    :originalArticle="originalArticle",
+    @save="create")
 </template>
 
 <script>
@@ -59,7 +66,7 @@ export default {
       window.removeEventListener('beforeunload', this.onBeforeUnload)
     },
     async create() {
-      const loading = this.$loading.open()
+      const loading = this.$buefy.loading.open()
       const { error, data } = await this.$store.dispatch('article/createArticles', {
         article: this.edittingArticle
       })
@@ -73,7 +80,7 @@ export default {
         return
       }
       this.editting = false
-      this.$toast.open({
+      this.$buefy.toast.open({
         message: 'Created',
         position: 'is-bottom',
       })

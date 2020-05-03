@@ -63,7 +63,7 @@
 
   pre {
     margin: 24px 0;
-    padding: 6px 12px 6px;
+    padding: 8px 16px 8px;
     max-height: 600px;
     overflow-y: auto;
     &.hljs {

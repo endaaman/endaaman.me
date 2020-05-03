@@ -1,14 +1,8 @@
 <style scoped lang="scss">
-@import "../css/variables";
-
-// .container-login {
-//   margin: 0 auto;
-//   max-width: 480px;
-// }
 </style>
 
 <template lang="pug">
-.container-login.section
+.login-root
   .notification.is-danger(v-if="errorMessage")
     button.delete(@click="errorMessage = ''")
     | {{ errorMessage }}
@@ -44,14 +38,14 @@ export default {
       this.isLoading = false
 
       if (error) {
-        this.$dialog.alert({
+        this.$buefy.dialog.alert({
           title: 'Error',
           message: error,
           type: 'is-danger',
         })
       } else {
         this.$router.push('/')
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: 'Logged in',
         })
       }

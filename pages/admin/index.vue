@@ -1,10 +1,9 @@
 <style scoped lang="scss">
 @import "../../css/variables";
-
 </style>
 
 <template lang="pug">
-.container-admin-article
+.admin-index-root
   .content
     h3 Status
     pre {{ warnings | json }}

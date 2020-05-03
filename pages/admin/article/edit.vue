@@ -1,25 +1,29 @@
 <style scoped lang="scss">
 @import "../../../css/variables";
 
+.admin-article-edit-root {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
 </style>
 
 <template lang="pug">
-.container-admin-article-edit(v-if="originalArticle")
-  form(v-on:submit.prevent="update")
-    ul.list-inline
-      li
-        nuxt-link.button.is-small(:to="'/admin/article'") Back to list
-      li
-        nuxt-link.button.is-small(:to="originalArticle.getHref()") Show article
-      li
-        input.button.is-primary.is-small(type="submit", value="Update")
-      li.list-item-right
-        input.button.is-danger.is-small(type="button", @click="tryDelete", value="Delete")
+form.admin-article-edit-root(v-if="originalArticle", v-on:submit.prevent="update")
+  ul.list-inline
+    li
+      nuxt-link.button.is-small(:to="'/admin/article'") Back to list
+    li
+      nuxt-link.button.is-small(:to="originalArticle.getHref()") Show article
+    li
+      input.button.is-primary.is-small(type="submit", value="Update")
+    li.list-item-right
+      input.button.is-danger.is-small(type="button", @click="tryDelete", value="Delete")
 
-    my-article-form(
-      :article="edittingArticle",
-      :originalArticle="originalArticle",
-      @save="update")
+  my-article-form(
+    :article="edittingArticle",
+    :originalArticle="originalArticle",
+    @save="update")
 </template>
 
 <script>
@@ -75,13 +79,13 @@ export default {
       window.removeEventListener('beforeunload', this.onBeforeUnload)
     },
     async update() {
-      const loading = this.$loading.open()
+      const loading = this.$buefy.loading.open()
       const { error, data } = await this.$store.dispatch('article/updateArticles', {
         article: this.edittingArticle
       })
       loading.close()
       if (error) {
-        this.$dialog.alert({
+        this.$buefy.dialog.alert({
           title: 'Error',
           message: error,
           type: 'is-danger',
@@ -91,12 +95,12 @@ export default {
       this.$router.push('/admin/article/edit?relative=' + data.getRelative())
       await this.$nextTick()
       this.edittingArticle = this.originalArticle.copy()
-      this.$toast.open({
+      this.$buefy.toast.open({
         message: `Updated "${ this.edittingArticle.title }"`,
       })
     },
     async tryDelete() {
-      this.$dialog.confirm({
+      this.$buefy.dialog.confirm({
         title: 'Confim delete',
         message: `OK to delete 「${ this.edittingArticle.slug }」`,
         cancelText: 'Cancel',
@@ -106,13 +110,13 @@ export default {
       })
     },
     async delete() {
-      const loading = this.$loading.open()
+      const loading = this.$buefy.loading.open()
       const { error } = await this.$store.dispatch('article/deleteArticles', {
         article: this.edittingArticle
       })
       loading.close()
       if (error) {
-        this.$dialog.alert({
+        this.$buefy.dialog.alert({
           title: 'Error',
           message: error,
           type: 'is-danger',
@@ -121,12 +125,12 @@ export default {
       }
       this.$router.push('/admin/article')
       await this.$store.dispatch('article/fetchArticles')
-      this.$toast.open({
+      this.$buefy.toast.open({
         message: `Deleted "${ this.edittingArticle.title }"`,
       })
     },
     confirmPageLeave(cb) {
-      this.$dialog.confirm({
+      this.$buefy.dialog.confirm({
         message: this.changedAlertMessage,
         cancelText: 'Cancel',
         confirmText: 'OK',

@@ -7,14 +7,13 @@
   }
 }
 
-.container-admin-article {
-  table-layout: fixed;
+.admin-article-index-root {
 }
 
 </style>
 
 <template lang="pug">
-.container-admin-article
+.admin-article-index-root
   ul.list-inline
     li
       nuxt-link.button.is-primary.is-small(to="/admin/article/new") New

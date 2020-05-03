@@ -1,5 +1,5 @@
 <template lang="pug">
-.container-s1
+.s1-root
   p redirecting...
 </template>
 
