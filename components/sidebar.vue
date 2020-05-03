@@ -32,8 +32,7 @@ h2 {
 
 .category-title {
   user-select: none;
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin: 16px 0 8px;
   & > a {
     display: block;
     text-decoration: none;
