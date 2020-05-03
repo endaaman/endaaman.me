@@ -1,22 +1,24 @@
 <style scoped lang="scss">
 @import "../css/variables";
 
-.sidebar {
+.sidebar-root {
   display: flex;
   flex-direction: column;
   width: 100%;
   min-height: 100vh;
-  height: 100%;
+  /* height: 100%; */
 
   color: $white-ter;
-  overflow-y: scroll;
+  /* overflow-y: auto; */
+
+  height: 100vh;
 }
 
 .sidebar-main {
-  background-color: $sidebar-bg;
   padding: 16px;
   flex: 1;
   flex-grow: 1;
+  /* height: 100%; */
 }
 
 h2 {
@@ -43,8 +45,15 @@ h2 {
 }
 
 .articles-by-category {
+  transition: height 2s;
+  height: auto;
   max-height: 400px;
-  overflow-y: auto;
+  &.articles-by-category-closed {
+    height: 0;
+    max-height: 0px;
+  }
+
+  /* overflow-y: auto; */
   ul {
     position: relative;
     margin-left: 0px;
@@ -162,7 +171,7 @@ h2 {
 </style>
 
 <template lang="pug">
-aside.sidebar
+aside.sidebar-root
   .sidebar-main
     my-logo
     h2 Category
@@ -170,7 +179,7 @@ aside.sidebar
       a.nodeco-inline(@click="cat.isActive = !cat.isActive")
         i.mdi.is-primay(:class="{ 'mdi-chevron-right': !cat.isActive, 'mdi-chevron-down': cat.isActive }")
         span(:class="{ 'has-text-weight-bold': cat.isActive }") {{ cat.name }}
-      .articles-by-category(v-if="cat.isActive", ref="articlesContainers")
+      simplebar.articles-by-category(v-if="cat.isActive", ref="articlesContainers")
         ul
           li(
             v-for="a in cat.category.getArticles()",

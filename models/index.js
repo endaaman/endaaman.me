@@ -37,7 +37,10 @@ export class Article {
     return [ NO_TAG_NAME ]
   }
   serialize() {
-    return JSON.stringify(this)
+    return JSON.stringify({...this})
+  }
+  toJSON() {
+    return this.serialize()
   }
   copy() {
     const a = new Article(JSON.parse(this.serialize()))
@@ -114,7 +117,6 @@ export class Article {
   }
 }
 
-
 export class Category {
   constructor(obj) {
     Object.assign(this, obj)
@@ -122,5 +124,11 @@ export class Category {
   getArticles() {
     const map = this.constructor.store.getters['article/articleMapKeyByCategory']
     return map[this.slug] || []
+  }
+  serialize() {
+    return JSON.stringify({...this})
+  }
+  toJSON() {
+    return this.serialize()
   }
 }

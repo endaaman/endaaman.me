@@ -9,7 +9,6 @@
 
 .admin-article-index-root {
 }
-
 </style>
 
 <template lang="pug">

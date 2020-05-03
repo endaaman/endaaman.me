@@ -88,7 +88,7 @@
 </style>
 
 <template lang="pug">
-.header-root(:class="{ 'header-hidden': isSidebarActive, 'header-inverted': !isSmallScreen }", v-if="isSizeCalculated")
+.header-root(:class="{ 'header-hidden': isSidebarActive, 'header-inverted': !isSmallScreen }")
   .header-title(v-if="isSmallScreen")
     nuxt-link.nodeco-inline(to='/')
       span.accent E
@@ -126,7 +126,6 @@
         span.header-sub-item(v-if="i > 0") /
         nuxt-link.header-sub-item(:to="crumb.href", v-if="crumb.href") {{ crumb.label }}
         span.header-sub-item(v-else) {{ crumb.label }}
-
 </template>
 
 <script>

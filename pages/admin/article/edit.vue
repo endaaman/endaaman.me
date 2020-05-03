@@ -1,11 +1,4 @@
 <style scoped lang="scss">
-@import "../../../css/variables";
-
-.admin-article-edit-root {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
 </style>
 
 <template lang="pug">

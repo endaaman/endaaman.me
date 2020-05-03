@@ -1,26 +1,23 @@
 <style lang="scss">
 @import "../css/variables";
 
-// .article-form-root {
-//   flex-grow: 1;
-//   display: flex;
-//   flex-direction: column;
-// }
-//
-// .form-content {
-//   flex-grow: 1;
-//   display: flex;
-//   flex-direction: column;
-// }
-
 .CodeMirror {
   height: auto;
 }
 
-.CodeMirror-scroll {
-  /* max-height: calc(100% - 200px); */
-  max-height: 400px;
+.article-preview {
+  overflow-y: auto;
 }
+
+.CodeMirror, .CodeMirror-scroll, .article-preview {
+  // small
+  max-height: calc(100vh - 290px);
+  @media screen and (min-width: $breakpoint) {
+    // large
+    max-height: calc(100vh - 260px);
+  }
+}
+
 </style>
 
 <template lang="pug">
@@ -57,7 +54,7 @@
       b-field
         b-input(v-model="article.image", placeholder="Image URL", expanded)
         p.control
-          a.button(target="_blank", :href="article.image", :class="{ 'is-disabled': !article.image }") Check
+          a.button(target="_blank", :href="article.image", v-bind:disabled="!article.image") Check
 
     b-field(label="Tags", horizontal)
       b-taginput(

@@ -61,6 +61,8 @@ $header-height: $header-sub-height + $header-title-height + $header-padding * 2 
 // $sidebar-bg: $grey-darker;
 $sidebar-bg: $black-ter;
 
+$loading-background: rgba(0, 0, 0, 0.2);
+
 @import "~bulma/sass/utilities/derived-variables";
 @import "~bulma/sass/utilities/animations.sass";
 @import "~bulma/sass/utilities/mixins.sass";

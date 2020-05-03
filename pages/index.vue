@@ -43,6 +43,8 @@
 <template lang="pug">
 .home-root
   nuxt-link.article-item(v-for="a in articles", :key="a.slug", :to="a.getHref()")
+    div
+      | {{ a.getCategory().name }}
     .article-title
       | {{ a.title }}
     .article-digest

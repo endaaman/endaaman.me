@@ -1,5 +1,4 @@
 <style scoped lang="scss">
-@import "../../css/variables";
 </style>
 
 <template lang="pug">

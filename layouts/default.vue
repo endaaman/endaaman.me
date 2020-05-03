@@ -22,17 +22,12 @@
   .col-main {
     flex: 3;
     overflow-y: auto;
-
-    margin-left: 0;
-    min-width: 0; // this is needed for pre tag sizing
-    max-width: $breakpoint;
-    width: 100%; // fix for flex parent
   }
 
   .col-sidebar {
     flex: 1;
     // align-self: flex-start;
-    overflow-y: auto;
+    /* overflow-y: auto; */
     min-width: 320px;
     max-width: 480px;
 
@@ -55,7 +50,7 @@ $sidebar-width: 320px;
     bottom: 0;
     width: $sidebar-width;
 
-    overflow-y: auto;
+    /* overflow-y: auto; */
     background-color: $white-ter;
     transition: left .1s ease;
     z-index: 101;
@@ -67,6 +62,10 @@ $sidebar-width: 320px;
 .row-main {
   flex-grow: 1;
   padding: 24px 24px 12px;
+  margin-left: 0;
+  min-width: 0; // this is needed for pre tag sizing
+  max-width: $breakpoint;
+  width: 100%; // fix for flex parent
 }
 
 .overlay {
@@ -86,26 +85,39 @@ $sidebar-width: 320px;
   display: block;
 }
 
+.col-sidebar {
+  background-color: $sidebar-bg;
+}
+
 .col-sidebar-active {
   box-shadow: 0 0 8px $black;
   transition: left .1s ease .2s;
   left: 0;
+}
+
+.sider-wrapper {
+  height: 100vh;
+  min-height: 100vh;
+  max-height: 100vh;
 }
 </style>
 
 <template lang="pug">
 .default-root
   my-common
+  b-loading(:active="!delayed", :can-cancel="true")
   .overlay(@click="closeSidebar", :class="{ 'overlay-active': isSidebarActive }")
   my-burger(:isActive="isSidebarActive", :isInversed="scrollTop < 40", @click="toggleSidebar", v-show="isSmallScreen")
   .col-sidebar(:class="{ 'col-sidebar-active': isSidebarActive }")
-    my-sidebar
-  .col-main(:class="{ 'noscroll': isSidebarActive }")
-    .row-header
-      my-header
-    .row-main
-      nuxt
-  // my-footer
+    transition(name="fade")
+      simplebar.sider-wrapper(v-show="delayed")
+        my-sidebar
+  transition(name="fade")
+    .col-main(:class="{ 'noscroll': isSidebarActive }")
+      .row-header(v-show="delayed")
+        my-header
+      .row-main(v-show="delayed")
+        nuxt
 </template>
 
 <script>
@@ -117,9 +129,11 @@ export default {
   data() {
     return {
       scrollTop: 0,
+      delayed: false,
     }
   },
   mounted() {
+    this.delayed = true
     window.addEventListener('scroll', debounce(this.onScroll, 50))
     this.onScroll()
   },
@@ -139,7 +153,7 @@ export default {
     },
   },
   computed: {
-    ...mapState('layout', ['isSidebarActive', 'isSmallScreen']),
+    ...mapState('layout', ['isSidebarActive', 'isSmallScreen', 'isSizeCalculated']),
   }
 }
 </script>
