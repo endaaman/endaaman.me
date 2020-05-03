@@ -1,4 +1,4 @@
-FROM node:9-stretch
+FROM node:14-stretch
 
 # system
 RUN apt-get update
