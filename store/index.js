@@ -81,7 +81,7 @@ export const actions = {
     if (!process.server) {
       Cookies.set('token', token, {
         expires: 365,
-        // domain: `.${ state.host }`,
+        domain: `.${ state.host }`,
       })
     }
   },
