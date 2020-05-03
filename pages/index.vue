@@ -15,6 +15,11 @@
     background-color: $white-ter;
   }
 
+  .article-category {
+    font-size: $size-7;
+    color: $grey;
+  }
+
   .article-title {
     font-size: 24px;
     line-height: 36px;
@@ -43,7 +48,7 @@
 <template lang="pug">
 .home-root
   nuxt-link.article-item(v-for="a in articles", :key="a.slug", :to="a.getHref()")
-    div
+    .article-category
       | {{ a.getCategory().name }}
     .article-title
       | {{ a.title }}

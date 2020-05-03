@@ -45,14 +45,8 @@ h2 {
 }
 
 .articles-by-category {
-  transition: height 2s;
   height: auto;
   max-height: 400px;
-  &.articles-by-category-closed {
-    height: 0;
-    max-height: 0px;
-  }
-
   /* overflow-y: auto; */
   ul {
     position: relative;
@@ -175,14 +169,15 @@ aside.sidebar-root
   .sidebar-main
     my-logo
     h2 Category
-    .category-title(v-for="cat in categoryItems" v-if="cat.category.getArticles().length > 0" :key="cat.slug")
-      a.nodeco-inline(@click="cat.isActive = !cat.isActive")
-        i.mdi.is-primay(:class="{ 'mdi-chevron-right': !cat.isActive, 'mdi-chevron-down': cat.isActive }")
-        span(:class="{ 'has-text-weight-bold': cat.isActive }") {{ cat.name }}
-      simplebar.articles-by-category(v-if="cat.isActive", ref="articlesContainers")
+    .category-title(
+      v-for="c in categoryItems" v-if="c.category.getArticles().length > 0" :key="c.slug")
+      a.nodeco-inline(@click="c.isActive = !c.isActive")
+        i.mdi.is-primay(:class="{ 'mdi-chevron-right': !c.isActive, 'mdi-chevron-down': c.isActive }")
+        span(:class="{ 'has-text-weight-bold': c.isActive }") {{ c.name }}
+      simplebar.articles-by-category(v-show="c.isActive", ref="articlesContainers")
         ul
           li(
-            v-for="a in cat.category.getArticles()",
+            v-for="a in c.category.getArticles()",
             :class="{ 'is-active': a.getHref() === $route.path }")
             nuxt-link(:to="a.getHref()")
               span.date {{ a.date }}
@@ -254,16 +249,28 @@ export default {
     }))
   },
   mounted() {
-    this.adjustScroll()
+    this.$nextTick(this.adjustScroll)
   },
   methods: {
     adjustScroll() {
       const activeEl = this.$el.querySelector('.articles-by-category .is-active')
-      if (activeEl) {
-        const container = activeEl.closest('.articles-by-category')
-        if ((container.scrollTop > activeEl.offsetTop) || (container.scrollTop + container.offsetHeight < activeEl.offsetTop)) {
-          container.scroll(0, activeEl.offsetTop - 64)
+      if (!activeEl) {
+        return
+      }
+
+      let i = 0
+      while (i < this.categoryItems.length) {
+        if (this.categoryItems[i].slug === this.activeArticle.categorySlug) {
+          break
         }
+        i += 1
+      }
+      if (i === this.categoryItems.length) {
+        return
+      }
+      const container = this.$refs.articlesContainers[i].scrollElement
+      if ((container.scrollTop > activeEl.offsetTop) || (container.scrollTop + container.offsetHeight < activeEl.offsetTop)) {
+        container.scroll(0, activeEl.offsetTop - 64)
       }
     }
   },
