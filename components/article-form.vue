@@ -105,10 +105,10 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import resize from '~/mixins/resize'
+import eventListener from '~/mixins/event-listener'
 
 export default {
-  mixins: [resize(100)],
+  mixins: [eventListener('resize', 100)],
   data() {
     return {
       activeTabIndex: 0,

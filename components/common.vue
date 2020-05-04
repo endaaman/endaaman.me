@@ -4,18 +4,18 @@ div
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import debounce from 'debounce'
+import eventListener from '~/mixins/event-listener'
 
 const breakpoint = 768
 
 export default {
+  mixins: [eventListener('resize', 100)],
   beforeCreate() {
     if (!process.isServer) {
       this.$store.dispatch('nuxtClientInit')
     }
   },
   mounted() {
-    window.addEventListener('resize', debounce(this.onResize, 50))
     this.onResize()
     this.$store.dispatch('layout/setIsSizeCalculated', true)
   },

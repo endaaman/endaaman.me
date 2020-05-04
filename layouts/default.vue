@@ -110,13 +110,13 @@ $sidebar-width: 320px;
   my-common
   b-loading(:active="!loaded", :can-cancel="true")
   .overlay(@click="closeSidebar", :class="{ 'overlay-active': isSidebarActive }")
-  my-burger(:isActive="isSidebarActive", :isInversed="scrollTop < 40", @click="toggleSidebar", v-show="isSmallScreen")
+  my-burger(:isActive="isSidebarActive", :isInversed="isSidebarActive || scrollTop < 40", @click="toggleSidebar", v-show="isSmallScreen")
   .col-sidebar(:class="{ 'col-sidebar-active': isSidebarActive }")
     transition(name="fade")
       simplebar.sider-wrapper(v-show="loaded")
         my-sidebar
   transition(name="fade")
-    .col-main(:class="{ 'noscroll': isSidebarActive }")
+    .col-main
       .row-header(v-show="loaded")
         my-header
       .row-main(v-show="loaded")
@@ -134,13 +134,13 @@ export default {
     loaded: false,
   }),
   mounted() {
+    window.document.body.addEventListener('scroll', debounce(this.onScroll, 100))
     this.loaded = true
-    window.addEventListener('scroll', debounce(this.onScroll, 50))
     this.onScroll()
   },
   methods: {
     onScroll() {
-      this.scrollTop = document.documentElement.scrollTop
+      this.scrollTop = window.document.body.scrollTop
     },
     ...mapActions('layout', [
       'closeSidebar',
