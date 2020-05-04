@@ -152,9 +152,6 @@ export default {
     ]),
   },
   watch: {
-    $route(from, to) {
-      console.log('route change')
-    },
     isSidebarActive(flag) {
       document.documentElement.classList.toggle('noscroll', flag)
       document.body.classList.toggle('noscroll', flag)
