@@ -42,14 +42,10 @@
     margin-top: 16px;
   }
 
-  p {
+  & > p {
     font-size: $size-6;
     line-height: 1.5;
     margin: 0 0 16px;
-  }
-
-  & > p {
-    margin: 24px 0;
   }
 
   ul, ol {
@@ -65,7 +61,8 @@
 
   li {
     ul, ol {
-      margin-top: 0;
+      margin-top: 8px;
+      margin-bottom: 8px;
     }
   }
 
