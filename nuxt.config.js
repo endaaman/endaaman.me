@@ -1,10 +1,6 @@
-const dev = process.env.NODE_ENV !== 'production'
-
-
 module.exports = {
   env: {
-    builtAt: new Date(),
-    dev,
+    BUILT_AT: new Date(),
   },
   head: {
     titleTemplate(title) {

@@ -315,7 +315,7 @@ export default {
       articleMap: 'articleMapKeyByCategory',
     }),
     builtAt() {
-      return new Date(process.env.builtAt)
+      return new Date(process.env.BUILT_AT)
     },
   },
 }

@@ -5,7 +5,6 @@ See also [endaaman/api.endaaman.me](https://github.com/endaaman/api.endaaman.me)
 ## envs
 
 - `NODE_ENV`: `string`
-- `SITE_HOST`: `string`
 - `SSL`: `boolean`
 
 ## TODOs
