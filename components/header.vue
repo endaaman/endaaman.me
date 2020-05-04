@@ -5,12 +5,14 @@
   background-color: $black-ter;
   // height: $header-height;
   color: $white-ter;
-  padding: $header-padding 24px;
+  padding: $header-vertical-padding $common-horizontal-narrow-padding;
   transform: translateY(0%);
   transition: transform 0.1s ease;
   padding-right: 72px;
-  &.header-inverted {
+
+  @media screen and (min-width: $breakpoint) {
     background-color: transparent;
+    padding: $header-vertical-padding $common-horizontal-padding;
     color: inherit;
   }
 
@@ -21,18 +23,22 @@
 
 .header-title {
   height: 100%;
-  font-size: $size-4;
+  font-size: $header-title-font-size;
   height: $header-title-height;
   line-height: $header-title-height;
   margin-bottom: $header-margin;
   font-family: 'Ubuntu Condensed', cursive;
   font-weight: bold;
+
+  @media screen and (min-width: $breakpoint) {
+    display: none;
+  }
 }
 
 .header-sub {
   height: $header-sub-height;
   line-height: $header-sub-height;
-  font-size: $size-7;
+  font-size: $header-sub-font-size;
 
   overflow: visible hidden;
   white-space: nowrap;
@@ -88,13 +94,15 @@
 </style>
 
 <template lang="pug">
-.header-root(:class="{ 'header-hidden': isSidebarActive, 'header-inverted': !isSmallScreen }")
-  .header-title(v-if="isSmallScreen")
+.header-root(:class="{ 'header-hidden': isSidebarActive }")
+
+  .header-title
     nuxt-link.nodeco-inline(to='/')
       span.accent E
       span NDAAMAN
       span.accent .
       span ME
+
   .header-sub
     nuxt-link.header-sub-item(:to="'/'") Home
     span.header-sub-item /

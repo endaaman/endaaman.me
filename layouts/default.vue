@@ -2,73 +2,91 @@
 @import "../css/variables";
 
 .default-root {
-  min-height: 100vh;
-  height: 100vh;
 }
 
-.col-main {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  height: 100%;
-}
 
 @media screen and (min-width: $breakpoint) {
-  .default-root {
+  .row {
     display: flex;
-    width: 100%;  // this is needed for horizontal grow
+  }
+
+  .row-fixed {
+    pointer-events: none;
+    display: flex;
+    position: fixed;
+    min-height: 100vh;
+    height: 100vh;
+    width: 100%;
   }
 
   .col-main {
     flex: 3;
-    overflow-y: auto;
   }
 
   .col-sidebar {
     flex: 1;
-    // align-self: flex-start;
-    /* overflow-y: auto; */
     min-width: 320px;
     max-width: 480px;
+  }
 
-    display: flex;
-    flex-direction: column;
+  .header-container {
+    margin-bottom: 8px;
+  }
+
+  .main-container {
+    flex-grow: 1;
+    margin-left: 0;
+
+    padding: 0px $common-horizontal-padding;
+    width: 100%; /* fix for flex parent */
+    min-width: 0; /* this is needed for pre tag sizing */
+    max-width: $breakpoint;
+    @media screen and (min-width: $fullhd) {
+      /* large */
+      max-width: $desktop;
+    }
+  }
+
+  .sidebar-wrapper {
+    position: sticky;
+    top: 0;
     min-height: 100vh;
-    height: 100%;
+    max-height: 100vh;
   }
 }
+
 
 $sidebar-width: 320px;
 
 @media screen and (max-width: $breakpoint - 1) {
+  .main-container {
+    padding: 16px $common-horizontal-narrow-padding 24px;
+  }
+
   .col-sidebar {
     position: fixed;
-    // right: - $sidebar-width;
-    // top: $my-header-hight;
+    /* right: - $sidebar-width; */
+    /* top: $my-header-hight; */
     left: - $sidebar-width;
     top: 0;
     bottom: 0;
     width: $sidebar-width;
 
-    /* overflow-y: auto; */
+    overflow-y: auto;
     background-color: $white-ter;
     transition: left .1s ease;
     z-index: 101;
   }
-}
 
-.row-header { }
-
-.row-main {
-  flex-grow: 1;
-  padding: 24px 24px 8px;
-  @media screen and (max-width: $breakpoint - 1) {
-    padding: 24px 16px 12px;
+  .col-sidebar-active {
+    box-shadow: 0 0 8px $black;
+    transition: left .1s ease .2s;
+    left: 0;
   }
-  margin-left: 0;
-  min-width: 0; // this is needed for pre tag sizing
-  max-width: $breakpoint;
-  width: 100%; // fix for flex parent
+
+  .sidebar-wrapper {
+    height: 100%;
+  }
 }
 
 .overlay {
@@ -87,40 +105,26 @@ $sidebar-width: 320px;
 .overlay-active {
   display: block;
 }
-
-.col-sidebar {
-  background-color: $sidebar-bg;
-}
-
-.col-sidebar-active {
-  box-shadow: 0 0 8px $black;
-  transition: left .1s ease .2s;
-  left: 0;
-}
-
-.sider-wrapper {
-  height: 100vh;
-  min-height: 100vh;
-  max-height: 100vh;
-}
 </style>
 
 <template lang="pug">
 .default-root
   my-common
-  b-loading(:active="!loaded", :can-cancel="true")
   .overlay(@click="closeSidebar", :class="{ 'overlay-active': isSidebarActive }")
-  my-burger(:isActive="isSidebarActive", :isInversed="isSidebarActive || scrollTop < 40", @click="toggleSidebar", v-show="isSmallScreen")
-  .col-sidebar(:class="{ 'col-sidebar-active': isSidebarActive }")
+  b-loading(:active="!loaded", :can-cancel="true")
+  my-burger(:isActive="isSidebarActive", :isInversed="isSidebarActive || scrollTop < 40", @click="toggleSidebar")
+  .row
+    .col-sidebar(:class="{ 'col-sidebar-active': isSidebarActive }")
+      transition(name="fade")
+        .sidebar-wrapper(v-show="loaded")
+          my-sidebar
     transition(name="fade")
-      simplebar.sider-wrapper(v-show="loaded")
-        my-sidebar
-  transition(name="fade")
-    .col-main
-      .row-header(v-show="loaded")
-        my-header
-      .row-main(v-show="loaded")
-        nuxt
+      .col-main(ref="scroller")
+        .header-container(v-show="loaded")
+          my-header
+        .main-container(v-show="loaded")
+          nuxt
+
 </template>
 
 <script>
@@ -148,6 +152,9 @@ export default {
     ]),
   },
   watch: {
+    $route(from, to) {
+      console.log('route change')
+    },
     isSidebarActive(flag) {
       document.documentElement.classList.toggle('noscroll', flag)
       document.body.classList.toggle('noscroll', flag)

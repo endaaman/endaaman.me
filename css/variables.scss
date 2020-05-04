@@ -49,14 +49,26 @@ $family-primary: $family-sans-serif;
 $family-code: $family-monospace;
 $body-primary: $family-sans-serif;
 
-$desktop: $tablet;
 $breakpoint: $tablet;
+// variables:
+// - $tablet
+// - $desktop
+// - $widescreen
+// - $fullhd
 
-$header-title-height: 24px;
+
+// APP
+
+$common-horizontal-padding: 24px;
+$common-horizontal-narrow-padding: 16px;
+
+$header-title-font-size: 28px;
+$header-title-height: 28px;
+$header-sub-font-size: 12px;
 $header-sub-height: 16px;
-$header-padding: 16px;
+$header-vertical-padding: 16px;
 $header-margin: 8px;
-$header-height: $header-sub-height + $header-title-height + $header-padding * 2 + $header-margin;
+$header-height: $header-title-height + $header-margin + $header-sub-height + $header-vertical-padding * 2 ;
 
 // $sidebar-bg: $grey-darker;
 // $sidebar-bg: $grey-darker;
