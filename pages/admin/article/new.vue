@@ -82,7 +82,7 @@ export default {
       this.$router.push('/admin/article/edit?relative=' + data.getRelative())
     },
     confirmPageLeave(cb) {
-      this.$dialog.confirm({
+      this.$buefy.dialog.confirm({
         message: this.changedAlertMessage,
         cancelText: 'Cancel',
         confirmText: 'OK',

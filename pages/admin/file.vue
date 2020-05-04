@@ -162,7 +162,7 @@ export default {
       return isAsc ? (a.isDir - b.isDir) : (b.isDir - a.isDir)
     },
     showError(error) {
-      this.$dialog.alert({
+      this.$buefy.dialog.alert({
         title: 'Error',
         message: error,
         type: 'is-danger',
@@ -219,7 +219,7 @@ export default {
     },
 
     tryMakeDir() {
-      this.$dialog.prompt({
+      this.$buefy.dialog.prompt({
         message: `Name of creating directory`,
         inputAttrs: {
           type: 'text',
@@ -244,7 +244,7 @@ export default {
     },
 
     tryDeleteFile(fileName) {
-      this.$dialog.confirm({
+      this.$buefy.dialog.confirm({
         title: 'Confim delete',
         message: `OK to delete "${ fileName }" on ${ this.dirStr }`,
         cancelText: 'Cancel',
@@ -266,7 +266,7 @@ export default {
     },
 
     tryRenameFile(fileName) {
-      this.$dialog.prompt({
+      this.$buefy.dialog.prompt({
         title: 'Rename file',
         message: `New name of the file "${ fileName }"`,
         inputAttrs: {
@@ -297,7 +297,7 @@ export default {
     },
 
     tryMoveFile(fileName) {
-      this.$dialog.prompt({
+      this.$buefy.dialog.prompt({
         title: 'Move file',
         message: `Directory to move the file "${ fileName }"`,
         inputAttrs: {
