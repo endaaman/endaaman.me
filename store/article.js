@@ -40,7 +40,7 @@ export const actions = {
     await dispatch('fetchArticles')
   },
 
-  async createArticles({ commit, rootGetters }, { article }) {
+  async createArticle({ commit, rootGetters }, { article }) {
     const res = await rootGetters.api('/articles/', {
       method: 'POST',
       json: article,

@@ -62,12 +62,12 @@ export default {
     },
     async create() {
       const loading = this.$buefy.loading.open()
-      const { error, data } = await this.$store.dispatch('article/createArticles', {
+      const { error, data } = await this.$store.dispatch('article/createArticle', {
         article: this.edittingArticle
       })
       loading.close()
       if (error) {
-        this.$dialog.alert({
+        this.$buefy.dialog.alert({
           title: 'Error',
           message: error,
           type: 'is-danger',

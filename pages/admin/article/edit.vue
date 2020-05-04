@@ -20,7 +20,7 @@ form.admin-article-edit-root(v-if="originalArticle", v-on:submit.prevent="update
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   validate({ redirect, query, store}) {
@@ -42,6 +42,7 @@ export default {
     return {
       changedAlertMessage: 'Now you editting and there are some changes on the article. Ok to leaven this page?',
       edittingArticle: null,
+      originalArticle: null,
       onBeforeUnload: (e) => {
         if (this.isChanged) {
           e.returnValue = this.changedAlertMessage
@@ -50,6 +51,8 @@ export default {
     }
   },
   created() {
+    const { relative } = this.$route.query
+    this.originalArticle = this.getArticleByRelative(relative)
     this.edittingArticle = this.originalArticle.copy()
   },
   mounted() {
@@ -59,13 +62,10 @@ export default {
     this.unbind()
   },
   computed: {
-    originalArticle() {
-      const { relative } = this.$route.query
-      return this.$store.getters['article/getArticleByRelative'](relative)
-    },
     isChanged() {
       return !this.originalArticle.equals(this.edittingArticle)
     },
+    ...mapGetters('article', ['getArticleByRelative']),
   },
   methods: {
     unbind() {
@@ -87,6 +87,7 @@ export default {
       }
       this.$router.push('/admin/article/edit?relative=' + data.getRelative())
       await this.$nextTick()
+      this.originalArticle = data
       this.edittingArticle = this.originalArticle.copy()
       this.$buefy.toast.open({
         message: `Updated "${ this.edittingArticle.title }"`,

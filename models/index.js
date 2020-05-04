@@ -37,13 +37,13 @@ export class Article {
     return [ NO_TAG_NAME ]
   }
   serialize() {
-    return JSON.stringify({...this})
+    return JSON.stringify(this)
   }
   toJSON() {
-    return this.serialize()
+    return {...this}
   }
   copy() {
-    const a = new Article(JSON.parse(this.serialize()))
+    const a = new Article(JSON.parse(JSON.stringify(this)))
     a[fieldOriginal] = this
     return a
   }
