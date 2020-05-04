@@ -13,15 +13,13 @@
 .sidebar-wrapper {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%; /* this must be `100%` for simplebar */
   min-height: 100vh;
-  max-height: 100vh;
 }
 
 .sidebar-main {
   padding: 16px;
-  /* flex-grow: 1; */
-  /* height: 100%; */
+  flex-grow: 1;
 
   h2 {
     line-height: 16px;
@@ -99,6 +97,8 @@
   }
 
   .tag.is-inversed {
+    margin-top: auto;
+
     background-color: transparent;
     border-color: $white-ter;
     color: $white-ter;
@@ -123,8 +123,15 @@
   }
 }
 
+// .sidebar-footer-wrapper  {
+//   display: flex;
+//   flex-direction: column;
+// }
+
 .sidebar-footer  {
-  margin-top: auto;
+  width: 100%;
+  /* margin-top: auto; */
+
   padding: 48px 16px 12px;
   font-size: $size-7;
   background-color: $sidebar-bg;
@@ -165,6 +172,7 @@
 .is-primay {
   color: $primary;
 }
+
 </style>
 
 <template lang="pug">

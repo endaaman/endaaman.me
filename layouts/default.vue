@@ -30,14 +30,14 @@
   }
 
   .header-container {
-    margin-bottom: 8px;
+    padding-bottom: 8px;
   }
 
   .main-container {
     flex-grow: 1;
     margin-left: 0;
 
-    padding: 0px $common-horizontal-padding;
+    padding: 0px $common-horizontal-padding 24px;
     width: 100%; /* fix for flex parent */
     min-width: 0; /* this is needed for pre tag sizing */
     max-width: $breakpoint;
