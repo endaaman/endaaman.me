@@ -10,7 +10,7 @@
   height: 100vh;
   max-height: 100vh;
 
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 .sidebar-main {
@@ -41,11 +41,15 @@
   }
 
   .articles-by-category {
-    height: auto;
-    max-height: 400px;
+    transition: max-height .1s;
+    max-height: 0;
     overflow-y: auto;
 
-    /* overflow-y: auto; */
+    &.articles-by-category-open {
+      height: auto;
+      max-height: 400px;
+    }
+
     ul {
       position: relative;
       margin-left: 0px;
@@ -64,16 +68,25 @@
 
       li {
         position: relative;
-        line-height: 1.25;
         margin: 8px 16px;
+        padding: 2px 0;
         a {
           display: block;
           font-size: $size-6;
           color: $grey;
           .date {
             display: block;
-          font-size: $size-7;
+            font-size: $size-7;
           }
+        }
+        &:before {
+          position: absolute;
+          content: '';
+          left: -10px;
+          top: 0;
+          bottom: 0;
+          width: 1px;
+          background-color: $grey-light;
         }
 
         &:hover, &.is-active {
@@ -81,12 +94,6 @@
             color: $white;
           }
           &:before {
-            position: absolute;
-            content: '';
-            left: -10px;
-            top: 0;
-            bottom: 0;
-            width: 1px;
             background-color: $primary;
           }
         }
@@ -178,12 +185,12 @@
   .sidebar-main
     my-logo
     h2 Category
-    .category-title(
-      v-for="c in categoryItems" v-if="c.category.getArticles().length > 0" :key="c.slug")
+    .category-title(v-for="c in categoryItems" v-if="c.category.getArticles().length > 0" :key="c.slug")
       a.nodeco-inline(@click="toggleArticlesList(c)")
         i.mdi.is-primay(:class="{ 'mdi-chevron-right': !c.isActive, 'mdi-chevron-down': c.isActive }")
         span(:class="{ 'has-text-weight-bold': c.isActive }") {{ c.name }}
-      .articles-by-category(v-show="c.isActive", ref="articlesContainers")
+
+      .articles-by-category(:class="{'articles-by-category-open' : c.isActive}", ref="articlesContainers")
         ul
           li(
             v-for="a in c.category.getArticles()",
