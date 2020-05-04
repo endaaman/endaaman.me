@@ -23,12 +23,13 @@ $breakpoint: 720px;
 </style>
 
 <template lang="pug">
-.simple-root
-  my-common
-  .row-header
-    my-header
-  .row-main
-    nuxt
+transition(name="fade")
+  .simple-root(v-show="loaded")
+    my-common
+    .row-header
+      my-header
+    .row-main
+      nuxt
 </template>
 
 <script>
@@ -38,5 +39,11 @@ export default {
       this.$store.dispatch('nuxtClientInit')
     }
   },
+  data: () => ({
+    loaded: false,
+  }),
+  mounted() {
+    this.loaded = true
+  }
 }
 </script>

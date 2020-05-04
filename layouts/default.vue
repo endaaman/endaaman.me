@@ -105,18 +105,18 @@ $sidebar-width: 320px;
 <template lang="pug">
 .default-root
   my-common
-  b-loading(:active="!delayed", :can-cancel="true")
+  b-loading(:active="!loaded", :can-cancel="true")
   .overlay(@click="closeSidebar", :class="{ 'overlay-active': isSidebarActive }")
   my-burger(:isActive="isSidebarActive", :isInversed="scrollTop < 40", @click="toggleSidebar", v-show="isSmallScreen")
   .col-sidebar(:class="{ 'col-sidebar-active': isSidebarActive }")
     transition(name="fade")
-      simplebar.sider-wrapper(v-show="delayed")
+      simplebar.sider-wrapper(v-show="loaded")
         my-sidebar
   transition(name="fade")
     .col-main(:class="{ 'noscroll': isSidebarActive }")
-      .row-header(v-show="delayed")
+      .row-header(v-show="loaded")
         my-header
-      .row-main(v-show="delayed")
+      .row-main(v-show="loaded")
         nuxt
 </template>
 
@@ -126,14 +126,12 @@ import debounce from 'debounce'
 
 
 export default {
-  data() {
-    return {
-      scrollTop: 0,
-      delayed: false,
-    }
-  },
+  data: () => ({
+    scrollTop: 0,
+    loaded: false,
+  }),
   mounted() {
-    this.delayed = true
+    this.loaded = true
     window.addEventListener('scroll', debounce(this.onScroll, 50))
     this.onScroll()
   },
