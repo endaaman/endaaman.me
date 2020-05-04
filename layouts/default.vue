@@ -61,7 +61,10 @@ $sidebar-width: 320px;
 
 .row-main {
   flex-grow: 1;
-  padding: 24px 24px 12px;
+  padding: 24px 24px 8px;
+  @media screen and (max-width: $breakpoint - 1) {
+    padding: 24px 16px 12px;
+  }
   margin-left: 0;
   min-width: 0; // this is needed for pre tag sizing
   max-width: $breakpoint;

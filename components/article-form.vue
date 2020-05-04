@@ -10,11 +10,13 @@
 }
 
 .CodeMirror, .CodeMirror-scroll, .article-preview {
-  // small
-  max-height: calc(100vh - 290px);
-  @media screen and (min-width: $breakpoint) {
-    // large
-    max-height: calc(100vh - 260px);
+  // large
+  max-height: calc(100vh - 260px);
+  font-size: 16px;
+  @media screen and (max-width: $breakpoint - 1) {
+    // small
+    font-size: 14px;
+    max-height: calc(100vh - 290px);
   }
 }
 
@@ -135,7 +137,7 @@ export default {
         lineWrapping: true,
         autofocus: true,
         mode: 'text/x-markdown',
-        lineNumbers: true,
+        // lineNumbers: true,
         line: true,
         height: 'auto',
         viewportMargin: Infinity,

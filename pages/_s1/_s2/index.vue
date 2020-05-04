@@ -12,7 +12,7 @@
 }
 
 .article-heading {
-  margin-bottom: 16px;
+  margin-bottom: 24px;
   .article-dates {
     font-size: $size-7;
     line-height: 24px;
@@ -20,11 +20,10 @@
   }
 
   .article-title {
-    font-size: $size-3;
-    line-height: 48px;
+    font-size: $size-2;
+    line-height: 1.5;
     @media screen and (max-width: $breakpoint) {
-      font-size: $size-4;
-      line-height: 32px;
+      font-size: $size-3;
     }
 
     font-weight: bold;
@@ -48,7 +47,7 @@
 
 .article-body {
   flex-grow: 1;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .article-bottom {

@@ -6,44 +6,77 @@
     margin-top: 0px; /* delete margin for parent is flex */
   }
 
-  h2 {
-    margin: 48px 0 24px;
-    line-height: 48px;
-    font-size: $size-4;
-    // border-bottom: solid 2px $border;
-    font-weight: bold;
+  @mixin hr {
+    border-bottom: dotted 1px $border;
   }
 
-  h3 {
-    margin: 48px 0 24px;
-    // padding: 16px;
-    font-size: $size-6;
-    // border-left: solid 2px $black-ter;
+  h2 {
+    margin: 48px 0 16px;
+    padding: 8px 0;
+    font-size: $size-4;
+    line-height: 1.5;
+    @media screen and (max-width: $breakpoint) {
+      font-size: $size-5;
+    }
     font-weight: bold;
-    // color: $black-ter;
+
+    @include hr
+  }
+
+  hr {
+    background: none;
+    margin: 32px 0;
+    @include hr;
+  }
+
+  h3, h4 {
+    margin: 32px 0 16px;
+    font-weight: bold;
+    font-size: $size-5;
+    @media screen and (max-width: $breakpoint) {
+      font-size: $size-6;
+    }
   }
 
   h2 + h3 {
-    margin-top: 24px;
-  }
-
-  h4 {
-    margin: 24px 0 24px;
-    font-size: $size-6;
-    font-weight: bold;
+    margin-top: 16px;
   }
 
   p {
-    line-height: 24px;
     font-size: $size-6;
+    line-height: 1.5;
+    margin: 0 0 16px;
   }
 
   & > p {
     margin: 24px 0;
   }
 
-  & > ul, & > ol {
-    margin: 24px 0 24px 24px;
+  ul, ol {
+    margin: 24px 0 24px 16px;
+    li {
+      line-height: 1.5;
+      margin-bottom: 8px;
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+  li {
+    ul, ol {
+      margin-top: 0;
+    }
+  }
+
+  table {
+    margin: 24px 0;
+    td, th {
+      padding: 8px;
+      @media screen and (max-width: $breakpoint) {
+        padding: 8px 4px;
+      }
+    }
   }
 
   dl {
@@ -63,9 +96,13 @@
 
   pre {
     margin: 24px 0;
-    padding: 8px 16px 8px;
+    padding: 8px 8px;
     max-height: 600px;
     overflow-y: auto;
+    @media screen and (max-width: $breakpoint) {
+      padding: 4px 8px;
+    }
+    background-color: $white-bis;
     &.hljs {
       position: relative;
       padding-top: 24px;
@@ -83,6 +120,15 @@
     }
   }
 
+  blockquote {
+    margin: 24px 0;
+    padding: 16px;
+  }
+
+  .message {
+    margin: 24px 0;
+  }
+
   .markdown-image {
     cursor: zoom-in;
   }
@@ -90,55 +136,19 @@
     max-width: 100%;
     width: 640px;
   }
+}
 
-  blockquote {
-    margin: 24px 0;
-    padding: 16px;
-    /* border-left: $grey-lighter solid 36px; */
-    /* position: relative; */
-    /* &:before { */
-    /*   position: absolute; */
-    /*   top: 50%; */
-    /*   transform: translateY(-50%); */
-    /*   left: -24px; */
-    /*   color: $white-ter; */
-    /*   content: '\F756'; */
-    /*   font-family: 'Material Design Icons'; */
-    /*   font-size: 36px; */
-    /* } */
-  }
-
-  .fl {
-    float: left;
-  }
-  .fr {
-    float: right;
-  }
-  .cl {
-    overflow: hidden;
-    clear: both;
-  }
-
-  .center {
-    text-align: center;
-  }
-
-  // markdown-it-container
-  .indented {
-    margin: 16px;
-  }
-
-  .no-content {
-    color: $grey;
-    font-style: italic;
-  }
+p.no-content {
+  color: $grey;
+  font-style: italic;
 }
 </style>
 
 <template lang="pug">
-.md-content.content
-  vue-markdown(:source="source", v-bind="mdProps", v-if="source", @rendered="onRendered")
-    slot
+.md-root
+  .md-content.content(v-if="source")
+    vue-markdown(:source="source", v-bind="mdProps", @rendered="onRendered")
+      slot
   p.no-content(v-else) No content
 
   div(ref="viewerContainer")

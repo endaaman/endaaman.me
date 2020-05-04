@@ -29,7 +29,7 @@ module.exports = {
   },
   css: [
     'mdi/css/materialdesignicons.css',
-    'highlight.js/styles/github.css',
+    'highlight.js/styles/github-gist.css',
     'viewerjs/dist/viewer.css',
     'katex/dist/katex.min.css',
     'simplebar/dist/simplebar.min.css',

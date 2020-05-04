@@ -15,6 +15,9 @@ $breakpoint: 720px;
 .row-main {
   flex-grow: 1;
   padding: 8px 24px 8px;
+  @media screen and (max-width: $breakpoint - 1) {
+    padding: 8px;
+  }
 
   display: flex;
   flex-direction: column;
