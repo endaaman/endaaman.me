@@ -5,16 +5,12 @@
   background-color: $sidebar-bg;
   color: $white-ter;
 
-  height: 100vh;
-  min-height: 100vh;
-  max-height: 100vh;
-}
-
-.sidebar-wrapper {
   display: flex;
   flex-direction: column;
-  height: 100%; /* this must be `100%` for simplebar */
-  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
+
+  overflow-y: auto;
 }
 
 .sidebar-main {
@@ -47,6 +43,8 @@
   .articles-by-category {
     height: auto;
     max-height: 400px;
+    overflow-y: auto;
+
     /* overflow-y: auto; */
     ul {
       position: relative;
@@ -176,63 +174,62 @@
 </style>
 
 <template lang="pug">
-simplebar.sidebar-root(ref="simplebarWrapper")
-  .sidebar-wrapper
-    .sidebar-main
-      my-logo
-      h2 Category
-      .category-title(
-        v-for="c in categoryItems" v-if="c.category.getArticles().length > 0" :key="c.slug")
-        a.nodeco-inline(@click="toggleArticlesList(c)")
-          i.mdi.is-primay(:class="{ 'mdi-chevron-right': !c.isActive, 'mdi-chevron-down': c.isActive }")
-          span(:class="{ 'has-text-weight-bold': c.isActive }") {{ c.name }}
-        simplebar.articles-by-category(v-show="c.isActive", ref="articlesContainers")
-          ul
-            li(
-              v-for="a in c.category.getArticles()",
-              :class="{ 'is-active': a.getHref() === $route.path }")
-              nuxt-link(:to="a.getHref()")
-                span.date {{ a.date }}
-                span {{ a.title }}
-                span.icon.has-text-danger(v-if="a.private")
-                  i.mdi.mdi-lock
+.sidebar-root
+  .sidebar-main
+    my-logo
+    h2 Category
+    .category-title(
+      v-for="c in categoryItems" v-if="c.category.getArticles().length > 0" :key="c.slug")
+      a.nodeco-inline(@click="toggleArticlesList(c)")
+        i.mdi.is-primay(:class="{ 'mdi-chevron-right': !c.isActive, 'mdi-chevron-down': c.isActive }")
+        span(:class="{ 'has-text-weight-bold': c.isActive }") {{ c.name }}
+      .articles-by-category(v-show="c.isActive", ref="articlesContainers")
+        ul
+          li(
+            v-for="a in c.category.getArticles()",
+            :class="{ 'is-active': a.getHref() === $route.path }")
+            nuxt-link(:to="a.getHref()")
+              span.date {{ a.date }}
+              span {{ a.title }}
+              span.icon.has-text-danger(v-if="a.private")
+                i.mdi.mdi-lock
 
-      h2 Tags
-      .tags
-        nuxt-link.tag.is-white(
-          v-for="tag in tagItems",
-          :to="tag.isActive ? '/' : '/?tag=' + tag.name",
-          :key="tag.name",
-          :class="{ 'is-inversed': !tag.isActive }"
-          ) {{ tag.name }} ({{ tag.count }})
+    h2 Tags
+    .tags
+      nuxt-link.tag.is-white(
+        v-for="tag in tagItems",
+        :to="tag.isActive ? '/' : '/?tag=' + tag.name",
+        :key="tag.name",
+        :class="{ 'is-inversed': !tag.isActive }"
+        ) {{ tag.name }} ({{ tag.count }})
 
-      h2 Links
-      .special-title(v-for="a in specialArticles")
-        nuxt-link.nodeco-inline(:to="a.getHref()")
-          i.mdi.mdi-rhombus-outline.is-primay
-          | &#x20;
-          span {{ a.title }}
+    h2 Links
+    .special-title(v-for="a in specialArticles")
+      nuxt-link.nodeco-inline(:to="a.getHref()")
+        i.mdi.mdi-rhombus-outline.is-primay
+        | &#x20;
+        span {{ a.title }}
 
-    footer.sidebar-footer
-      ul.social-links
-        li
-          a.social-link(href="http://twitter.com/endaaman")
-            i.mdi.mdi-twitter
-        li
-          a.social-link(href="http://github.com/endaaman")
-            i.mdi.mdi-github-face
+  footer.sidebar-footer
+    ul.social-links
+      li
+        a.social-link(href="http://twitter.com/endaaman")
+          i.mdi.mdi-twitter
+      li
+        a.social-link(href="http://github.com/endaaman")
+          i.mdi.mdi-github-face
 
-      span.footer-left-text
-        | Made with&#x20;
-        i.mdi.mdi-heart.is-primay
-        | &#x20;at {{ builtAt | date('YYYY-MM-DD') }}
+    span.footer-left-text
+      | Made with&#x20;
+      i.mdi.mdi-heart.is-primay
+      | &#x20;at {{ builtAt | date('YYYY-MM-DD') }}
 
-      span.footer-right-text(v-if="!authorized")
-        nuxt-link.nodeco-inline(to="/login") Login
-      span.footer-right-text(v-if="authorized")
-        nuxt-link.nodeco-inline(to="/logout") Logout
-      span.footer-right-text(v-if="authorized")
-        nuxt-link.nodeco-inline(to="/admin") Admin
+    span.footer-right-text(v-if="!authorized")
+      nuxt-link.nodeco-inline(to="/login") Login
+    span.footer-right-text(v-if="authorized")
+      nuxt-link.nodeco-inline(to="/logout") Logout
+    span.footer-right-text(v-if="authorized")
+      nuxt-link.nodeco-inline(to="/admin") Admin
 </template>
 
 <script>
@@ -264,14 +261,8 @@ export default {
     this.$nextTick(this.adjustScroll)
   },
   methods: {
-    recalcSimpleBar() {
-      this.$nextTick(() => {
-        this.$refs.simplebarWrapper.SimpleBar.recalculate()
-      })
-    },
     toggleArticlesList(item) {
       item.isActive = !item.isActive
-      this.recalcSimpleBar()
     },
     adjustScroll() {
       const activeEl = this.$el.querySelector('.articles-by-category .is-active')
@@ -289,11 +280,10 @@ export default {
       if (i === this.categoryItems.length) {
         return
       }
-      const container = this.$refs.articlesContainers[i].scrollElement
+      const container = this.$refs.articlesContainers[i]
       if ((container.scrollTop > activeEl.offsetTop) || (container.scrollTop + container.offsetHeight < activeEl.offsetTop)) {
         container.scroll(0, activeEl.offsetTop - 64)
       }
-      this.recalcSimpleBar()
     }
   },
   watch: {
@@ -316,9 +306,6 @@ export default {
         c.isActive = c.isActive || (this.activeArticle && !this.activeArticle.special && c.slug === this.activeArticle.categorySlug)
       }
     },
-    isSidebarActive() {
-      this.recalcSimpleBar()
-    }
   },
   computed: {
     ...mapState([

@@ -22,6 +22,10 @@ $hm-y: ($header-height - $hm-size) / 2;
   .burger-bar {
     transition: background-color ease 0.3s;
   }
+
+  @media screen and (min-width: $breakpoint) {
+    display: none;
+  }
 }
 
 .burger-is-inversed {

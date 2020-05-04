@@ -144,7 +144,7 @@ export default {
   },
   methods: {
     onScroll() {
-      this.scrollTop = window.document.body.scrollTop
+      this.scrollTop = document.documentElement.scrollTop
     },
     ...mapActions('layout', [
       'closeSidebar',
