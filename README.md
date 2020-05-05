@@ -5,20 +5,16 @@ See also [endaaman/api.endaaman.me](https://github.com/endaaman/api.endaaman.me)
 ## envs
 
 - `NODE_ENV`: `string`
-- `SSL`: `boolean`
+- `SSL`: `0` or `1`
 
 ## TODOs
 
-- Use English as possible
 - SEO
   - hero image
 - lint
-- home
-  - pagination
 - category CRUD
 - swipe sidebar
 - article
-  - prev next inverse
   - search
   - comment
   - related article(same category, same tags)

@@ -36,7 +36,7 @@ export const mutations = {
     state.authorized = authorized
   },
   initHosts(state, host) {
-    const ssl = !process.env.NO_SSL
+    const ssl = !!process.env.SSL
     const isDev = process.env.NODE_ENV !== 'production'
 
     state.host = host
