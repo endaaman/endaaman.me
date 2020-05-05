@@ -5,7 +5,7 @@ See also [endaaman/api.endaaman.me](https://github.com/endaaman/api.endaaman.me)
 ## envs
 
 - `NODE_ENV`: `string`
-- `SSL`: `0` or `1`
+- `SSL`: `""` or somthing truethy
 
 ## TODOs
 
