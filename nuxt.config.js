@@ -1,7 +1,6 @@
 module.exports = {
   env: {
     BUILT_AT: new Date(),
-    SSL: !!process.env.SSL,
   },
   head: {
     titleTemplate(title) {

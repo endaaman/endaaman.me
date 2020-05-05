@@ -16,9 +16,8 @@ export const state = () => ({
   authorized: false,
   token: null,
   host: '',
-  apiRoot: '',
-  staticRoot: '',
-  staticHost: '',
+  // apiRoot: '',
+  // staticRoot: '',
   warnings: null,
 })
 
@@ -36,22 +35,7 @@ export const mutations = {
     state.authorized = authorized
   },
   initHosts(state, host) {
-    const ssl = !!process.env.SSL
-    const isDev = process.env.NODE_ENV !== 'production'
-
     state.host = host
-
-    state.apiRoot = isDev
-      ? 'http://localhost:3001/v1'
-      : `${ ssl ? 'https' : 'http' }://api.${ host }/v1`
-
-    state.staticRoot = isDev
-      ? 'http://localhost:3001/static'
-      : `${ ssl ? 'https' : 'http' }://static.${ host }`
-
-    state.staticHost = isDev
-      ? 'localhost:3002'
-      : `static.${ host }`
   },
   setWarnings(state, warnings) {
     state.warnings = warnings
@@ -120,7 +104,27 @@ export const actions = {
 }
 
 export const getters = {
-  api({ token, apiRoot }) {
+  staticRoot({ host }) {
+    const isDev = process.env.NODE_ENV !== 'production'
+    const isServer = !!process.server
+    const isSSL = /SSL/.test(process.env.SSL)
+    return isDev
+      ? 'http://localhost:3001/static'
+      : isServer
+        ? `${ isSSL ? 'https' : 'http' }://static.${ host }`
+        : `//static.${ host }`
+  },
+  api({ host, token }) {
+    const isDev = process.env.NODE_ENV !== 'production'
+    const isServer = !!process.server
+    const isSSL = /SSL/.test(process.env.SSL)
+
+    const apiRoot = isDev
+      ? 'http://localhost:3001/v1'
+      : isServer
+        ? `${ isSSL ? 'https' : 'http' }://api.${ host }/v1`
+        : `//api.${ host }/v1`
+
     const headers = {}
     if (token) {
       headers['Authorization'] = 'Bearer ' + token

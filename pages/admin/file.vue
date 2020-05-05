@@ -195,7 +195,7 @@ export default {
       return '/admin/file?dir=' + suffix
     },
     buildFileLink(fileName) {
-      return urlJoin(this.$store.state.staticRoot, this.dir, fileName)
+      return urlJoin(this.$store.getters['staticRoot'], this.dir, fileName)
     },
 
     async reload() {
