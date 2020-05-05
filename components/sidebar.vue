@@ -229,7 +229,9 @@
     span.footer-left-text
       | Made with&#x20;
       i.mdi.mdi-heart.is-primay
-      | &#x20;at {{ builtAt | date('YYYY-MM-DD') }}
+      | &#x20;at&#x20;
+      b-tooltip(:label="builtAt | date('YYYY-MM-DD HH:mm:ss')", top, size="is-small")
+        span {{ builtAt | date('YYYY-MM-DD') }}
 
     span.footer-right-text(v-if="!authorized")
       nuxt-link.nodeco-inline(to="/login") Login
