@@ -252,7 +252,6 @@ export default {
             }
           })
         })
-
       this.$el.querySelectorAll('pre > code').forEach((e) => {
         let isCode = false
         let lang = null
@@ -281,6 +280,7 @@ export default {
           }
         })
       }
+      await this.$nextTick()
       this.$emit('ready')
     },
   },

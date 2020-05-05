@@ -105,49 +105,48 @@
 
 <template lang="pug">
 .article-show-root
-  transition(name="fade")
-    .article-content(v-show="isMarkdownReady")
-      .article-heading
-        .article-sub.article-dates
-          template(v-if="!article.special")
-            span Category:&#x20;
-            nuxt-link(:to="'/?category=' + article.categorySlug") {{ article.getCategory().name }}
-            span ・
-          span {{ article.date | date }}
-          template(v-if="authorized")
-            span ・
-            nuxt-link(:to="'/admin/article/edit?relative=' + article.getRelative()") edit
-            span.icon.has-text-danger(v-if="article.private")
-              i.mdi.mdi-lock
-        h1.article-title
-          nuxt-link(:to="article.getHref()") {{ article.title }}
-        .article-sub.article-digest(v-if="article.digest")
-          | {{ article.digest }}
-        .article-sub.article-tags(v-if="!article.special && article.getTags().length > 0")
-          .tags
-            nuxt-link.tag.is-white(v-for="tag in article.getTags()", :to="'/?tag=' + tag" :key="tag") {{ tag }}
+  .article-content
+    .article-heading
+      .article-sub.article-dates
+        template(v-if="!article.special")
+          span Category:&#x20;
+          nuxt-link(:to="'/?category=' + article.categorySlug") {{ article.getCategory().name }}
+          span ・
+        span {{ article.date | date }}
+        template(v-if="authorized")
+          span ・
+          nuxt-link(:to="'/admin/article/edit?relative=' + article.getRelative()") edit
+          span.icon.has-text-danger(v-if="article.private")
+            i.mdi.mdi-lock
+      h1.article-title
+        nuxt-link(:to="article.getHref()") {{ article.title }}
+      .article-sub.article-digest(v-if="article.digest")
+        | {{ article.digest }}
+      .article-sub.article-tags(v-if="!article.special && article.getTags().length > 0")
+        .tags
+          nuxt-link.tag.is-white(v-for="tag in article.getTags()", :to="'/?tag=' + tag" :key="tag") {{ tag }}
 
-      .article-body
-        my-markdown(:source="article.body", @ready="onMarkdownReady")
+    .article-body
+      my-markdown(:source="article.body", @ready="onMarkdownReady")
 
-      .article-bottom(v-if="prevArticle || nextArticle")
-        hr.article-bottom-divider
-        .article-navigators
-          nuxt-link.article-navigator(v-if="prevArticle", :to="prevArticle.getHref()")
-            .article-navigator-guide
-              i.mdi.mdi-chevron-double-left
-              | Prev {{ article.getCategory().name }} entry
-            .article-navigator-content
-              .article-navigator-inner
-                span {{ prevArticle.title }}
-          .article-navigator(v-else)
-          nuxt-link.article-navigator(v-if="nextArticle", :to="nextArticle.getHref()")
-            .article-navigator-guide
-              | Next {{ article.getCategory().name }} entry
-              i.mdi.mdi-chevron-double-right
-            .article-navigator-content
-              .article-navigator-inner
-                span {{ nextArticle.title }}
+    .article-bottom(v-if="prevArticle || nextArticle")
+      hr.article-bottom-divider
+      .article-navigators
+        nuxt-link.article-navigator(v-if="prevArticle", :to="prevArticle.getHref()")
+          .article-navigator-guide
+            i.mdi.mdi-chevron-double-left
+            | Prev {{ article.getCategory().name }} entry
+          .article-navigator-content
+            .article-navigator-inner
+              span {{ prevArticle.title }}
+        .article-navigator(v-else)
+        nuxt-link.article-navigator(v-if="nextArticle", :to="nextArticle.getHref()")
+          .article-navigator-guide
+            | Next {{ article.getCategory().name }} entry
+            i.mdi.mdi-chevron-double-right
+          .article-navigator-content
+            .article-navigator-inner
+              span {{ nextArticle.title }}
 </template>
 
 <script>
