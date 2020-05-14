@@ -138,13 +138,13 @@ export default {
     loaded: false,
   }),
   mounted() {
-    window.document.body.addEventListener('scroll', debounce(this.onScroll, 100))
+    document.addEventListener('scroll', debounce(this.onScroll, 100))
     this.loaded = true
     this.onScroll()
   },
   methods: {
     onScroll() {
-      this.scrollTop = document.documentElement.scrollTop
+      this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
     },
     ...mapActions('layout', [
       'closeSidebar',

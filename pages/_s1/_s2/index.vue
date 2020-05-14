@@ -34,13 +34,14 @@
   }
 
   .article-digest {
-    font-size: $size-7;
+    font-size: 14px;
     line-height: 24px;
     margin-bottom: 8px;
+    font-style: italic;
     // text-align: center;
   }
 
-  .article-sub {
+  .article-tags {
     margin-bottom: 8px;
   }
 }
@@ -120,9 +121,9 @@
             i.mdi.mdi-lock
       h1.article-title
         nuxt-link(:to="article.getHref()") {{ article.title }}
-      .article-sub.article-digest(v-if="article.digest")
+      .article-digest(v-if="article.digest")
         | {{ article.digest }}
-      .article-sub.article-tags(v-if="!article.special && article.getTags().length > 0")
+      .article-tags(v-if="!article.special && article.getTags().length > 0")
         .tags
           nuxt-link.tag.is-white(v-for="tag in article.getTags()", :to="'/?tag=' + tag" :key="tag") {{ tag }}
 

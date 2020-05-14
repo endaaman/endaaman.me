@@ -16,6 +16,7 @@
   }
 
   .article-category {
+    display: block;
     font-size: $size-7;
     color: $grey;
   }
@@ -26,8 +27,9 @@
   }
   .article-digest {
     position: relative;
-    font-size: $size-7;
+    font-size: 14px;
     line-height: 24px;
+    font-style: italic;
   }
   .article-sub {
     margin: 8px 0;
