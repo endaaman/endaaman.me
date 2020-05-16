@@ -18,7 +18,7 @@ export const state = () => ({
   host: '',
   // apiRoot: '',
   // staticRoot: '',
-  warnings: null,
+  status: null,
 })
 
 export const mutations = {
@@ -37,8 +37,8 @@ export const mutations = {
   initHosts(state, host) {
     state.host = host
   },
-  setWarnings(state, warnings) {
-    state.warnings = warnings
+  setStatus(state, status) {
+    state.status = status
   },
 }
 
@@ -97,9 +97,19 @@ export const actions = {
     commit('setAuthorized', false)
     await dispatch('article/fetchArticles')
   },
-  async fetchWarnings({ getters, commit, dispatch }) {
-    const res = await getters.api('/misc/warnings', { method: 'GET' })
-    commit('setWarnings', await res.json())
+  async fetchStatus({ getters, commit, dispatch }) {
+    const res = await getters.api('/misc/status', { method: 'GET' })
+    commit('setStatus', await res.json())
+  },
+
+  async restartWatcher({ commit, rootGetters, dispatch }) {
+    const res = await rootGetters.api('/misc/watcher/restart', { method: 'POST', })
+    if (!res.ok) {
+      return { error: await res.text() }
+    }
+    const data = await res.json()
+    await dispatch('fetchStatus')
+    return { error: null, data }
   },
 }
 

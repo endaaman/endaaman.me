@@ -75,7 +75,11 @@
           b-dropdown-item(@click="copyFileUrl(data.row.name)")
             .media
               b-icon.media-left(icon="clipboard", type="is-dark")
-              .media-content Copy
+              .media-content Copy URL
+          b-dropdown-item(@click="copyFileAsMarkdown(data.row.name)")
+            .media
+              b-icon.media-left(icon="clipboard", type="is-dark")
+              .media-content Copy md link
 
       b-table-column(label="Name", field="name", :sortable="true")
         span.file-filename
@@ -328,16 +332,25 @@ export default {
       this.notify(`Moved "${ fileName }" from ${ this.dirStr } to "${ dest }"`)
     },
 
-    copyFileUrl(name) {
-      const url = this.buildFileLink(name)
+    copyToClipboard(content) {
       const cb = (e) => {
         e.preventDefault()
-        e.clipboardData.setData('text', url)
-        this.notify(`Copied "${ url }"`)
+        e.clipboardData.setData('text', content)
+        this.notify(`Copied "${ content }"`)
         document.removeEventListener('copy', cb, false)
       }
       document.addEventListener('copy', cb)
       document.execCommand('copy')
+    },
+
+    copyFileUrl(name) {
+      const url = this.buildFileLink(name)
+      this.copyToClipboard(url)
+    },
+
+    copyFileAsMarkdown(name) {
+      const url = this.buildFileLink(name)
+      this.copyToClipboard(`![${name}](${url})`)
     }
   }
 }

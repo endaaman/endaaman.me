@@ -69,7 +69,8 @@
   table {
     margin: 24px 0;
     td, th {
-      padding: 8px;
+      font-size: 14px;
+      padding: 8px 0;
       @media screen and (max-width: $breakpoint) {
         padding: 8px 4px;
       }

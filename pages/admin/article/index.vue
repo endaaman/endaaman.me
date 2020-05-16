@@ -6,9 +6,6 @@
     max-width: calc(100vw - 120px);
   }
 }
-
-.admin-article-index-root {
-}
 </style>
 
 <template lang="pug">
@@ -30,6 +27,12 @@
         option(:value="null") すべて
         option(value="private") Private
         option(value="special") Special
+
+    li
+      b-input(v-model="filterStr", placeholder="Filter", type="search", icon="magnify", size="is-small", rounded)
+
+    li
+      p(v-show="isFiltering") loading
 
   b-table(:data="articleDate", :mobile-cards="false", detailed, default-sort="date", default-sort-direction="desc")
     template(slot-scope="data")
@@ -57,6 +60,8 @@ export default {
       selectedCategorySlug: null,
       selectedTag: null,
       selectedFlag: null,
+      filterStr: '',
+      isFiltering: false,
     }
   },
   computed: {
@@ -67,21 +72,38 @@ export default {
       'tags': 'tagAggregations',
     }),
     filteredArticles() {
-      const c = this.selectedCategorySlug
-      const t = this.selectedTag
-      const f = this.selectedFlag
+      this.isFiltering = true
+      const filteredKeys = ['slug', 'title', 'body', 'digest']
       return this.articles.filter((a) => {
-        let flag = true
-        if (c) {
-          flag = flag && a.categorySlug === c
+        if (this.selectedCategorySlug) {
+          if (a.categorySlug !== this.selectedCategorySlug) {
+            return false
+          }
         }
-        if (t) {
-          flag = flag && a.getTags().includes(t)
+        if (this.selectedTag) {
+          if (!a.getTags().includes(this.selectedTag)) {
+            return false
+          }
         }
-        if (f) {
-          flag = flag && a[f]
+        if (this.selectedFlag) {
+          if (!a[this.selectedFlag]) {
+            return false
+          }
         }
-        return flag
+        if (this.filterStr) {
+          let contains = false
+          for (const key of filteredKeys) {
+            // console.log(key, a[key], a[key].includes(this.filterStr))
+            if (a[key].includes(this.filterStr)) {
+              contains = true
+              break
+            }
+          }
+          if (!contains) {
+            return false
+          }
+        }
+        return true
       })
     },
     articleDate() {
