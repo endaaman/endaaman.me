@@ -11,7 +11,6 @@
     "@iktakahiro/markdown-it-katex": "^3.1.0",
     "buefy": "^0.8.17",
     "bulma": "^0.7.5",
-    "codemirror": "^5.52.2",
     "cookie": "^0.3.1",
     "debounce": "^1.2.0",
     "fecha": "^2.3.3",
@@ -37,7 +36,6 @@
     "nuxt": "^2.12.2",
     "url-join": "^4.0.1",
     "viewerjs": "^1.5.0",
-    "vue-codemirror": "^4.0.6",
     "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {
