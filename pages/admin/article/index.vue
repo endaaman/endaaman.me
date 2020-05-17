@@ -31,9 +31,6 @@
     li
       b-input(v-model="filterStr", placeholder="Filter", type="search", icon="magnify", size="is-small", rounded)
 
-    li
-      p(v-show="isFiltering") loading
-
   b-table(:data="articleDate", :mobile-cards="false", detailed, default-sort="date", default-sort-direction="desc")
     template(slot-scope="data")
       b-table-column(label="Relative", field="extra.relative", :visible="!isSmallScreen", :sortable="true")

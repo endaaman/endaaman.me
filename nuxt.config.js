@@ -28,7 +28,7 @@ module.exports = {
     'highlight.js/styles/github-gist.css',
     'viewerjs/dist/viewer.css',
     'katex/dist/katex.min.css',
-    'codemirror/lib/codemirror.css',
+    // 'codemirror/lib/codemirror.css',
     { src: '@/css/bulma.scss', lang: 'scss' },
     { src: '@/css/app.scss', lang: 'scss' },
   ],
@@ -57,7 +57,7 @@ module.exports = {
     '~plugins/filters',
     '~plugins/markdown',
     '~plugins/vuex-router-sync',
-    { src: '~plugins/codemirror', ssr: false },
+    // { src: '~plugins/codemirror', ssr: false },
     { src: '~plugins/ga', ssr: false },
   ],
 }

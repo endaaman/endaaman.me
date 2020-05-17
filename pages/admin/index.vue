@@ -6,7 +6,7 @@
   .content
     h3 Status
     pre {{ status | json }}
-    button.button.is-primary(v-on:click="restartWatcher()" v-bind:disabled="status.watcher.isActive") Restart watcher
+    button.button.is-primary(v-on:click="restartWatcher()") Restart watcher
 
     h3 Token
     pre {{ token }}

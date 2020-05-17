@@ -1,24 +1,39 @@
-<style lang="scss">
+<style scoped lang="scss">
 @import "../css/variables";
-
-.CodeMirror {
-  height: auto;
-}
 
 .article-preview {
   overflow-y: auto;
 }
 
-.CodeMirror, .CodeMirror-scroll, .article-preview {
-  // large
+.article-editor {
+  display: block;
+  width: 100%;
+  font-family: $family-monospace;
+  height: calc(100vh - 260px);
   max-height: calc(100vh - 260px);
   font-size: 16px;
   @media screen and (max-width: $breakpoint - 1) {
     // small
     font-size: 14px;
+    height: calc(100vh - 290px);
     max-height: calc(100vh - 290px);
   }
 }
+
+// .CodeMirror {
+//   height: auto;
+// }
+//
+// .CodeMirror, .CodeMirror-scroll, .article-preview {
+//   // large
+//   max-height: calc(100vh - 260px);
+//   font-size: 16px;
+//   @media screen and (max-width: $breakpoint - 1) {
+//     // small
+//     font-size: 14px;
+//     max-height: calc(100vh - 290px);
+//   }
+// }
 
 </style>
 
@@ -83,15 +98,19 @@
     .add-margin-for-hidden-tags
 
   .form-content(v-if="isActiveTabContent(1)")
-    client-only(placeholder="Loading Codemirror...")
-      codemirror(
-        class="vertical-grow"
-        @keydown.page-down="onCtrlS"
-        ref="elCm"
-        :value="article.body",
-        :options="cmOptions",
-        @ready="onCmReady",
-        @input="onCmChanged")
+    // b-field()
+    //   b-input(maxlength="200" type="textarea", v-model="article.body", custom-class="article-editor")
+    textarea.textarea.article-editor(v-model="article.body")
+
+    // client-only(placeholder="Loading ace editor...")
+    //   codemirror(
+    //      class="vertical&#45;grow"
+    //      @keydown.page&#45;down="onCtrlS"
+    //      ref="elCm"
+    //      :value="article.body",
+    //      :options="cmOptions",
+    //      @ready="onCmReady",
+    //      @input="onCmChanged")
 
   .form-content(v-if="isActiveTabContent(2)")
     client-only(placeholder="Loading markdown...")
