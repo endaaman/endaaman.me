@@ -13,8 +13,9 @@ RUN \
   echo "\ndaemon off;" >> /etc/nginx/nginx.conf && \
   rm /etc/nginx/sites-enabled/default
 
-COPY package*.json /tmp/
-RUN cd /tmp && npm --production=false install
+COPY package.json /tmp/
+COPY package-lock.json /tmp/
+RUN cd /tmp && npm install --production=false
 RUN cp -a /tmp/node_modules ./
 
 COPY nginx/front.conf /etc/nginx/sites-enabled/
