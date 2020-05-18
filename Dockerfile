@@ -14,8 +14,7 @@ RUN \
   rm /etc/nginx/sites-enabled/default
 
 COPY package.json /tmp/
-COPY package-lock.json /tmp/
-RUN cd /tmp && npm install --production=false
+RUN cd /tmp && npm install --production=false --no-package-lock
 RUN cp -a /tmp/node_modules ./
 
 COPY nginx/front.conf /etc/nginx/sites-enabled/
