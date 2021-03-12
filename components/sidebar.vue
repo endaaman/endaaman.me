@@ -290,8 +290,10 @@ export default {
         return
       }
       const container = this.$refs.articlesContainers[i]
-      if ((container.scrollTop > activeEl.offsetTop) || (container.scrollTop + container.offsetHeight < activeEl.offsetTop)) {
-        container.scroll(0, activeEl.offsetTop - 64)
+      if (container) {
+        if ((container.scrollTop > activeEl.offsetTop) || (container.scrollTop + container.offsetHeight < activeEl.offsetTop)) {
+          container.scroll(0, activeEl.offsetTop - 64)
+        }
       }
     }
   },
