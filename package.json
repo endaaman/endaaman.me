@@ -34,6 +34,7 @@
     "monaco-editor": "^0.20.0",
     "node-fetch": "^2.6.1",
     "nuxt": "^2.12.2",
+    "shell-quote": "^1.7.2",
     "url-join": "^4.0.1",
     "viewerjs": "^1.5.0",
     "vuex-router-sync": "^5.0.0"

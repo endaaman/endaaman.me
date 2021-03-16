@@ -11,7 +11,7 @@
   }
 
   h2 {
-    margin: 48px 0 16px;
+    margin: 48px 0 24px;
     padding: 8px 0;
     font-size: $size-4;
     line-height: 1.5;
@@ -30,12 +30,13 @@
   }
 
   h3, h4 {
-    margin: 32px 0 16px;
+    margin: 48px 0 24px;
     font-weight: bold;
     font-size: $size-5;
-    @media screen and (max-width: $breakpoint) {
-      font-size: $size-6;
-    }
+    // @media screen and (max-width: $breakpoint) {
+    //   margin-bottom: 32px;
+    //   font-size: $size-5;
+    // }
   }
 
   h2 + h3 {
@@ -67,7 +68,7 @@
   }
 
   table {
-    margin: 24px 0;
+    margin: 32px 0;
     td, th {
       font-size: 14px;
       padding: 8px 0;
@@ -93,7 +94,7 @@
   }
 
   pre {
-    margin: 24px 0;
+    margin: 32px 0;
     padding: 8px 8px;
     max-height: 600px;
     overflow-y: auto;
@@ -119,12 +120,46 @@
   }
 
   blockquote {
+    position: relative;
     margin: 24px 0;
-    padding: 16px;
+    padding: 24px 64px 24px 48px;
+    font-style: italic;
+    display: flex;
+    flex-direction: column;
+    &:before {
+      position: absolute;
+      top: 0px;
+      left: 8px;
+      font-family: "Material Design Icons";
+      content: "\F756";
+      font-size: 32px;
+      color: $border;
+    }
+    &:after {
+      position: absolute;
+      bottom: 0px;
+      right: 24px;
+      font-family: "Material Design Icons";
+      content: "\F27E";
+      font-size: 32px;
+      color: $border;
+    }
+    cite {
+      color: $grey;
+      order: 1;
+      text-align: right;
+      padding-top: 8px;
+      padding-right: 8px;
+      /* margin-top: 16px; */
+    }
+  }
+
+  .right {
+    text-align: right;
   }
 
   .message {
-    margin: 24px 0;
+    margin: 32px 0;
   }
 
   .markdown-image {
@@ -153,6 +188,7 @@ p.no-content {
 </template>
 
 <script>
+import { parse as shellSplit } from 'shell-quote'
 import hljs from 'highlight.js'
 import mdItAttrs from 'markdown-it-attrs'
 import mdItContainer from 'markdown-it-container'
@@ -208,20 +244,51 @@ export default {
         })
         md.use(mdItContainer, 'message', {
           validate: function(param) {
-            const splitted = param.trim().split('|')
-            return splitted[0] === 'message' && splitted.length > 1
+            const splitted = shellSplit(param.trim())
+            return splitted[0] === 'message'
           },
           render(tokens, idx, options, env, self) {
             const param = tokens[idx].info.trim()
-            const [_, mode, title] = param.split('|')
+            const [_, title, mode, icon] = shellSplit(param)
             if (tokens[idx].nesting === 1) {
-              let heading = `<article class="message is-${mode}">`
+              const modeClass = mode ? ` is-${mode}` : ''
+              let heading = `<article class="message${modeClass}">`
               if (title) {
-                heading += `<div class="message-header"><p>${md.utils.escapeHtml(title)}</p></div>`
+                heading += `<div class="message-header"><p>`
+                if (icon) {
+                  heading += `<i class="mdi mdi-18px mdi-${icon}"></i> `
+                }
+                heading += `${md.utils.escapeHtml(title)}</p></div>`
               }
               return heading + `<div class="message-body">`
             } else {
               return '</div></article>'
+            }
+          }
+        })
+
+        md.use(mdItContainer, 'quote', {
+          validate: function(param) {
+            const splitted = shellSplit(param.trim())
+            return splitted[0] === 'quote' && splitted.length > 0
+          },
+          render(tokens, idx, options, env, self) {
+            const param = tokens[idx].info.trim()
+            const [_, title, url] = shellSplit(param)
+            if (tokens[idx].nesting === 1) {
+              let body = `<blockquote>`
+              if (title) {
+                body += `<cite>`
+                if (url) {
+                  body += `<a href="${url}">${title}</a>`
+                } else {
+                  body += title
+                }
+                body += `</cite>`
+              }
+              return body
+            } else {
+              return '</blockquote>'
             }
           }
         })
