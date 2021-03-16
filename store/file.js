@@ -22,7 +22,7 @@ export const mutations = {
 export const actions = {
   async fetchFiles({ commit, dispatch, getters, rootGetters }, { dir }) {
     dir = dir || ''
-    const res = await rootGetters.api('files/' + dir)
+    const res = await rootGetters.api('files/' + encodeURI(dir))
     commit('SET_FILES', [ dir, await res.json() ])
   },
   async getFiles({ commit, getters, dispatch }, { dir }) {
