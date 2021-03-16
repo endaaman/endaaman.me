@@ -28,7 +28,10 @@ export const mutations = {
   clearToken(state) {
     state.token = null
     if (!process.server) {
-      Cookies.remove('token', { domain: `.${ state.host }`, })
+      Cookies.remove('token', {
+        // domain: `.${ state.host }`,
+        sameSite: 'lax',
+      })
     }
   },
   setAuthorized(state, authorized) {
@@ -68,7 +71,7 @@ export const actions = {
       Cookies.set('token', token, {
         expires: 365,
         // domain: `${state.host}`,
-        samesite: 'lax',
+        sameSite: 'lax',
       })
     }
   },

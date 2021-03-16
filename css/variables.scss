@@ -76,7 +76,7 @@ $header-height: $header-title-height + $header-margin + $header-sub-height + $he
 // $sidebar-bg: $grey-darker;
 $sidebar-bg: $black-ter;
 
-@import "~bulma/sass/utilities/derived-variables";
-@import "~bulma/sass/utilities/animations.sass";
+@import "~bulma/sass/base/animations.sass";
+@import "~bulma/sass/utilities/derived-variables.sass";
 @import "~bulma/sass/utilities/mixins.sass";
 @import "~bulma/sass/utilities/controls.sass";
