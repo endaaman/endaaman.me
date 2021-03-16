@@ -43,9 +43,8 @@
   "devDependencies": {
     "node-sass": "^4.14.1",
     "pug": "^3.0.2",
-    "pug-loader": "^2.4.0",
     "pug-plain-loader": "^1.0.0",
-    "sass-loader": "^6.0.7"
+    "sass-loader": "^10.1.1"
   },
   "config": {
     "nuxt": {
