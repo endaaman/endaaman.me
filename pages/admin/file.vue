@@ -47,52 +47,51 @@
     default-sort="directory",
     default-sort-direction="desc",
   )
-    template(slot-scope="data")
-      b-table-column(
-        label="",
-        field="directory",
-        :sortable="true",
-        :custom-sort="compareBool",
-        centered,
-        width="40"
-      )
-        b-dropdown(:mobile-modal="isSmallScreen")
-          a.icon.has-text-grey.clickable(@click="", slot="trigger")
-            i.mdi.mdi-folder-outline(v-if="data.row.isDir")
-            i.mdi.mdi-file(v-else)
-          b-dropdown-item(@click="tryRenameFile(data.row.name)")
-            .media
-              b-icon.media-left(icon="pencil", type="is-success")
-              .media-content Rename
-          b-dropdown-item(@click="tryMoveFile(data.row.name)")
-            .media
-              b-icon.media-left(icon="keyboard-return", type="is-info")
-              .media-content Move
-          b-dropdown-item(@click="tryDeleteFile(data.row.name)")
-            .media
-              b-icon.media-left(icon="delete", type="is-danger")
-              .media-content Delete
-          b-dropdown-item(@click="copyFileUrl(data.row.name)")
-            .media
-              b-icon.media-left(icon="clipboard", type="is-dark")
-              .media-content Copy URL
-          b-dropdown-item(@click="copyFileAsMarkdown(data.row.name)")
-            .media
-              b-icon.media-left(icon="clipboard", type="is-dark")
-              .media-content Copy md link
+    b-table-column(
+      label="",
+      field="directory",
+      :sortable="true",
+      :custom-sort="compareBool",
+      centered,
+      width="40",
+      v-slot="props",
+    )
+      b-dropdown(:mobile-modal="isSmallScreen")
+        a.icon.has-text-grey.clickable(@click="", slot="trigger")
+          i.mdi.mdi-folder-outline(v-if="props.row.isDir")
+          i.mdi.mdi-file(v-else)
+        b-dropdown-item(@click="tryRenameFile(props.row.name)")
+          .media
+            b-icon.media-left(icon="pencil", type="is-success")
+            .media-content Rename
+        b-dropdown-item(@click="tryMoveFile(props.row.name)")
+          .media
+            b-icon.media-left(icon="keyboard-return", type="is-info")
+            .media-content Move
+        b-dropdown-item(@click="tryDeleteFile(props.row.name)")
+          .media
+            b-icon.media-left(icon="delete", type="is-danger")
+            .media-content Delete
+        b-dropdown-item(@click="copyFileUrl(props.row.name)")
+          .media
+            b-icon.media-left(icon="clipboard", type="is-dark")
+            .media-content Copy URL
+        b-dropdown-item(@click="copyFileAsMarkdown(props.row.name)")
+          .media
+            b-icon.media-left(icon="clipboard", type="is-dark")
+            .media-content Copy md link
 
-      b-table-column(label="Name", field="name", :sortable="true")
-        span.file-filename
-          template(v-if="data.row.isDir")
-            nuxt-link(:to="buildSubLink(data.row.name)") {{ data.row.name }}
-            span &nbsp;/
-          template(v-else)
-            a(:href="buildFileLink(data.row.name)", target="_blank") {{ data.row.name }}
-      b-table-column(label="Size", field="size", :sortable="true")
-        span.nowrap(:class="{ 'is-size-7': isSmallScreen }") {{ data.row.size | formatByteSize }}
-
-      b-table-column(label="Date", field="date", :sortable="true", :visible="!isSmallScreen")
-        span {{ data.row.mtime | date('YYYY-MM-DD HH:mm') }}
+    b-table-column(label="Name", field="name", :sortable="true", v-slot="props")
+      span.file-filename
+        template(v-if="props.row.isDir")
+          nuxt-link(:to="buildSubLink(props.row.name)") {{ props.row.name }}
+          span &nbsp;/
+        template(v-else)
+          a(:href="buildFileLink(props.row.name)", target="_blank") {{ props.row.name }}
+    b-table-column(label="Size", field="size", :sortable="true", v-slot="props")
+      span.nowrap(:class="{ 'is-size-7': isSmallScreen }") {{ props.row.size | formatByteSize }}
+    b-table-column(label="Date", field="date", :sortable="true", :visible="!isSmallScreen", v-slot="props")
+      span {{ props.row.mtime | date('YYYY-MM-DD HH:mm') }}
 </template>
 
 <script>
@@ -134,7 +133,7 @@ export default {
       return !this.dir
     },
     files() {
-      const files = this.$store.getters['file/getFiles'](this.dir)
+      const files = this.$store.getters['file/getFiles'](this.dir) || []
       const f = this.filterStr
       return files.filter((file) => {
         let flag = true

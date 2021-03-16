@@ -31,21 +31,20 @@
     li
       b-input(v-model="filterStr", placeholder="Filter", type="search", icon="magnify", size="is-small", rounded)
 
-  b-table(:data="articleDate", :mobile-cards="false", detailed, default-sort="date", default-sort-direction="desc")
-    template(slot-scope="data")
-      b-table-column(label="Relative", field="extra.relative", :visible="!isSmallScreen", :sortable="true")
-        code {{ data.row.extra.relative }}
-      b-table-column(label="Title", field="title", :sortable="true")
-        nuxt-link(:to="'/admin/article/edit?relative=' + data.row.extra.relative") {{ data.row.title }}
-        span.icon.has-text-danger(v-if="data.row.private")
-          i.mdi.mdi-lock
-        span.icon.has-text-info(v-if="data.row.special")
-          i.mdi.mdi-star-circle
-      b-table-column(label="Date", field="date", :sortable="true")
-        | {{ data.row.date }}
-    template(slot="detail", slot-scope="data")
+  b-table(:data="articleData", :mobile-cards="false", detailed, default-sort="date", default-sort-direction="desc")
+    b-table-column(label="Relative", field="extra.relative", :visible="!isSmallScreen", :sortable="true", v-slot="props")
+      code {{ props.row.extra.relative }}
+    b-table-column(label="Title", field="title", :sortable="true", v-slot="props")
+      nuxt-link(:to="'/admin/article/edit?relative=' + props.row.extra.relative") {{ props.row.title }}
+      span.icon.has-text-danger(v-if="props.row.private")
+        i.mdi.mdi-lock
+      span.icon.has-text-info(v-if="props.row.special")
+        i.mdi.mdi-star-circle
+    b-table-column(label="Date", field="date", :sortable="true", v-slot="props")
+      | {{ props.row.date }}
+    template(#detail="props")
       .table-detail
-        pre {{ data.row | json }}
+        pre {{ props.row | json }}
 </template>
 
 <script>
@@ -103,7 +102,7 @@ export default {
         return true
       })
     },
-    articleDate() {
+    articleData() {
       return this.filteredArticles.map((a) => a.toPrintable())
     },
     columns() {
