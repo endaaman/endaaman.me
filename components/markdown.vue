@@ -169,6 +169,13 @@
     max-width: 100%;
     width: 640px;
   }
+
+  .youtube-container {
+    max-width: 100%;
+    iframe {
+      max-width: 100%;
+    }
+  }
 }
 
 p.no-content {
@@ -293,6 +300,24 @@ export default {
           }
         })
 
+        md.use(mdItContainer, 'youtube', {
+          validate: function(param) {
+            const splitted = shellSplit(param.trim())
+            return splitted[0] === 'youtube' && splitted.length > 0
+          },
+          render(tokens, idx, options, env, self) {
+            const param = tokens[idx].info.trim()
+            let [_, url, width, height] = shellSplit(param)
+            width = parseInt(width) || 640
+            height = parseInt(height) || 360
+            if (tokens[idx].nesting === 1) {
+              return `<div class="youtube-container">`
+                + `<iframe type="text/html" src="${url}" width="${width}px" height="${height}px" frameborder="0">`
+            } else {
+              return `</iframe></div?`
+            }
+          }
+        })
       }
     }
   }),
