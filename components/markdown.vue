@@ -68,7 +68,7 @@
   }
 
   table {
-    width: auto;
+    width: 100%;
     margin: 32px 0;
     /* display: inline-block; */
     td, th {
@@ -96,7 +96,7 @@
         border: 0;
       }
     }
-    &.full-width {
+    &.compact {
       width: auto;
     }
   }
