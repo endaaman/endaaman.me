@@ -314,7 +314,7 @@ export default {
               return `<div class="youtube-container">`
                 + `<iframe type="text/html" src="${url}" width="${width}px" height="${height}px" frameborder="0">`
             } else {
-              return `</iframe></div?`
+              return `</iframe></div>`
             }
           }
         })
