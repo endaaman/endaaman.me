@@ -22,6 +22,8 @@ Vue.component('vue-markdown', {
   data() {
     return {
       sourceData: this.source,
+      toc: false,
+      tocFirstLevel: 2
     }
   },
 
@@ -38,64 +40,8 @@ Vue.component('vue-markdown', {
       type: Boolean,
       default: true,
     },
-    highlight: {
-      type: Boolean,
-      default: true
-    },
-    html: {
-      type: Boolean,
-      default: true,
-    },
-    xhtmlOut: {
-      type: Boolean,
-      default: true,
-    },
-    breaks: {
-      type: Boolean,
-      default: true,
-    },
-    linkify: {
-      type: Boolean,
-      default: true,
-    },
-    emoji: {
-      type: Boolean,
-      default: true,
-    },
-    typographer: {
-      type: Boolean,
-      default: true,
-    },
-    langPrefix: {
-      type: String,
-      default: 'language-',
-    },
-    quotes: {
-      type: String,
-      default: '“”‘’',
-    },
-    tableClass: {
-      type: String,
-      default: 'table',
-    },
-    taskLists: {
-      type: Boolean,
-      default: true
-    },
-    toc: {
-      type: Boolean,
-      default: false,
-    },
     tocId: {
       type: String,
-    },
-    tocClass: {
-      type: String,
-      default: 'table-of-contents',
-    },
-    tocFirstLevel: {
-      type: Number,
-      default: 2,
     },
     tocLastLevel: {
       type: Number,
@@ -158,11 +104,8 @@ Vue.component('vue-markdown', {
       .use(insert)
       .use(mark)
       .use(katex, { "throwOnError": false, "errorColor": " #cc0000" })
-      .use(tasklists, { enabled: this.taskLists })
-
-    if (this.emoji) {
-      this.md.use(emoji)
-    }
+      .use(tasklists, { enabled: true })
+      .use(emoji)
 
     if (this.plugins.length > 0) {
       for (const plugin of this.plugins) {
@@ -171,15 +114,16 @@ Vue.component('vue-markdown', {
     }
 
     this.md.set({
-      html: this.html,
-      xhtmlOut: this.xhtmlOut,
-      breaks: this.breaks,
-      linkify: this.linkify,
-      typographer: this.typographer,
-      langPrefix: this.langPrefix,
-      quotes: this.quotes,
+      html: true,
+      xhtmlOut: true,
+      linkify: true,
+      typographer: true,
+      langPrefix: 'language-',
+      quotes: '“”‘’',
     })
-    this.md.renderer.rules.table_open = () => `<table class="${this.tableClass}">\n`
+
+    // this.md.renderer.rules.table_open = (...args) => `<table class="table"/>\n`
+
     let defaultLinkRenderer = this.md.renderer.rules.link_open ||
       function (tokens, idx, options, env, self) {
         return self.renderToken(tokens, idx, options)
@@ -199,7 +143,7 @@ Vue.component('vue-markdown', {
 
     if (this.toc) {
       this.md.use(toc, {
-        tocClassName: this.tocClass,
+        tocClassName: 'table-of-contents',
         tocFirstLevel: this.tocFirstLevel,
         tocLastLevel: this.tocLastLevelComputed,
         anchorLink: this.tocAnchorLink,

@@ -26,6 +26,7 @@ $hm-y: ($header-height - $hm-size) / 2;
   @media screen and (min-width: $breakpoint) {
     display: none;
   }
+  box-shadow: 0px 0px 2px black;
 }
 
 .burger-is-inversed {

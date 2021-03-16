@@ -68,13 +68,36 @@
   }
 
   table {
+    width: auto;
     margin: 32px 0;
+    /* display: inline-block; */
     td, th {
+      padding: 8px;
       font-size: 14px;
-      padding: 8px 0;
       @media screen and (max-width: $breakpoint) {
         padding: 8px 4px;
       }
+    }
+    &.bordered {
+      td, th {
+        border-width: 1px;
+      }
+      tr {
+        &:last-child {
+          td, th {
+            border-bottom-width: 1px
+          }
+        }
+      }
+    }
+    &.no-bordered {
+      margin: 0 -8px;
+      td, th, tr {
+        border: 0;
+      }
+    }
+    &.full-width {
+      width: auto;
     }
   }
 
@@ -154,6 +177,10 @@
     }
   }
 
+  .center {
+    text-align: center;
+  }
+
   .right {
     text-align: right;
   }
@@ -165,7 +192,8 @@
   .markdown-image {
     cursor: zoom-in;
   }
-  .markdown-video {
+
+  .video-container {
     max-width: 100%;
     width: 640px;
   }
@@ -175,6 +203,27 @@
     iframe {
       max-width: 100%;
     }
+  }
+
+  figure {
+    display: inline-block;
+    margin: 16px 0;
+    .figure-inner {
+      & > p {
+        margin-bottom: 0px;
+      }
+      display: flex;
+      flex-direction: column;
+      figcaption {
+        order: 1;
+        color: $dark;
+        text-align: center;
+        font-style: italic;
+        max-width: 100%;
+        word-break : break-all;
+      }
+    }
+    /* display: inline-block; */
   }
 }
 
@@ -213,14 +262,13 @@ export default {
     images: [],
     mdProps: {
       linkify: false,
-      bre: false,
-      breaks: false,
       plugins: [
         mdItAttrs,
         mdItMultimdTable,
       ],
       override(md) {
         const defaultImageRenderFunc = md.renderer.rules.image
+
         md.renderer.rules.image = (...args) => {
           const [ tokens, idx, options, env, self ] = args
           const token = tokens[idx]
@@ -236,30 +284,32 @@ export default {
           const html = defaultImageRenderFunc(...args)
           return html
         }
+
         md.use(mdItContainer, 'video', {
           validate(param) {
-            return param.trim().match(/^video\|(.+)/)
+            const splitted = shellSplit(param.trim())
+            return splitted[0] === 'message'
           },
           render(tokens, idx, options, env, self) {
-            const url = tokens[idx].info.trim().match(/^video\|(.+)/)[1]
             if (tokens[idx].nesting === 1) {
-              return `<video class="markdown-video" src="${ md.utils.escapeHtml(url) }" controls>`
+              const param = tokens[idx].info.trim()
+              const [_, url] = shellSplit(param)
+              return `<video class="video-container" src="${ md.utils.escapeHtml(url) }" controls>`
             } else {
               return '</video>\n'
             }
           }
         })
+
         md.use(mdItContainer, 'message', {
           validate: function(param) {
             const splitted = shellSplit(param.trim())
             return splitted[0] === 'message'
           },
           render(tokens, idx, options, env, self) {
-            const param = tokens[idx].info.trim()
-            const [_, title, mode, icon] = shellSplit(param)
             if (tokens[idx].nesting === 1) {
-              const modeClass = mode ? ` is-${mode}` : ''
-              let heading = `<article class="message${modeClass}">`
+              const param = tokens[idx].info.trim()
+              const [_, title, mode, icon] = shellSplit(param)
               if (title) {
                 heading += `<div class="message-header"><p>`
                 if (icon) {
@@ -277,12 +327,12 @@ export default {
         md.use(mdItContainer, 'quote', {
           validate: function(param) {
             const splitted = shellSplit(param.trim())
-            return splitted[0] === 'quote' && splitted.length > 0
+            return splitted[0] === 'quote'
           },
           render(tokens, idx, options, env, self) {
-            const param = tokens[idx].info.trim()
-            const [_, title, url] = shellSplit(param)
             if (tokens[idx].nesting === 1) {
+              const param = tokens[idx].info.trim()
+              const [_, title, url] = shellSplit(param)
               let body = `<blockquote>`
               if (title) {
                 body += `<cite>`
@@ -303,18 +353,35 @@ export default {
         md.use(mdItContainer, 'youtube', {
           validate: function(param) {
             const splitted = shellSplit(param.trim())
-            return splitted[0] === 'youtube' && splitted.length > 0
+            return splitted[0] === 'youtube'
           },
           render(tokens, idx, options, env, self) {
-            const param = tokens[idx].info.trim()
-            let [_, url, width, height] = shellSplit(param)
-            width = parseInt(width) || 640
-            height = parseInt(height) || 360
             if (tokens[idx].nesting === 1) {
+              const param = tokens[idx].info.trim()
+              let [_, url, width, height] = shellSplit(param)
+              width = parseInt(width) || 640
+              height = parseInt(height) || 360
               return `<div class="youtube-container">`
                 + `<iframe type="text/html" src="${url}" width="${width}px" height="${height}px" frameborder="0">`
             } else {
               return `</iframe></div>`
+            }
+          }
+        })
+
+        md.use(mdItContainer, 'figure', {
+          validate(param) {
+            const splitted = shellSplit(param.trim())
+            return splitted[0] === 'figure'
+          },
+          render(tokens, idx, options, env, self) {
+            const param = tokens[idx].info.trim()
+            const [_, text] = shellSplit(param)
+            if (tokens[idx].nesting === 1) {
+              return `<figure><div class="figure-inner">`
+                + `<figcaption>${text}</figcaption>`
+            } else {
+              return '</div></figure>'
             }
           }
         })
