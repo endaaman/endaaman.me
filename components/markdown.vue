@@ -310,6 +310,7 @@ export default {
             if (tokens[idx].nesting === 1) {
               const param = tokens[idx].info.trim()
               const [_, title, mode, icon] = shellSplit(param)
+              let heading = ''
               if (title) {
                 heading += `<div class="message-header"><p>`
                 if (icon) {
@@ -359,10 +360,10 @@ export default {
             if (tokens[idx].nesting === 1) {
               const param = tokens[idx].info.trim()
               let [_, url, width, height] = shellSplit(param)
-              width = parseInt(width) || 640
-              height = parseInt(height) || 360
+              const w = parseInt(width) || 640
+              const h = parseInt(height) || 360
               return `<div class="youtube-container">`
-                + `<iframe type="text/html" src="${url}" width="${width}px" height="${height}px" frameborder="0">`
+                + `<iframe type="text/html" src="${url}" width="${w}px" height="${h}px" frameborder="0">`
             } else {
               return `</iframe></div>`
             }
