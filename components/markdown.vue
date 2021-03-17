@@ -310,15 +310,16 @@ export default {
             if (tokens[idx].nesting === 1) {
               const param = tokens[idx].info.trim()
               const [_, title, mode, icon] = shellSplit(param)
-              let heading = ''
+              const modeClass = mode ? ` is-${mode}` : ''
+              let opening = `<article class="message${modeClass}">`
               if (title) {
-                heading += `<div class="message-header"><p>`
+                opening += `<div class="message-header"><p>`
                 if (icon) {
-                  heading += `<i class="mdi mdi-18px mdi-${icon}"></i> `
+                  opening += `<i class="mdi mdi-18px mdi-${icon}"></i> `
                 }
-                heading += `${md.utils.escapeHtml(title)}</p></div>`
+                opening += `${md.utils.escapeHtml(title)}</p></div>`
               }
-              return heading + `<div class="message-body">`
+              return opening + `<div class="message-body">`
             } else {
               return '</div></article>'
             }
