@@ -288,7 +288,7 @@ export default {
         md.use(mdItContainer, 'video', {
           validate(param) {
             const splitted = shellSplit(param.trim())
-            return splitted[0] === 'message'
+            return splitted[0] === 'video'
           },
           render(tokens, idx, options, env, self) {
             if (tokens[idx].nesting === 1) {
