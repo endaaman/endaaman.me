@@ -335,7 +335,7 @@ export default {
     ]),
     ...mapGetters('article', {
       specialArticles: 'specialArticles',
-      tags: 'tagAggregations',
+      tags: 'tagAggregation',
       articleMap: 'articleMapKeyByCategory',
     }),
     builtAt() {

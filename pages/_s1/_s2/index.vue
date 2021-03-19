@@ -177,9 +177,16 @@ export default {
       meta,
     }
   },
-  validate({ store, params }) {
+  validate({ store, params, redirect }) {
     const { s1, s2 } = params
-    return store.getters['article/getArticleByRelative'](s1 + '/' + s2)
+    const relative = s1 + '/' + s2
+    const aliases = store.getters['article/aliasAggregation']
+    for (const alias of aliases) {
+      if (relative === alias.from) {
+        return redirect(alias.to)
+      }
+    }
+    return store.getters['article/getArticleByRelative'](relative)
   },
   computed: {
     article() {

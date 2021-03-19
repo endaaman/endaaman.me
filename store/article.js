@@ -137,7 +137,7 @@ export const getters = {
       return getters['getTags']((a) => a.categorySlug === categorySlug)
     }
   },
-  tagAggregations(state, getters) {
+  tagAggregation(state, getters) {
     const counts = {}
     const aa = getters['normalArticles']
     for (const article of aa) {
@@ -171,5 +171,19 @@ export const getters = {
       return a.name.localeCompare(b.name)
     })
     return tags
+  },
+  aliasAggregation(state, getters) {
+    const counts = {}
+    const aa = getters['normalArticles']
+    const aliases = []
+    for (const a of aa) {
+      for (const alias of a.aliases) {
+        aliases.push({
+          from: alias,
+          to: a.getHref(),
+        })
+      }
+    }
+    return aliases
   }
 }

@@ -65,7 +65,7 @@ export default {
     ...mapState('article', ['articles']),
     ...mapState('category', ['categories']),
     ...mapGetters('article', {
-      'tags': 'tagAggregations',
+      'tags': 'tagAggregation',
     }),
     filteredArticles() {
       this.isFiltering = true
