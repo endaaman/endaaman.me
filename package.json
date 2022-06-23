@@ -33,7 +33,7 @@
     "markdown-it-toc-and-anchor": "^4.2.0",
     "mdi": "^2.2.43",
     "monaco-editor": "^0.20.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.7",
     "nuxt": "^2.15.3",
     "shell-quote": "^1.7.2",
     "url-join": "^4.0.1",
